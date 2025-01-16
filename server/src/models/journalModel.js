@@ -4,7 +4,7 @@ const JournalSchema = new Schema(
   {
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
-    body: { type: Object, required: true },
+    body: { type: String, required: true },
     photo: { type: String, required: false },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     tags: { type: [String] },

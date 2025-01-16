@@ -28,17 +28,6 @@
 //     setImagePreview(null)
 //   }
 
-//   const handleImageChange = (e) => {
-//     const file = e.target.files?.[0]
-//     if (file) {
-//       const reader = new FileReader()
-//       reader.onloadend = () => {
-//         setImagePreview(reader.result)
-//       }
-//       reader.readAsDataURL(file)
-//     }
-//   }
-
 //   return (
 //     <Dialog open={open} onOpenChange={setOpen}>
 //       <DialogTrigger asChild>
@@ -102,8 +91,6 @@
 //   )
 // }
 
-"use client";
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -147,6 +134,17 @@ export default function NewJournalDialog() {
     }
 
     // setImagePreview(null);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         url: `${user_url}/login`,
         method: "POST",
         body: data,
-        credentials: 'include'
+        credentials: "include",
       }),
     }),
 
@@ -32,19 +32,32 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: `${user_url}/logout`,
         method: "POST",
-        credentials: 'include'
+        credentials: "include",
       }),
     }),
     createJournal: builder.mutation({
       query: (data) => ({
         url: `${journal_url}/create-journal`,
         method: "POST",
-        body:data,
-        credentials: 'include'
+        body: data,
+        credentials: "include",
+      }),
+    }),
+    getAllJournal: builder.query({
+      query: () => ({
+        url: `${journal_url}/get-journal`,
+        method: "GET",
+        credentials: "include",
       }),
     }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useActivateMutation, useLogoutMutation, useCreateJournalMutation } =
-  userApiSlice;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useActivateMutation,
+  useLogoutMutation,
+  useCreateJournalMutation,
+  useGetAllJournalQuery,
+} = userApiSlice;
