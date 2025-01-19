@@ -5,6 +5,7 @@ import Footer from "./Footer/Footer";
 import LogoutButton from "./Header/LogoutButton";
 import Activate from './Activate'
 import Dashboard from "./Header/DashBoard/Dashboard";
+import Journal from "./Header/DashBoard/Journal";
 export {
   Login, 
   Register,
@@ -12,5 +13,9 @@ export {
   Activate,
   Footer,
   LogoutButton,
-  Dashboard
+  Dashboard,
+  Journal
 }
+
+
+// TODO: NARESH --- CREATE THE JOURNAL PAGE IN PAGES FOLDER IMPLEMENT THE DASHBOARD TO THE NEW FOLDER INSIDE THE COMPONENT..
