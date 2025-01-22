@@ -34,13 +34,12 @@ const journalSchema = new mongoose.Schema(
       type: String,
     },
 
-    tags: [
-      {
-        type: String,
-        trim: true,
-        lowercase: true,
-      },
-    ],
+    tags: {
+      type: [String], // Array of strings
+      trim: true,
+      lowercase: true,
+      default: ["general"],
+    },
 
     images: [
       {

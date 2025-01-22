@@ -52,11 +52,11 @@ export default function JournalList() {
   ) : (
     <ScrollArea className="h-[calc(100vh-200px)]">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {data.map((journal) => (
-          <div className="w-full max-w-md mx-auto" key={journal.id}>
+        {mockJournals.map((journal) => (
+          <div className="w-full max-w-md mx-auto" key={journal?.id}>
             <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl dark:bg-gray-950">
               <img
-                src={journal.photo}
+                src={journal?.photo}
                 alt="Product Image"
                 width={600}
                 height={400}
@@ -64,9 +64,9 @@ export default function JournalList() {
                 style={{ aspectRatio: "600/400", objectFit: "cover" }}
               />
               <div className="p-4 space-y-2">
-                <h3 className="text-xl font-semibold">{journal.title}</h3>
+                <h3 className="text-xl font-semibold">{journal?.title}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
-                  {journal.preview}
+                  {journal?.preview}
                 </p>
                 <div className="flex items-center justify-between">
                   {/* <span className="text-lg font-bold">$49.99</span> */}
