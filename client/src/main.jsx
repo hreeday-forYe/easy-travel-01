@@ -7,8 +7,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Login, Register, Activate, Dashboard, Journal } from "./components";
 import { Provider } from "react-redux";
 
-import { HomePage } from "./pages";
+import { HomePage, About } from "./pages";
 import AuthLayout from "./routes/AuthLayout";
+import JournalDetail from "./components/DashBoard/Journal/JournalDetail";
+import EditJournal from "./components/DashBoard/Journal/Edit-Journal";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/about",
+        element: <About />,
       },
       {
         path: "/login",
@@ -43,6 +49,29 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
+
+      {
+        path: "/journal/:id",
+        element: (
+          <AuthLayout authentication={true}>
+            <JournalDetail  />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/journal/edit/:id",
+        element: (
+          <AuthLayout authentication={true}>
+            <EditJournal  />
+          </AuthLayout>
+        ),
+      },
+
+
+      // <Link 
+      //         to={`/journal/edit/${journal._id}`}
+      //         className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+      //       ></Link>
       //TODO:NARESH Implement this Page {
       //   path: "/register-success",
       //   element: (
@@ -59,6 +88,19 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
+
+
+
+
+
+
+
+
+
+
+
+
+
       // TODO: THis should be a journal Page where the User will see his journals based in pages directory...
       // TODO: The sidebar of the DASHBOARD should be a seperate component making it reusable
       // TODO: LOGOUT BUTTON SHOULD BE its seperate component that can be placed inside the DASHBOARD OR HEADER FOLDER INSIDE COMPONENTS

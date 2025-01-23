@@ -1,9 +1,8 @@
 class ErrorHandler extends Error {
   statusCode;
-  constructor(message, statusCode, errors={}) {
+  constructor(message, statusCode) {
     super(message);
     this.statusCode = statusCode;
-    this.errors = errors;
     Error.captureStackTrace(this, this.constructor);
   }
 }

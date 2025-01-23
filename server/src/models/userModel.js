@@ -42,9 +42,10 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
-    journalEntries: {
-      type: Number,
-      default: 0,
+    journalStats: {
+      totalEntries: { type: Number, default: 0 },
+      publicEntries: { type: Number, default: 0 },
+      privateEntries: { type: Number, default: 0 },
     },
 
     role: {

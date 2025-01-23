@@ -1,6 +1,6 @@
 import Journal from "../models/JournalModel.js";
-import User from "../models/UserModel.js";
 import { v4 as uuidv4 } from "uuid";
+import User from "../models/UserModel.js";
 import cloudinary from "cloudinary";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
@@ -14,11 +14,10 @@ class JournalController {
         mood,
         location,
         tags,
-        images,
         isPrivate = true,
       } = req.body;
 
-      if (!title && !content && !tags && !images) {
+      if (!title && !content && !tags && !req.body.images) {
         let errors = {
           title: "Title is required",
           content: "Content is required",
@@ -29,6 +28,30 @@ class JournalController {
       }
 
       // Handle Image section using cloudinary
+      let images = [];
+
+      // If images are passed as a string (for a single image)
+      if (typeof req.body.images === "string") {
+        images.push(req.body.images);
+      } else {
+        images = req.body.images;
+      }
+
+      // Now uploading the images to Cloudinary
+      const imagesLinks = [];
+      for (let i = 0; i < images.length; i++) {
+        const result = await cloudinary.v2.uploader.upload(images[i], {
+          folder: "posts",
+          quality: "auto:best",
+          height: 600,
+        });
+
+        // Storing the image links and public_id
+        imagesLinks.push({
+          public_id: result.public_id,
+          url: result.secure_url,
+        });
+      }
 
       // Increment the user Journal Entry
       await User.findByIdAndUpdate(req.user._id, {
@@ -44,7 +67,7 @@ class JournalController {
         location,
         tags,
         isPrivate,
-        images,
+        images: imagesLinks,
       });
 
       return res.status(201).json({ success: true, journal });
@@ -69,10 +92,36 @@ class JournalController {
   static updateJournal = asyncHandler(async (req, res, next) => {
     try {
       const id = req.params.id;
-      const { title, content, mood, location, tags, images, isPrivate } =
+      // console.log(id)
+      const { title, content, mood, location, tags, isPrivate } =
         req.body;
 
       // Handle Image Updation logic as well.
+      // Handle Image section using cloudinary
+      let images = [];
+
+      // If images are passed as a string (for a single image)
+      if (typeof req.body.images === "string") {
+        images.push(req.body.images);
+      } else {
+        images = req.body.images;
+      }
+
+      // Now uploading the images to Cloudinary
+      const imagesLinks = [];
+      for (let i = 0; i < images.length; i++) {
+        const result = await cloudinary.v2.uploader.upload(images[i], {
+          folder: "posts",
+          quality: "auto:best",
+          height: 600,
+        });
+
+        // Storing the image links and public_id
+        imagesLinks.push({
+          public_id: result.public_id,
+          url: result.secure_url,
+        });
+      }
 
       const updatedJournal = await Journal.findByIdAndUpdate(
         id,
@@ -82,7 +131,7 @@ class JournalController {
           mood,
           location,
           tags,
-          images,
+          images: imagesLinks,
           isPrivate,
         },
         {
