@@ -82,7 +82,7 @@ export default function EditJournal() {
           images: journal.images || [],
         });
         setTags(journal.tags || []);
-        // setImagePreviews(journal.images || []);
+        setImagePreviews(journal.images || []);
       }
     }
   }, [journalData, id, reset]);
@@ -368,7 +368,7 @@ export default function EditJournal() {
                 </div>
 
                 <div className="space-y-2">
-                  {/* {imagePreviews.length > 0 ? (
+                  {imagePreviews.length > 0 ? (
                     imagePreviews.map((images, index) => (
                       <div key={index} className="relative">
                         <img
@@ -394,7 +394,7 @@ export default function EditJournal() {
                         <p>No images uploaded</p>
                       </div>
                     </div>
-                  )} */}
+                  )}
                   {imagePreviews.length > 0 ? (
                     // Show imagePreviews if the user uploaded new images
                     imagePreviews.map((preview, index) => (

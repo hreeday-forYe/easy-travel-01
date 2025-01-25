@@ -1,8 +1,6 @@
-import JournalList from "./journal_list";
-import NewJournalDialog from "./AddJournal";
-import Side_bar from "../Side_bar";
-const JournalPage = () => {
-  
+import React from "react";
+
+const JournalsPage = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Side_bar />
@@ -16,4 +14,4 @@ const JournalPage = () => {
   );
 };
 
-export default JournalPage;
+export default JournalsPage;

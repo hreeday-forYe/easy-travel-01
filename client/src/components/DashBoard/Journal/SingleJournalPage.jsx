@@ -30,7 +30,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Side_bar from "../Side_bar";
 
-function JournalDetail() {
+function SingleJournalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
@@ -100,7 +100,7 @@ function JournalDetail() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Side_bar className="w-64 flex-shrink-0"  />
+      <Side_bar className="w-64 flex-shrink-0" />
 
       <main className="flex-1 px-8 py-6">
         <div className="max-w-4xl mx-auto">
@@ -225,4 +225,4 @@ function JournalDetail() {
   );
 }
 
-export default JournalDetail;
+export default SingleJournalDetail;

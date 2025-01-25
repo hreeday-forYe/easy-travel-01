@@ -61,7 +61,6 @@ export default function AddJournal() {
       toast.success("Journal entry created successfully!");
       setOpen(false);
       setImagePreviews([]);
-
       setTags([]);
     } catch (error) {
       console.error("Error creating journal:", error);

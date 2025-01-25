@@ -1,7 +1,10 @@
-import About from "@/components/About";
 import HomePage from "./HomePage";
-
+import EditJournalPage from "./EditJournalPage";
+import JournalsPage from './JournalsPage';
+import SingleJournalPage from './SingleJournalPage'
 export{
   HomePage,
-  About,
+  EditJournalPage,
+  JournalsPage,
+  SingleJournalPage
 }

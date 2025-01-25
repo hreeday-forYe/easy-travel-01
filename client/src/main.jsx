@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 
 import { HomePage, About } from "./pages";
 import AuthLayout from "./routes/AuthLayout";
-import JournalDetail from "./components/DashBoard/Journal/JournalDetail";
+import JournalDetail from "./components/DashBoard/Journal/SingleJournalPage";
 import EditJournal from "./components/DashBoard/Journal/Edit-Journal";
 
 const router = createBrowserRouter([
