@@ -20,7 +20,7 @@ export const journalApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
-
+    // Gets all the journals of the user
     getJournal: builder.query({
       query: () => ({
         url: `${journal_url}/`,
@@ -36,6 +36,10 @@ export const journalApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+
+    getSingleJournal:builder.query({
+      // TODO: Add url and method to the 
+    })
   }),
 });
 
