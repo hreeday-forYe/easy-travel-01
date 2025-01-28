@@ -1,6 +1,6 @@
 import express from "express";
-import TravelGroupController from "../controllers/travelgroupController";
-import { isAuthenticated } from "../middlewares/auth";
+import TravelGroupController from "../controllers/travelgroupController.js";
+import { isAuthenticated } from "../middlewares/auth.js";
 
 const travelGroupRouter = express.Router();
 
@@ -11,7 +11,7 @@ travelGroupRouter.get("/", isAuthenticated, TravelGroupController.fetchGroups);
 travelGroupRouter.put(
   "/:id",
   isAuthenticated,
-  TravelGroupController.addorRemove
+  TravelGroupController.addOrRemoveMembers
 );
 
 travelGroupRouter.delete(

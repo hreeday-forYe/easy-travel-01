@@ -1,6 +1,5 @@
 import TravelGroup from "../models/TravelGroupModel.js";
 import User from "../models/UserModel.js";
-import cloudinary from "cloudinary";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 
@@ -19,7 +18,9 @@ class TravelGroupController {
     const creatorId = req.user._id;
     try {
       if (!name || !creatorId) {
-        return next(new ErrorHandler(error.message, 400));
+        return next(
+          new ErrorHandler("Group name and creator Id is required", 400)
+        );
       }
       // Check if the creator exists
       const creator = await User.findById(creatorId);
@@ -46,9 +47,7 @@ class TravelGroupController {
           status: "planning", // Default status
         },
         currency: currency || "NRS", // Default to USD if not provided
-        budget: {
-          amount: budget || 0,
-        },
+        budget: Number(budget) || 0,
         totalExpenses: 0, // Initial total expenses
         isActive: true, // Group is active by default
       });
@@ -104,6 +103,7 @@ class TravelGroupController {
     }
     // Logic to fetch the groups if your are  part or you have created.
   });
+
   static fetchSingleGroup = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const userId = req.user._id;

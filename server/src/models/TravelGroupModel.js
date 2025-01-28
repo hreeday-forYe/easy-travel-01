@@ -48,7 +48,7 @@ const travelGroupSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      default: "NRS",
+      default: "NPR",
     },
     budget: {
       type: Number,
