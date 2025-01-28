@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   useGetJournalQuery,
   useDeleteJournalMutation,
-} from "@/app/slices/journalSlice";
+} from "@/app/slices/journalApiSlice";
 import { useSelector } from "react-redux";
 
 import { Link } from "react-router-dom";
@@ -20,6 +20,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-toastify";
+// import DOMPurify from "dompurify";
+
+// {typeof item.blogText === 'string' ? (
+//   <div dangerouslySetInnerHTML={{ __html: `<div>${truncateText(item.blogText, 5)}</div>` }} />
+// ) : (
+//   item.blogText
+// )}
 
 export default function JournalList() {
   const user = useSelector((state) => state.auth.user);
@@ -93,8 +100,7 @@ export default function JournalList() {
                     alt={journal.title}
                     width={600}
                     height={400}
-                    className="w-full h-44 object-cover"
-                    style={{ aspectRatio: "600/400", objectFit: "cover" }}
+                    style={{ aspectRatio: "600/400", objectFit: "fill" }}
                   />
                   {/* Action Buttons Overlay - Only show for owner */}
                   {isOwner && (

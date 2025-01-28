@@ -1,15 +1,13 @@
 import JournalList from "./journal_list";
-import NewJournalDialog from "./AddJournal";
-import Side_bar from "../Side_bar";
+import AddJournal from "./AddJournal";
+import SideBar from "../SideBar";
+
 const JournalPage = () => {
-  
   return (
     <div className="flex min-h-screen bg-background">
-      <Side_bar />
-
+      <SideBar />
       <div className=" px-10 py-8">
-        <h1 className="text-3xl font-bold mb-6">My Journals</h1>
-        <NewJournalDialog />
+        <AddJournal />
         <JournalList />
       </div>
     </div>

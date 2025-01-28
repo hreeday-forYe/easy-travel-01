@@ -1,9 +1,12 @@
-import React from 'react'
+import { EditJournal } from "@/components";
 
+EditJournal;
 const EditJournalPage = () => {
   return (
-    <div>EditJournalPage</div>
-  )
-}
+    <>
+      <EditJournal />
+    </>
+  );
+};
 
-export default EditJournalPage
+export default EditJournalPage;
