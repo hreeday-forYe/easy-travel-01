@@ -10,17 +10,23 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
-import { LogoutButton } from "..";
+import { Link, useLocation } from "react-router-dom";
+import LogoutButton from "@/components/Header/LogoutButton";
 
-const Side_bar = () => {
+const SideBar = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const location = useLocation(); 
+
   const navigationItems = [
-    { icon: LayoutDashboard, label: "Dashboard", active: true, href: "/dashboard" },
+    {
+      icon: LayoutDashboard,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
     { icon: NotebookPen, label: "Journal", href: "/journal" },
-    { icon: Wallet, label: "Budgets" },
-    { icon: PieChart, label: "Reports" },
-    { icon: Settings, label: "Settings" },
+    { icon: Wallet, label: "Budgets", href: "/budgets" },
+    { icon: PieChart, label: "Reports", href: "/reports" },
+    { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
   return (
@@ -47,8 +53,9 @@ const Side_bar = () => {
           {navigationItems.map((item) => (
             <Link to={item.href} key={item.label}>
               <Button
-                key={item.label}
-                variant={item.active ? "secondary" : "ghost"}
+                variant={
+                  location.pathname === item.href ? "secondary" : "ghost"
+                }
                 className={cn(
                   "w-full justify-start",
                   isSidebarCollapsed ? "px-3" : "px-4"
@@ -70,4 +77,4 @@ const Side_bar = () => {
   );
 };
 
-export default Side_bar;
+export default SideBar;

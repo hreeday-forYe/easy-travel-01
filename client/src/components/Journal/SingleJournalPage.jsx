@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   useGetJournalQuery,
   useDeleteJournalMutation,
-} from "@/app/slices/journalSlice";
+} from "@/app/slices/journalApiSlice";
 import { useSelector } from "react-redux";
 // Add this import
 import {
@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
-import Side_bar from "../Side_bar";
+import SideBar from "../SideBar";
 
 function SingleJournalDetail() {
   const { id } = useParams();
@@ -100,7 +100,7 @@ function SingleJournalDetail() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Side_bar className="w-64 flex-shrink-0" />
+      <SideBar className="w-64 flex-shrink-0" />
 
       <main className="flex-1 px-8 py-6">
         <div className="max-w-4xl mx-auto">
@@ -161,11 +161,11 @@ function SingleJournalDetail() {
           {/* Main Content */}
           <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
             {/* Hero Image */}
-            <div className="relative h-[400px]">
+            <div className="relative h-[400px]  ">
               <img
                 src={journal.images[0].url}
                 alt={journal.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-fill"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               <h1 className="absolute bottom-8 left-8 right-8 text-4xl font-bold text-white">
