@@ -16,27 +16,35 @@ import { toast } from "react-toastify";
 
 import { useCreateJournalMutation } from "@/app/slices/journalApiSlice";
 import { useGetJournalQuery } from "@/app/slices/journalApiSlice";
-import Formfield from "../Formfield";
+import GroupFormfield from "../GroupFormfield";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-export default function AddJournal() {
+export default function AddGroup() {
   const [open, setOpen] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [createJournal, { isLoading }] = useCreateJournalMutation();
   const { refetch } = useGetJournalQuery();
 
-  const moodOptions = [
-    { value: "happy", label: "Happy" },
-    { value: "sad", label: "Sad" },
-    { value: "anxious", label: "Anxious" },
-    { value: "excited", label: "Excited" },
-    { value: "neutral", label: "neutral" },
-    { value: "angry", label: "angry" },
-    { value: "grateful", label: "grateful" },
+  const statusOptions = [
+    { value: "pending", label: "Pending" },
+    { value: "settled", label: "Settled" },
+    { value: "disputed", label: "Disputed" },
+  ];
+
+  const paymentOptions = [
+    { value: "cash", label: "Cash" },
+    { value: "khalti", label: "Khalti" },
+    { value: "others", label: "Others" },
+  ];
+  const categoryOptions = [
+    { value: "accommodation", label: "Accommodation" },
+    { value: "transport", label: "Transport" },
+    { value: "food", label: "Food" },
+    { value: "activities", label: "Activities" },
+    { value: "shopping", label: "Shopping" },
+    { value: "others", label: "Others" },
   ];
 
   const {
@@ -48,10 +56,9 @@ export default function AddJournal() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      isPrivate: true,
-      mood: "neutral",
-      content: "",
-      images: [],
+      note: "",
+      receipt: [],
+      status: "pending",
     },
   });
 
@@ -59,19 +66,18 @@ export default function AddJournal() {
     // Check if imagePreviews is empty
 
     if (imagePreviews.length === 0) {
-      setErrorMessage("Please upload at least one image.");
+      setErrorMessage("Please upload at least one Receipt.");
       return;
     }
 
     try {
-      const updatedData = { ...data, tags };
+      const updatedData = { ...data };
       const res = await createJournal(updatedData).unwrap();
       console.log("Journal created:", res);
       refetch();
       toast.success("Journal entry created successfully!");
       setOpen(false);
       setImagePreviews([]);
-      setTags([]);
     } catch (error) {
       console.error("Error creating journal:", error);
       toast.error(error?.data?.message || "Failed to create journal entry");
@@ -82,7 +88,7 @@ export default function AddJournal() {
     const files = Array.from(e.target.files || []);
 
     if (files.length === 0) {
-      setErrorMessage("Please select at least one image.");
+      setErrorMessage("Please select at least one ");
       return;
     }
 
@@ -101,7 +107,10 @@ export default function AddJournal() {
         reader.onload = () => {
           if (reader.readyState === 2) {
             setImagePreviews((prev) => [...prev, reader.result]);
-            setValue("images", [...(getValues("images") || []), reader.result]);
+            setValue("receipt", [
+              ...(getValues("receipt") || []),
+              reader.result,
+            ]);
             setErrorMessage(""); // Clear error message
           }
         };
@@ -114,30 +123,16 @@ export default function AddJournal() {
 
   const removeImage = (index) => {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
-    const currentImages = getValues("images") || [];
+    const currentImages = getValues("receipt") || [];
     setValue(
-      "images",
+      "receipt",
       currentImages.filter((_, i) => i !== index)
     );
 
-    // Show error if no images are left
+    // Show error if no receipt are left
     if (imagePreviews.length === 1) {
       setErrorMessage("Please upload at least one image.");
     }
-  };
-
-  const handleAddTag = (e) => {
-    e.preventDefault();
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()]);
-      setTagInput("");
-    } else {
-      toast.error("Invalid or duplicate tag");
-    }
-  };
-
-  const removeTag = (tagToRemove) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
   return (
@@ -145,12 +140,12 @@ export default function AddJournal() {
       <DialogTrigger asChild>
         <Button className="mb-6">
           <PlusCircle className="mr-2 h-4 w-4" />
-          New Journal
+          Add Expense
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[70vw] overflow-y-auto h-[520px]">
         <DialogHeader>
-          <DialogTitle>Create New Journal Entry</DialogTitle>
+          <DialogTitle>Add New Group Entry</DialogTitle>
           <DialogDescription>
             Capture your thoughts, feelings, and moments. All fields help create
             a richer memory.
@@ -161,7 +156,7 @@ export default function AddJournal() {
           className="space-y-6"
           encType="multipart/form-data"
         >
-          <Formfield
+          <GroupFormfield
             control={control}
             register={register}
             errors={errors}
@@ -169,26 +164,22 @@ export default function AddJournal() {
             getValues={getValues}
             imagePreviews={imagePreviews}
             setImagePreviews={setImagePreviews}
-            tags={tags}
-            setTags={setTags}
-            tagInput={tagInput}
-            setTagInput={setTagInput}
             errorMessage={errorMessage}
             setErrorMessage={setErrorMessage}
             handleImageChange={handleImageChange}
-            handleAddTag={handleAddTag}
-            removeTag={removeTag}
             removeImage={removeImage}
-            moodOptions={moodOptions}
+            statusOptions={statusOptions}
+            paymentOptions={paymentOptions}
+            categoryOptions={categoryOptions}
           />
-          
+
           <DialogFooter>
             <Button
               type="submit"
               className="w-full sm:w-auto"
               disabled={isLoading}
             >
-              {isLoading ? "Creating..." : "Create Journal Entry"}
+              {isLoading ? "Creating..." : "Create Group"}
             </Button>
           </DialogFooter>
         </form>

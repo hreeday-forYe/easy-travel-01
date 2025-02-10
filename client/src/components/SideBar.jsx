@@ -6,6 +6,7 @@ import {
   Wallet,
   Menu,
   NotebookPen,
+  UsersRound
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ const SideBar = () => {
     { icon: NotebookPen, label: "Journal", href: "/journal" },
     { icon: Wallet, label: "Budgets", href: "/budgets" },
     { icon: PieChart, label: "Reports", href: "/reports" },
+    { icon: UsersRound, label: "Group", href: "/groups" },
     { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
