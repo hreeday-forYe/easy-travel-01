@@ -23,7 +23,7 @@ function ListGroup() {
                 <li key={expense._id} className="">
                   <Link
                     to={`/groups/${expense._id}`}
-                    className="px-4 py-4 sm:px-6  "
+                    state={expense.name} className="px-4 py-4 sm:px-6   "
                   >
                     <div className="px-4 py-4 sm:px-6  ">
                       <div className="flex items-center justify-between">

@@ -11,6 +11,7 @@ import SideBar from "./SideBar";
 import SingleJournalDetail from "./Journal/SingleJournalPage";
 import EditJournal from "./Journal/Edit-Journal";
 import Group from "./Group/Group";
+import SingleGroup from "./Group/SingleGroup";
 
 
 export {
@@ -27,6 +28,7 @@ export {
   SingleJournalDetail,
   EditJournal,
   Group,
+  SingleGroup,
 
 };
 
