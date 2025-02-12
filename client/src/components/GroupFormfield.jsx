@@ -208,26 +208,6 @@ export default function GroupFormfield({
           <p className="text-red-500 text-sm">{errors.amount.value.message}</p>
         )}
 
-        {/* Note Field */}
-        <div className="">
-          <div className="flex items-center gap-8">
-            <Label htmlFor="amount" className="text-right">
-              Note
-            </Label>
-
-            <Controller
-              name="note"
-              control={control}
-              render={({ field }) => (
-                <textarea
-                  {...field}
-                  placeholder="Write a Note here..."
-                  className="w-full h-20 p-2 border rounded-md"
-                />
-              )}
-            />
-          </div>
-        </div>
       </div>
 
       {/* Right Column - Image Upload */}

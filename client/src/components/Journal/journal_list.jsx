@@ -20,13 +20,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-toastify";
-// import DOMPurify from "dompurify";
-
-// {typeof item.blogText === 'string' ? (
-//   <div dangerouslySetInnerHTML={{ __html: `<div>${truncateText(item.blogText, 5)}</div>` }} />
-// ) : (
-//   item.blogText
-// )}
 
 export default function JournalList() {
   const user = useSelector((state) => state.auth.user);
@@ -47,7 +40,6 @@ export default function JournalList() {
       console.error("Delete error:", error);
     }
   };
-  // console.log(allJournals);
 
   if (isLoading) {
     return (
@@ -82,7 +74,7 @@ export default function JournalList() {
   const reversedData = [...journals].reverse();
 
   return (
-    <ScrollArea className="h-[calc(100vh-100px)]">
+    <ScrollArea className="h-[calc(100vh-130px)] ">
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 p-6">
         {reversedData.map((journal) => {
           const isOwner = user?.id === journal.userId;

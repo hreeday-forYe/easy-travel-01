@@ -78,7 +78,7 @@ export default function EditJournal() {
   }, [journalData, reset]);
 
   const onSubmit = async (data) => {
-    if (imagePreviews.length === 0) {
+    if (imagePreviews.length === 0 && existingImages.length === 0) {
       setErrorMessage("Please upload at least one image.");
       return;
     }

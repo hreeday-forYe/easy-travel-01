@@ -14,9 +14,10 @@ import {
 import { PlusCircle } from "lucide-react";
 import { toast } from "react-toastify";
 
-import { useCreateJournalMutation } from "@/app/slices/journalApiSlice";
+import { useCreateExpenseMutation } from "@/app/slices/expenseApiSlice";
 import { useGetJournalQuery } from "@/app/slices/journalApiSlice";
 import GroupFormfield from "../GroupFormfield";
+import { useSelector } from "react-redux";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -24,8 +25,9 @@ export default function AddGroup() {
   const [open, setOpen] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [createJournal, { isLoading }] = useCreateJournalMutation();
+  const [createExpense, { isLoading }] = useCreateExpenseMutation();
   const { refetch } = useGetJournalQuery();
+  const authStatus = useSelector((state) => state?.auth?.user?._id);
 
   const statusOptions = [
     { value: "pending", label: "Pending" },
@@ -56,31 +58,28 @@ export default function AddGroup() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      note: "",
       receipt: [],
       status: "pending",
     },
   });
 
   const onSubmit = async (data) => {
-    // Check if imagePreviews is empty
-
     if (imagePreviews.length === 0) {
       setErrorMessage("Please upload at least one Receipt.");
       return;
     }
 
     try {
-      const updatedData = { ...data };
-      const res = await createJournal(updatedData).unwrap();
-      console.log("Journal created:", res);
+      const updatedData = { ...data, paidBy: authStatus };
+      const res = await createExpense(updatedData).unwrap();
+      console.log("Expense created:", res);
       refetch();
-      toast.success("Journal entry created successfully!");
+      toast.success("Expense entry created successfully!");
       setOpen(false);
       setImagePreviews([]);
     } catch (error) {
-      console.error("Error creating journal:", error);
-      toast.error(error?.data?.message || "Failed to create journal entry");
+      console.error("Error creating Expense:", error);
+      toast.error(error?.data?.message || "Failed to create Expense entry");
     }
   };
 
@@ -135,6 +134,11 @@ export default function AddGroup() {
     }
   };
 
+  if (!authStatus) {
+    console.error("User is not authenticated!");
+    return;
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -181,6 +185,7 @@ export default function AddGroup() {
             >
               {isLoading ? "Creating..." : "Create Group"}
             </Button>
+            <p>oo {authStatus}</p>
           </DialogFooter>
         </form>
       </DialogContent>

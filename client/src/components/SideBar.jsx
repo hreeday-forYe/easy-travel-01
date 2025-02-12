@@ -6,7 +6,7 @@ import {
   Wallet,
   Menu,
   NotebookPen,
-  UsersRound
+  UsersRound,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import LogoutButton from "@/components/Header/LogoutButton";
 
 const SideBar = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const location = useLocation(); 
+  const location = useLocation();
 
   const navigationItems = [
     {
@@ -34,7 +34,7 @@ const SideBar = () => {
   return (
     <div
       className={cn(
-        "flex h-screen flex-col border-r bg-card transition-all duration-300",
+        "flex h-screen flex-col border-r  bg-card transition-all duration-300",
         isSidebarCollapsed ? "w-[80px]" : "w-[250px]"
       )}
     >

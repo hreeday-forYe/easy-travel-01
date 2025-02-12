@@ -11,9 +11,7 @@ import SideBar from "./SideBar";
 import SingleJournalDetail from "./Journal/SingleJournalPage";
 import EditJournal from "./Journal/Edit-Journal";
 import Group from "./Group/Group";
-import DmsLogin from "./DMS/Login";
-import DmsRegister from "./DMS/Register";
-import Dms   from "./DMS/Dms";
+
 
 export {
   Login,
@@ -29,9 +27,7 @@ export {
   SingleJournalDetail,
   EditJournal,
   Group,
-  DmsLogin,
-  Dms,
-  DmsRegister
+
 };
 
 // TODO: NARESH --- CREATE THE JOURNAL PAGE IN PAGES FOLDER IMPLEMENT THE DASHBOARD TO THE NEW FOLDER INSIDE THE COMPONENT...

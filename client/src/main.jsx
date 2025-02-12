@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import store from "./app/store";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { Login, Register, Activate, Journal, Group, DmsLogin, Dms, DmsRegister} from "./components";
+import { Login, Register, Activate, Journal, Group} from "./components";
 import { Provider } from "react-redux";
 
 import {
@@ -34,30 +34,8 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
-      {
-        path: "/dms/login",
-        element: (
-          <AuthLayout authentication={false}>
-            <DmsLogin />
-          </AuthLayout>
-        ),
-      },
-      {
-        path: "/dms/register",
-        element: (
-          <AuthLayout authentication={false}>
-            <DmsRegister />
-          </AuthLayout>
-        ),
-      },
-      {
-        path: "/dms",
-        element: (
-          <AuthLayout authentication={false}>
-            <Dms />
-          </AuthLayout>
-        ),
-      },
+
+
       {
         path: "/activate",
         element: (
