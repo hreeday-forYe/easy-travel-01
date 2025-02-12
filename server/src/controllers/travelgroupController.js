@@ -2,11 +2,13 @@ import TravelGroup from "../models/TravelGroupModel.js";
 import User from "../models/UserModel.js";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
+import Expense from "../models/ExpenseModel.js";
 
 class TravelGroupController {
   /** GROUPS CREATION AND DELETION FUNCTIONALITY */
   static createGroup = asyncHandler(async (req, res, next) => {
-    const { name, startDate, endDate, destination, budget, currency } = req.body;
+    const { name, startDate, endDate, destination, budget, currency } =
+      req.body;
     const creatorId = req.user._id;
     try {
       if (!name || !creatorId) {
@@ -126,6 +128,32 @@ class TravelGroupController {
       return res.status(200).json({
         success: true,
         group,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  static fetchGroupExpenses = asyncHandler(async (req, res, next) => {
+    const groupid = req.query.id;
+    console.log(groupid); // Use query params instead of body for GET requests
+
+    try {
+      // Find the group
+      const group = await TravelGroup.findById(groupid);
+      if (!group) {
+        return next(new ErrorHandler("Group not found", 404));
+      }
+
+      // Fetch all expenses for the group
+      const expenses = await Expense.find({ group: groupid })
+        .populate("paidBy.user", "name email")
+        .populate("splitBetween.user", "name email");
+
+      res.status(200).json({
+        success: true,
+        count: expenses.length,
+        expenses,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
