@@ -6,15 +6,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 class TravelGroupController {
   /** GROUPS CREATION AND DELETION FUNCTIONALITY */
   static createGroup = asyncHandler(async (req, res, next) => {
-    const {
-      name,
-      description,
-      startDate,
-      endDate,
-      destination,
-      currency,
-      budget,
-    } = req.body;
+    const { name, startDate, endDate, destination, budget, currency } = req.body;
     const creatorId = req.user._id;
     try {
       if (!name || !creatorId) {
@@ -30,7 +22,8 @@ class TravelGroupController {
       // Creating the GROUP
       const newGroup = new TravelGroup({
         name,
-        description,
+        currency,
+
         creator: creatorId,
         members: [
           {
@@ -46,7 +39,6 @@ class TravelGroupController {
           destination,
           status: "planning", // Default status
         },
-        currency: currency || "NRS", // Default to USD if not provided
         budget: Number(budget) || 0,
         totalExpenses: 0, // Initial total expenses
         isActive: true, // Group is active by default

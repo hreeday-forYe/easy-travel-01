@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import store from "./app/store";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { Login, Register, Activate, Journal, Group} from "./components";
+import { Login, Register, Activate, Journal, Group } from "./components";
 import { Provider } from "react-redux";
 
 import {
@@ -15,6 +15,7 @@ import {
   SingleJournalPage,
 } from "./pages";
 import AuthLayout from "./routes/AuthLayout";
+import SingleGroupPage from "./pages/SingleGroupPage";
 
 const router = createBrowserRouter([
   {
@@ -34,7 +35,6 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
-
 
       {
         path: "/activate",
@@ -62,21 +62,22 @@ const router = createBrowserRouter([
         ),
       },
 
-
-
-
       {
         path: "/groups",
         element: (
           <AuthLayout authentication={true}>
-            <Group/>
+            <Group />
           </AuthLayout>
         ),
       },
-
-
-
-
+      {
+        path: "/groups/:id",
+        element: (
+          <AuthLayout authentication={true}>
+            <SingleGroupPage />
+          </AuthLayout>
+        ),
+      },
 
       {
         path: "/journal",
