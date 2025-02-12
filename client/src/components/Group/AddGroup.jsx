@@ -31,6 +31,7 @@ export default function AddGroup() {
     setValue,
     register,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {},
   });
@@ -41,6 +42,7 @@ export default function AddGroup() {
       const res = await createGroup(addData).unwrap();
       console.log("Group created:", res);
       refetch();
+      reset();
       toast.success("Group entry created successfully!");
       setOpen(false);
     } catch (error) {

@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
 import { useCreateExpenseMutation } from "@/app/slices/expenseApiSlice";
-import { useGetJournalQuery } from "@/app/slices/journalApiSlice";
+import { useGetExpenseQuery } from "@/app/slices/expenseApiSlice";
 import ExpensesFromfield from "../ExpensesFromfield";
 // import { useSelector } from "react-redux";
 
@@ -27,7 +27,7 @@ export default function AddGroup() {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [createExpense, { isLoading }] = useCreateExpenseMutation();
-  const { refetch } = useGetJournalQuery();
+  const { refetch } = useGetExpenseQuery();
   // const authStatus = useSelector((state) => state?.auth?.user?._id);
   const { id } = useParams();
   const statusOptions = [
@@ -39,7 +39,7 @@ export default function AddGroup() {
   const paymentOptions = [
     { value: "cash", label: "Cash" },
     { value: "khalti", label: "Khalti" },
-    { value: "others", label: "Others" },
+
   ];
   const categoryOptions = [
     { value: "accommodation", label: "Accommodation" },
@@ -57,6 +57,7 @@ export default function AddGroup() {
     setValue,
     register,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
       receipt: [],
@@ -66,10 +67,12 @@ export default function AddGroup() {
 
   const onSubmit = async (data) => {
     try {
-      const updatedData = { ...data, GroupId: id };
+      const updatedData = { ...data, groupId: id };
       const res = await createExpense(updatedData).unwrap();
       console.log("Expense created:", res);
+      location.reload();
       refetch();
+      reset();
       toast.success("Expense entry created successfully!");
       setOpen(false);
       setImagePreviews([]);

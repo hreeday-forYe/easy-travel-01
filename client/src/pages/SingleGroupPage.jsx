@@ -6,9 +6,9 @@ import {
   Ticket,
   Laugh,
   Building2,
-  ArrowRight,
 } from "lucide-react";
-
+import { useGetTravelGroupIdQuery } from "@/app/slices/travelGroupApiSlice";
+import { useParams } from "react-router-dom";
 import AddExpenses from "../components/Group/AddExpenses";
 const expenses = [
   {
@@ -113,7 +113,11 @@ function SingleGroupPage() {
     setShowInviteModal(true);
     alert("Invite Users clicked! Add your modal or navigation logic here.");
   };
-
+  const { id } = useParams();
+  const { data } = useGetTravelGroupIdQuery(id);
+  const group = Array.isArray(data?.expenses) ? data.expenses : [];
+  const getData = group.length ? [...group].reverse() : [];
+  console.log(getData);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -169,7 +173,7 @@ function SingleGroupPage() {
         {/* Content based on active tab */}
         {activeTab === "activity" ? (
           <div className="space-y-4">
-            {expenses.map((expense) => (
+            {getData.map((expense) => (
               <div
                 key={expense.id}
                 className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
@@ -177,28 +181,37 @@ function SingleGroupPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                      <expense.icon className="w-5 h-5 text-indigo-600" />
+                      {/* <expense.icon className="w-5 h-5 text-indigo-600" /> */}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-500">
-                          <Calendar className="w-4 h-4 inline mr-1" />
-                          {expense.date}
+                          <Calendar className="w-4 h-4 inline mr-1 text-orange-400" />
+                          {new Date(expense.date).toLocaleDateString()}
                         </span>
                       </div>
                       <h3 className="font-medium text-gray-900">
                         {expense.title}
                       </h3>
-                      <p className="text-sm text-gray-500">
-                        {expense.paidBy} paid for
-                      </p>
+
+                      <div className="flex gap-10 mt-2">
+                        <p className="text-sm text-gray-500">
+                          Paid by : Ram
+                          {expense.paidBy.name}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Category :{" "}
+                          {expense.category.charAt(0).toUpperCase() +
+                            expense.category.slice(1)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-semibold text-gray-900">
-                      ₹ {expense.amount.toLocaleString()}
+                      {expense.amount.value} {expense.amount.currency}
                     </p>
-                    <div className="flex -space-x-2 mt-2">
+                    {/* <div className="flex -space-x-2 mt-2">
                       {expense.participants.map((avatar, index) => (
                         <img
                           key={index}
@@ -207,7 +220,7 @@ function SingleGroupPage() {
                           alt="Participant"
                         />
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -219,25 +232,26 @@ function SingleGroupPage() {
             <div className="grid grid-cols-2 gap-4 bg-slate-800 rounded-xl p-8 text-white">
               <div className="text-center">
                 <div className="text-gray-400 mb-2">Total Expenses</div>
-                <div className="text-2xl font-semibold">₹ 35800</div>
+                {/* <div className="text-2xl font-semibold">{expense.}</div> */}
+                <div className="text-2xl font-semibold">USD {100000}</div>
               </div>
               <div className="text-center border-l border-gray-700">
                 <div className="text-gray-400 mb-2">Your Expenses</div>
-                <div className="text-2xl font-semibold">₹ 10450</div>
+                <div className="text-2xl font-semibold">USD 10450</div>
               </div>
               <div className="text-center border-t border-gray-700 pt-4">
                 <div className="text-gray-400 mb-2">You owe People</div>
-                <div className="text-2xl font-semibold">₹ 0</div>
+                <div className="text-2xl font-semibold">USD 0</div>
               </div>
               <div className="text-center border-l border-t border-gray-700 pt-4">
                 <div className="text-gray-400 mb-2">People owe you</div>
-                <div className="text-2xl font-semibold">₹ 16400</div>
+                <div className="text-2xl font-semibold">USD 16400</div>
               </div>
             </div>
 
             {/* Settlement List */}
             <div className="space-y-3">
-              {settlements.map((settlement) => (
+              {/* {settlements.map((settlement) => (
                 <div
                   key={settlement.id}
                   className="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow"
@@ -264,7 +278,7 @@ function SingleGroupPage() {
                     />
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
         )}

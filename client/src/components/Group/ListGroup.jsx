@@ -9,7 +9,10 @@ function ListGroup() {
   const getData = [...group].reverse();
 
   return (
+    <> 
+    <h1 className="text-xl font-semibold  pb-5 mx-10">My Groups</h1>
     <ScrollArea className="h-[calc(100vh-130px)] ">
+      
       <div className="min-h-screen bg-gray-50 gap-1  ">
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
@@ -79,6 +82,8 @@ function ListGroup() {
         </main>
       </div>
     </ScrollArea>
+    </>
+
   );
 }
 
