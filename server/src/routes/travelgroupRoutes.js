@@ -20,14 +20,14 @@ travelGroupRouter.delete(
   TravelGroupController.deleteGroup
 );
 
-// travelGroupRouter.get(
-//   "/:id",
-//   // isAuthenticated,
-//   TravelGroupController.fetchSingleGroup
-// );
+travelGroupRouter.get(
+  "/:id",
+  isAuthenticated,
+  TravelGroupController.fetchSingleGroup
+);
 
 travelGroupRouter.get(
-  "/all-expenses",
+  "/all-expenses/:id",
   isAuthenticated,
   TravelGroupController.fetchGroupExpenses
 );

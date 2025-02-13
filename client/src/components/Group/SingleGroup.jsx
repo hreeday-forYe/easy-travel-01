@@ -3,102 +3,15 @@ import {
   Calendar,
   Users,
   PlusCircle,
-  Ticket,
-  Laugh,
-  Building2,
 } from "lucide-react";
-import { useGetTravelGroupIdQuery } from "@/app/slices/travelGroupApiSlice";
+import {
+  useGetTravelExpensesQuery,
+  useGetSingleTravelGroupQuery,
+} from "@/app/slices/travelGroupApiSlice";
 import { useParams } from "react-router-dom";
 import AddExpenses from "./AddExpenses";
 import { useLocation } from "react-router-dom";
-const expenses = [
-  {
-    id: 1,
-    date: "Sep 05, 22",
-    title: "Museum Fare",
-    amount: 7500,
-    paidBy: "You",
-    participants: [
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=faces",
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=32&h=32&fit=crop&crop=faces",
-      "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=32&h=32&fit=crop&crop=faces",
-    ],
-    icon: Building2,
-  },
-  {
-    id: 2,
-    date: "Sep 05, 22",
-    title: "Cricket Match Tickets",
-    amount: 10000,
-    paidBy: "Om Budhiraja",
-    participants: [
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=faces",
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=32&h=32&fit=crop&crop=faces",
-      "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=32&h=32&fit=crop&crop=faces",
-    ],
-    icon: Ticket,
-  },
-  {
-    id: 3,
-    date: "Sep 05, 22",
-    title: "Standup Comedy Event",
-    amount: 6000,
-    paidBy: "You",
-    participants: [
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=faces",
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=faces",
-    ],
-    icon: Laugh,
-  },
-];
 
-const settlements = [
-  {
-    id: 1,
-    from: {
-      name: "Om Budhiraja",
-      avatar:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=faces",
-      color: "bg-blue-500",
-    },
-    to: {
-      name: "You",
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=faces",
-    },
-    amount: 3500,
-  },
-  {
-    id: 2,
-    from: {
-      name: "Om Budhiraja",
-      avatar:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=faces",
-      color: "bg-pink-500",
-    },
-    to: {
-      name: "You",
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=faces",
-    },
-    amount: 4950,
-  },
-  {
-    id: 3,
-    from: {
-      name: "Internet Nerd",
-      avatar:
-        "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=32&h=32&fit=crop&crop=faces",
-      color: "bg-gray-500",
-    },
-    to: {
-      name: "You",
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=faces",
-    },
-    amount: 7950,
-  },
-];
 
 function SingleGroup() {
   const [activeTab, setActiveTab] = useState("activity");
@@ -117,10 +30,12 @@ function SingleGroup() {
   const location = useLocation();
   const dataReceived = location.state;
   const { id } = useParams();
-  const { data } = useGetTravelGroupIdQuery(id);
-  const group = Array.isArray(data?.expenses) ? data.expenses : [];
-  const getData = group.length ? [...group].reverse() : [];
-  console.log(getData);
+  const { data } = useGetTravelExpensesQuery(id);
+  const { data: groupData } =
+    useGetSingleTravelGroupQuery(id);
+  const expenses = Array.isArray(data?.expenses) ? data.expenses : [];
+  const getData = expenses.length ? [...expenses].reverse() : [];
+  console.log(groupData);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -183,24 +98,20 @@ function SingleGroup() {
                   className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                        {/* <expense.icon className="w-5 h-5 text-indigo-600" /> */}
-                      </div>
+                    <div className="flex flex-col ">
+                      <span className="text-md font-medium text-black">
+                        {expense.description}
+                      </span>
                       <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-500">
-                            <Calendar className="w-4 h-4 inline mr-1 text-orange-400" />
-                            {new Date(expense.date).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <h3 className="font-medium text-gray-900">
-                          {expense.title}
-                        </h3>
-
                         <div className="flex gap-10 mt-2">
+                          <div className="flex items-center gap-28">
+                            <span className="text-sm text-gray-500">
+                              <Calendar className="w-4 h-4 inline mr-1 text-orange-400" />
+                              {new Date(expense.date).toLocaleDateString()}
+                            </span>
+                          </div>
                           <p className="text-sm text-gray-500">
-                            Paid by : Ram {expense.paidBy.name}
+                            Paid by : {expense.paidBy.name}
                           </p>
                           <p className="text-sm text-gray-500">
                             Category :{" "}
@@ -214,16 +125,6 @@ function SingleGroup() {
                       <p className="text-lg font-semibold text-gray-900">
                         {expense.amount.value} {expense.amount.currency}
                       </p>
-                      {/* <div className="flex -space-x-2 mt-2">
-                {expense.participants.map((avatar, index) => (
-                  <img
-                    key={index}
-                    className="w-8 h-8 rounded-full border-2 border-white"
-                    src={avatar}
-                    alt="Participant"
-                  />
-                ))}
-              </div> */}
                     </div>
                   </div>
                 </div>
@@ -236,16 +137,27 @@ function SingleGroup() {
           </div>
         ) : (
           <div className="space-y-6">
-            {/* Summary Grid */}
             <div className="grid grid-cols-2 gap-4 bg-slate-800 rounded-xl p-8 text-white">
               <div className="text-center">
                 <div className="text-gray-400 mb-2">Total Expenses</div>
-                {/* <div className="text-2xl font-semibold">{expense.}</div> */}
-                <div className="text-2xl font-semibold">USD {100000}</div>
+
+                <div className="text-2xl font-semibold ">
+                  <span>{groupData.group.currency}</span>{" "}
+                  <span className="text-xl font-medium">
+                    {groupData.group.totalExpenses}
+                  </span>
+                </div>
               </div>
               <div className="text-center border-l border-gray-700">
-                <div className="text-gray-400 mb-2">Your Expenses</div>
-                <div className="text-2xl font-semibold">USD 10450</div>
+                <div className="text-gray-400 mb-2">Total Budget</div>
+                <div className="">
+                  <span className="text-2xl font-semibold">
+                    {groupData.group.currency}
+                  </span>{" "}
+                  <span className="text-xl font-medium">
+                    {groupData.group.budget}
+                  </span>
+                </div>
               </div>
               <div className="text-center border-t border-gray-700 pt-4">
                 <div className="text-gray-400 mb-2">You owe People</div>

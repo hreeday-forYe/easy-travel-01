@@ -111,11 +111,13 @@ class TravelGroupController {
       if (!group) {
         return next(new ErrorHandler("Group not found", 404));
       }
+      // console.log(group)
 
       // Check if the user is the creator or a member of the group
-      const isCreator = group.creator.toString() === userId.toString();
+      const isCreator = group.creator._id.toString() === userId.toString();
+      console.log(isCreator)
       const isMember = group.members.some(
-        (member) => member.user.toString() === userId.toString()
+        (member) => member.user._id.toString() === userId.toString()
       );
 
       // If the user is neither the creator nor a member, return a 403 error
@@ -135,7 +137,7 @@ class TravelGroupController {
   });
 
   static fetchGroupExpenses = asyncHandler(async (req, res, next) => {
-    const groupid = req.query.id;
+    const groupid = req.params.id;
     console.log(groupid); // Use query params instead of body for GET requests
 
     try {
@@ -147,7 +149,7 @@ class TravelGroupController {
 
       // Fetch all expenses for the group
       const expenses = await Expense.find({ group: groupid })
-        .populate("paidBy.user", "name email")
+        .populate("paidBy", "name email")
         .populate("splitBetween.user", "name email");
 
       res.status(200).json({

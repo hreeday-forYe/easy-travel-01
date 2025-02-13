@@ -20,17 +20,24 @@ export const travelGroupApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
-    // Gets all the journals of the user
-    getTravelGroup: builder.query({
-      query: () => ({
-        url: `${travelGroup_url}/`,
+    // Gets all the groups of the user
+    getSingleTravelGroup: builder.query({
+      query: (id) => ({
+        url: `${travelGroup_url}/${id}`,
         method: "GET",
         credentials: "include",
       }),
     }),
-    getTravelGroupId: builder.query({
+    getTravelGroup: builder.query({
+      query: () => ({
+        url: `${travelGroup_url}`,
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
+    getTravelExpenses: builder.query({
       query: (id) => ({
-        url: `${travelGroup_url}/all-expenses?id=${id}`,
+        url: `${travelGroup_url}/all-expenses/${id}`,
         method: "GET",
         credentials: "include",
       }),
@@ -45,8 +52,8 @@ export const travelGroupApiSlice = apiSlice.injectEndpoints({
     }),
 
     getSingleJournal: builder.query({
-      query: () => ({
-        url: `${travelGroup_url}`,
+      query: (id) => ({
+        url: `${travelGroup_url/id}`,
         method: "GET",
         credentials: "include",
       }),
@@ -58,7 +65,8 @@ export const {
   useCreateTravelGroupMutation,
   useUpdateJournalMutation,
   useGetTravelGroupQuery,
-  useGetTravelGroupIdQuery,
+  useGetTravelExpensesQuery,
   useDeleteJournalMutation,
   useGetSingleJournalQuery,
+  useGetSingleTravelGroupQuery
 } = travelGroupApiSlice;
