@@ -60,13 +60,9 @@ export default function AddGroup() {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[70vw] overflow-y-auto h-[520px]">
-        <DialogHeader>
+    
           <DialogTitle>Add New Group Entry</DialogTitle>
-          <DialogDescription>
-            Capture your thoughts, feelings, and moments. All fields help create
-            a richer memory.
-          </DialogDescription>
-        </DialogHeader>
+  
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6"

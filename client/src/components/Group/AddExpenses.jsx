@@ -39,7 +39,6 @@ export default function AddGroup() {
   const paymentOptions = [
     { value: "cash", label: "Cash" },
     { value: "khalti", label: "Khalti" },
-
   ];
   const categoryOptions = [
     { value: "accommodation", label: "Accommodation" },
@@ -141,11 +140,8 @@ export default function AddGroup() {
       </DialogTrigger>
       <DialogContent className="max-w-[70vw] overflow-y-auto h-[520px]">
         <DialogHeader>
-          <DialogTitle>Add New Group Entry</DialogTitle>
-          <DialogDescription>
-            Capture your thoughts, feelings, and moments. All fields help create
-            a richer memory.
-          </DialogDescription>
+          <DialogTitle>Add New Expenses Entry</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -175,7 +171,7 @@ export default function AddGroup() {
               className="w-full sm:w-auto"
               disabled={isLoading}
             >
-              {isLoading ? "Creating..." : "Create Group"}
+              {isLoading ? "Creating..." : "Create Expenses"}
             </Button>
           </DialogFooter>
         </form>
