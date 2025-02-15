@@ -6,30 +6,45 @@ import LogoutButton from "./Header/LogoutButton";
 import Activate from "./Activate";
 import Dashboard from "./DashBoard/Dashboard";
 import About from "./About";
-import Journal from "./Journal/Journal";
+import AddJournal from "./Journal/AddJournal";
+import JournalList from "./Journal/JournalList";
 import SideBar from "./SideBar";
 import SingleJournalDetail from "./Journal/SingleJournalPage";
 import EditJournal from "./Journal/Edit-Journal";
-import Group from "./Group/Group";
 import SingleGroup from "./Group/SingleGroup";
-
+import ListGroup from "./Group/GroupList";
+import AddGroup from "./Group/AddGroup";
+import Profile from "./Profile";
+import Top from "./Top";
+import Features from "./Features";
+import BentoBox from "./BentoBox";
+import Faq from "./FAQ";
+import Testimonial from "./Testimonial";
+import Work from "./Work";
 
 export {
   Login,
   Register,
-  About,
   Header,
-  Activate,
+  Top,
+  Features,
+  About,
+  Faq,
+  BentoBox,
+  Work,
+  Testimonial,
   Footer,
+  Activate,
   LogoutButton,
   Dashboard,
-  Journal,
   SideBar,
   SingleJournalDetail,
+  AddJournal,
   EditJournal,
-  Group,
+  JournalList,
   SingleGroup,
-
+  ListGroup,
+  AddGroup,
+  Profile,
 };
 
-// TODO: NARESH --- CREATE THE JOURNAL PAGE IN PAGES FOLDER IMPLEMENT THE DASHBOARD TO THE NEW FOLDER INSIDE THE COMPONENT...

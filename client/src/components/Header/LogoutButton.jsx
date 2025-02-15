@@ -25,10 +25,10 @@ const LogoutButton = ({ className = " ", isSidebarCollapsed = false }) => {
   return (
     <Button
       onClick={handleLogout}
-      disabled={isLoading || isSidebarCollapsed} // Disable the button if isSidebarCollapsed is true
+      disabled={isLoading}
       className={`${className}`}
     >
-      <LogOut /> {isSidebarCollapsed ? "" : "Logout"}  {/* Render text only if isSidebarCollapsed is false */}
+      <LogOut className="mr-2" /> {isSidebarCollapsed ? "" : "Logout"}
     </Button>
   );
 };

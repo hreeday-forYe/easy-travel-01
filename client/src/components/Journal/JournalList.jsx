@@ -75,7 +75,7 @@ export default function JournalList() {
 
   return (
     <ScrollArea className="h-[calc(100vh-130px)] ">
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 p-6">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mx-8">
         {reversedData.map((journal) => {
           const isOwner = user?.id === journal.userId;
 

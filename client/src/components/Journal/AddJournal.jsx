@@ -143,7 +143,7 @@ export default function AddJournal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mb-6">
+        <Button className="m-8">
           <PlusCircle className="mr-2 h-4 w-4" />
           New Journal
         </Button>

@@ -1,10 +1,15 @@
-import { SingleJournalDetail } from "@/components";
+import { SingleJournalDetail, SideBar } from "@/components";
 
 SingleJournalDetail;
 const SingleJournalPage = () => {
   return (
     <>
-      <SingleJournalDetail />
+      <div className="flex">
+        <SideBar />
+        <div className="w-full">
+          <SingleJournalDetail />
+        </div>
+      </div>
     </>
   );
 };

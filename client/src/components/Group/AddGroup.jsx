@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -54,15 +52,13 @@ export default function AddGroup() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mb-6">
+        <Button className="m-8">
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Group
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[70vw] overflow-y-auto h-[520px]">
-    
-          <DialogTitle>Add New Group Entry</DialogTitle>
-  
+      <DialogContent className="max-w-[70vw] overflow-y-auto h-[550px]">
+        <DialogTitle>Add New Group Entry</DialogTitle>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6"

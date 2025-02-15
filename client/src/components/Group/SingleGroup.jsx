@@ -1,17 +1,12 @@
 import { useState } from "react";
-import {
-  Calendar,
-  Users,
-  PlusCircle,
-} from "lucide-react";
+import { Calendar, Users, PlusCircle, ArrowLeft } from "lucide-react";
 import {
   useGetTravelExpensesQuery,
   useGetSingleTravelGroupQuery,
 } from "@/app/slices/travelGroupApiSlice";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import AddExpenses from "./AddExpenses";
 import { useLocation } from "react-router-dom";
-
 
 function SingleGroup() {
   const [activeTab, setActiveTab] = useState("activity");
@@ -27,43 +22,49 @@ function SingleGroup() {
     setShowInviteModal(true);
     alert("Invite Users clicked! Add your modal or navigation logic here.");
   };
+
   const location = useLocation();
   const dataReceived = location.state;
   const { id } = useParams();
   const { data } = useGetTravelExpensesQuery(id);
-  const { data: groupData } =
-    useGetSingleTravelGroupQuery(id);
+  const { data: groupData } = useGetSingleTravelGroupQuery(id);
   const expenses = Array.isArray(data?.expenses) ? data.expenses : [];
   const getData = expenses.length ? [...expenses].reverse() : [];
+  const navigate = useNavigate(); // Hook for navigation
+
   console.log(groupData);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)} // Go back to the previous page
+            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back</span>
+          </button>
+
+          {/* Group Name */}
           <h1 className="text-xl font-semibold text-gray-900">
             {dataReceived.charAt(0).toUpperCase() + dataReceived.slice(1)}
           </h1>
-          <div className="flex gap-2">
-            <button
-              onClick={handleGroupDetails}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300"
-            >
-              GROUP DETAILS
-            </button>
-            <button
-              onClick={handleInviteUsers}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <Users className="w-4 h-4" />
-              INVITE USERS
-            </button>
-          </div>
+
+          {/* Group Details Button */}
+          <button
+            onClick={handleGroupDetails}
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300"
+          >
+            GROUP DETAILS
+          </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Tabs */}
         <div className="flex gap-4 mb-8">
           <button

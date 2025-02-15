@@ -16,7 +16,6 @@ export default function GroupFormfield({
   errors,
   setValue,
   getValues,
-
   errorMessage,
   setErrorMessage,
 }) {

@@ -1,9 +1,15 @@
-import { Journal } from "@/components";
+import { SideBar, AddJournal,JournalList  } from "../components/index";
 
 const JournalsPage = () => {
   return (
     <>
-      <Journal />
+      <div className="flex">
+        <SideBar />
+        <div className="w-full ">
+        <AddJournal />
+        <JournalList/>
+        </div>
+      </div>
     </>
   );
 };

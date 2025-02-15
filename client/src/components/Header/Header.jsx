@@ -1,7 +1,7 @@
+import Nav from "../Nav";
 
-// Use this as a dashboard header 
 const Header = () => {
-  return <div>Header</div>;
+  return <Nav />;
 };
 
 export default Header;

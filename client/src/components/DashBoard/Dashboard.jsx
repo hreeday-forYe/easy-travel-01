@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
 import {
   Select,
   SelectContent,
@@ -19,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "../ui/scroll-area"; // Ensure this is correctly imported
 
 function App() {
   const [monthlyBudget] = useState(5000);
@@ -53,6 +53,14 @@ function App() {
       date: "2024-03-17",
       category: "Transportation",
     },
+    // Add more transactions to test scrolling
+    ...Array.from({ length: 20 }, (_, i) => ({
+      id: i + 5,
+      description: `Transaction ${i + 5}`,
+      amount: -Math.random() * 100,
+      date: `2024-03-${17 - i}`,
+      category: ["Food", "Transportation", "Entertainment", "Others"][i % 4],
+    })),
   ];
 
   const spendingByCategory = [
@@ -65,7 +73,7 @@ function App() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-8">
+      <div className="py-5 px-8">
         <div className="mx-auto max-w-7xl space-y-8">
           <div className="flex items-center justify-between">
             <div>
@@ -158,46 +166,52 @@ function App() {
               <h2 className="text-xl font-semibold mb-4">
                 Recent Transactions
               </h2>
-              <div className="space-y-4">
-                {recentTransactions.map((transaction) => (
-                  <div
-                    key={transaction.id}
-                    className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`rounded-full p-2 ${
+              <ScrollArea className="h-[240px]">
+                {" "}
+                {/* Set a fixed height for scrolling */}
+                <div className="space-y-4">
+                  {recentTransactions.map((transaction) => (
+                    <div
+                      key={transaction.id}
+                      className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`rounded-full p-2 ${
+                            transaction.amount > 0
+                              ? "bg-green-100 dark:bg-green-900"
+                              : "bg-red-100 dark:bg-red-900"
+                          }`}
+                        >
+                          {transaction.amount > 0 ? (
+                            <Download className="h-4 w-4 text-green-700 dark:text-green-300" />
+                          ) : (
+                            <Upload className="h-4 w-4 text-red-700 dark:text-red-300" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium">
+                            {transaction.description}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {transaction.category} • {transaction.date}
+                          </p>
+                        </div>
+                      </div>
+                      <p
+                        className={`font-semibold ${
                           transaction.amount > 0
-                            ? "bg-green-100 dark:bg-green-900"
-                            : "bg-red-100 dark:bg-red-900"
+                            ? "text-green-600"
+                            : "text-red-600"
                         }`}
                       >
-                        {transaction.amount > 0 ? (
-                          <Download className="h-4 w-4 text-green-700 dark:text-green-300" />
-                        ) : (
-                          <Upload className="h-4 w-4 text-red-700 dark:text-red-300" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium">{transaction.description}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {transaction.category} • {transaction.date}
-                        </p>
-                      </div>
+                        {transaction.amount > 0 ? "+" : ""}$
+                        {Math.abs(transaction.amount).toFixed(2)}
+                      </p>
                     </div>
-                    <p
-                      className={`font-semibold ${
-                        transaction.amount > 0
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {transaction.amount > 0 ? "+" : ""}$
-                      {Math.abs(transaction.amount).toFixed(2)}
-                    </p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </Card>
 
             {/* Spending by Category */}
@@ -205,20 +219,24 @@ function App() {
               <h2 className="text-xl font-semibold mb-4">
                 Spending by Category
               </h2>
-              <div className="space-y-4">
-                {spendingByCategory.map((category) => (
-                  <div key={category.category} className="space-y-2">
-                    <div className="flex justify-between">
-                      <p className="font-medium">{category.category}</p>
-                      <p className="text-muted-foreground">
-                        ${category.amount.toLocaleString()} (
-                        {category.percentage}%)
-                      </p>
+              <ScrollArea className="h-[240px]">
+                {" "}
+                {/* Set a fixed height for scrolling */}
+                <div className="space-y-4">
+                  {spendingByCategory.map((category) => (
+                    <div key={category.category} className="space-y-2">
+                      <div className="flex justify-between">
+                        <p className="font-medium">{category.category}</p>
+                        <p className="text-muted-foreground">
+                          ${category.amount.toLocaleString()} (
+                          {category.percentage}%)
+                        </p>
+                      </div>
+                      <Progress value={category.percentage} className="h-2" />
                     </div>
-                    <Progress value={category.percentage} className="h-2" />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ScrollArea>
             </Card>
           </div>
         </div>
