@@ -1,6 +1,6 @@
 import { EditJournal } from "@/components";
 
-EditJournal;
+// EditJournal;
 const EditJournalPage = () => {
   return (
     <>

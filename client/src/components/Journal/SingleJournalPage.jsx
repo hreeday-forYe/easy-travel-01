@@ -99,7 +99,7 @@ function SingleJournalDetail() {
   const isOwner = user?.id === journal.userId;
 
   return (
-    <ScrollArea className="h-[600px]">
+    <ScrollArea className="h-screen">
       {" "}
       {/* Set a fixed height for scrolling */}
       <div className="flex  bg-gray-50 dark:bg-gray-900">
