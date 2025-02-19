@@ -57,8 +57,9 @@ export default function AddGroup() {
           Add Group
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[70vw] overflow-y-auto h-[550px]">
+      <DialogContent className="max-w-[70vw] overflow-y-auto h-[440px]">
         <DialogTitle>Add New Group Entry</DialogTitle>
+        <hr />
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6"
