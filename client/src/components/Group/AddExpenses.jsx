@@ -138,9 +138,11 @@ export default function AddGroup() {
           <PlusCircle className="w-6 h-6 hover:animate-spin" />
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-[70vw] overflow-y-auto h-[520px]">
+      <DialogContent className="max-w-[70vw] overflow-y-auto h-[470px]">
         <DialogHeader>
           <DialogTitle>Add New Expenses Entry</DialogTitle>
+          <p>Fill in the details below</p>
+          <hr />
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <form

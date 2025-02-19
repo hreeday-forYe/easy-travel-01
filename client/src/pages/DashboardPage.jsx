@@ -1,11 +1,11 @@
 import { Dashboard, SideBar } from "../components/index";
 const DashboardPage = () => {
   return (
-    <div className="flex min-h-screen bg-background">
-      <div>
-        <SideBar />
+    <div className="flex ">
+      <SideBar />
+      <div className="w-full">
+        <Dashboard />
       </div>
-      <Dashboard />
     </div>
   );
 };

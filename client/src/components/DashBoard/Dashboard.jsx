@@ -20,7 +20,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "../ui/scroll-area"; // Ensure this is correctly imported
 
-function App() {
+function Dashboard() {
   const [monthlyBudget] = useState(5000);
   const [currentSpent] = useState(3250);
 
@@ -166,7 +166,7 @@ function App() {
               <h2 className="text-xl font-semibold mb-4">
                 Recent Transactions
               </h2>
-              <ScrollArea className="h-[240px]">
+              <ScrollArea className="h-[39vh]">
                 {" "}
                 {/* Set a fixed height for scrolling */}
                 <div className="space-y-4">
@@ -219,7 +219,7 @@ function App() {
               <h2 className="text-xl font-semibold mb-4">
                 Spending by Category
               </h2>
-              <ScrollArea className="h-[240px]">
+              <ScrollArea className="h-[39vh]">
                 {" "}
                 {/* Set a fixed height for scrolling */}
                 <div className="space-y-4">
@@ -245,4 +245,4 @@ function App() {
   );
 }
 
-export default App;
+export default Dashboard;

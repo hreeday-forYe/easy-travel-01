@@ -5,8 +5,7 @@ const JournalsPage = () => {
     <>
       <div className="flex">
         <SideBar />
-        <div className="w-full ">
-        <AddJournal />
+        <div className=" w-full ">
         <JournalList/>
         </div>
       </div>

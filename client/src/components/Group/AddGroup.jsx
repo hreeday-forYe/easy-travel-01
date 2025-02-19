@@ -52,7 +52,7 @@ export default function AddGroup() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="m-8">
+        <Button className="m-6">
           <PlusCircle className="mr-2 h-4 w-4" />
           Add Group
         </Button>

@@ -143,7 +143,7 @@ export default function AddJournal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="m-8">
+        <Button className="m-3">
           <PlusCircle className="mr-2 h-4 w-4" />
           New Journal
         </Button>
@@ -181,7 +181,7 @@ export default function AddJournal() {
             removeImage={removeImage}
             moodOptions={moodOptions}
           />
-          
+
           <DialogFooter>
             <Button
               type="submit"

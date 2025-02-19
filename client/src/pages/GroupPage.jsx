@@ -1,4 +1,4 @@
-import { ListGroup, SideBar, AddGroup } from "../components/index";
+import { ListGroup, SideBar } from "../components/index";
 
 const GroupListPage = () => {
   return (
@@ -6,7 +6,6 @@ const GroupListPage = () => {
       <div className="flex">
         <SideBar />
         <div className="w-full">
-          <AddGroup />
           <ListGroup />
         </div>
       </div>

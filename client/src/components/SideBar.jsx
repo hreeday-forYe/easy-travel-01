@@ -25,9 +25,9 @@ const SideBar = () => {
       href: "/dashboard",
     },
     { icon: NotebookPen, label: "Journal", href: "/journal" },
+    { icon: UsersRound, label: "Group", href: "/groups" },
     { icon: Wallet, label: "Budgets", href: "/budgets" },
     { icon: PieChart, label: "Reports", href: "/reports" },
-    { icon: UsersRound, label: "Group", href: "/groups" },
     { icon: Settings, label: "Settings", href: "/settings" },
   ];
 
@@ -73,10 +73,10 @@ const SideBar = () => {
         </nav>
       </div>
       <div className="border-t p-4">
-       <LogoutButton
-      className="bg-no w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50"
-      isSidebarCollapsed={isSidebarCollapsed} // Pass this prop
-    /> 
+        <LogoutButton
+          className="bg-no w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50"
+          isSidebarCollapsed={isSidebarCollapsed} // Pass this prop
+        />
       </div>
     </div>
   );

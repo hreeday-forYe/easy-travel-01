@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ImageIcon, X } from "lucide-react";
+import { Card } from "./ui/card";
 
 export default function ExpensesFromfield({
   control,
@@ -29,147 +30,127 @@ export default function ExpensesFromfield({
   categoryOptions,
 }) {
   return (
-    <div className="grid grid-cols-[1fr_auto] gap-6">
-      {/* Left Column */}
-      <div className="space-y-4">
-        {/* description Field */}
-        <div className="flex flex-col gap-1">
-          <div className="flex flex-row items-center gap-1">
-            <Label htmlFor="title" className="text-right">
-              Description
-            </Label>
-            <div className="flex flex-col w-full">
-              <Input
-                id="description"
-                placeholder="Give your entry a meaningful description"
-                {...register("description", {
-                  required: "description is required",
-                  minLength: {
-                    value: 4,
-                    message: "description must be at least 4 characters",
-                  },
-                })}
-                className="col-span-3"
-              />
-              {errors.description && (
-                <p className="text-sm text-red-500 w-full">
-                  {errors.description.message}
-                </p>
-              )}
-            </div>
-          </div>
+    <div className="grid grid-cols-[2fr_1fr] gap-8">
+      {/* Left Column - Form Fields */}
+      <div className="space-y-6">
+        {/* Description Field */}
+        <div className="space-y-2">
+          <Label htmlFor="description" className="text-sm font-medium">
+            Description
+          </Label>
+          <Input
+            id="description"
+            placeholder="Enter a meaningful description"
+            className="w-full"
+            {...register("description", {
+              required: "Description is required",
+              minLength: {
+                value: 4,
+                message: "Description must be at least 4 characters",
+              },
+            })}
+          />
+          {errors.description && (
+            <p className="text-sm text-red-500">{errors.description.message}</p>
+          )}
         </div>
-        {/* Status Field */}
-        <div className="flex items-center gap-8">
-          <Label className="text-right">Status</Label>
-          <div className="col-span-3 w-full">
+
+        {/* Status, Payment, Category Row */}
+        <div className="grid grid-cols-3 gap-4">
+          {/* Status Field */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Status</Label>
             <Controller
               name="status"
               control={control}
               rules={{ required: "Status is required" }}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your Status" />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
                     {statusOptions.map((status) => (
                       <SelectItem key={status.value} value={status.value}>
-                        <div className="flex items-center">{status.label}</div>
+                        {status.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
-                  {errors.status && (
-                    <p className="text-red-500 text-sm">
-                      {errors.status.message}
-                    </p>
-                  )}
                 </Select>
               )}
             />
+            {errors.status && (
+              <p className="text-sm text-red-500">{errors.status.message}</p>
+            )}
           </div>
-        </div>
 
-        {/* Payment Field */}
-        <div className="flex items-center gap-4">
-          <Label className="text-right">Payment</Label>
-          <div className="col-span-3 w-full">
+          {/* Payment Field */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Payment Method</Label>
             <Controller
               name="payment"
               control={control}
               rules={{ required: "Payment is required" }}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a Payment Method" />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select payment" />
                   </SelectTrigger>
                   <SelectContent>
                     {paymentOptions.map((payment) => (
                       <SelectItem key={payment.value} value={payment.value}>
-                        <div className="flex items-center">{payment.label}</div>
+                        {payment.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
-                  {errors.payment && (
-                    <p className="text-red-500 text-sm">
-                      {errors.payment.message}
-                    </p>
-                  )}
                 </Select>
               )}
             />
+            {errors.payment && (
+              <p className="text-sm text-red-500">{errors.payment.message}</p>
+            )}
           </div>
-        </div>
 
-        {/* Category Field */}
-        <div className="flex items-center gap-3">
-          <Label className="text-right">Category</Label>
-          <div className="col-span-3 w-full">
+          {/* Category Field */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Category</Label>
             <Controller
               name="category"
               control={control}
               rules={{ required: "Category is required" }}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a Category" />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
                     {categoryOptions.map((category) => (
                       <SelectItem key={category.value} value={category.value}>
-                        <div className="flex items-center">
-                          {category.label}
-                        </div>
+                        {category.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
-                  {errors.category && (
-                    <p className="text-red-500 text-sm">
-                      {errors.category.message}
-                    </p>
-                  )}
                 </Select>
               )}
             />
+            {errors.category && (
+              <p className="text-sm text-red-500">{errors.category.message}</p>
+            )}
           </div>
         </div>
-        {/* amount */}
-        <div className="flex items-center gap-5">
-          <Label htmlFor="amount" className="text-right">
+
+        {/* Amount Field */}
+        <div className="space-y-2">
+          <Label htmlFor="amount" className="text-sm font-medium">
             Amount
           </Label>
-          <div className="col-span-3 relative w-full flex">
-            {/* Currency Select */}
+          <div className="flex gap-2">
             <Controller
               name="currency"
               control={control}
               defaultValue="NPR"
-              rules={{ required: "Currency is required" }}
               render={({ field }) => (
-                <Select
-                  onValueChange={(value) => field.onChange(value)}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger className="w-[100px]">
                     <SelectValue placeholder="Currency" />
                   </SelectTrigger>
@@ -182,37 +163,28 @@ export default function ExpensesFromfield({
                 </Select>
               )}
             />
-            <div className="flex flex-col w-full">
-              {/* Amount Input */}
-              <Input
-                type="number"
-                id="amount"
-                placeholder="amount..."
-                {...register("amount", {
-                  required: "Amount is required",
-                  min: { value: 0, message: "Amount cannot be negative" },
-                  valueAsNumber: true,
-                })}
-                className="flex-1 ml-2"
-              />
-              {/* Error Handling */}
-              {errors.currency && (
-                <p className="text-red-500 text-sm">
-                  {errors.currency.message}
-                </p>
-              )}
-
-              {errors.amount && (
-                <p className="text-red-500 text-sm">{errors.amount.message}</p>
-              )}
-            </div>
+            <Input
+              type="number"
+              id="amount"
+              placeholder="Enter amount"
+              className="flex-1"
+              {...register("amount", {
+                required: "Amount is required",
+                min: { value: 0, message: "Amount cannot be negative" },
+                valueAsNumber: true,
+              })}
+            />
           </div>
+          {errors.amount && (
+            <p className="text-sm text-red-500">{errors.amount.message}</p>
+          )}
         </div>
       </div>
 
       {/* Right Column - Image Upload */}
-      <div className="w-[200px] space-y-4">
+      <div className="space-y-4">
         <div className="space-y-2">
+          <Label className="text-sm font-medium">Receipt Images</Label>
           <Input
             id="photo"
             type="file"
@@ -230,62 +202,63 @@ export default function ExpensesFromfield({
             <ImageIcon className="mr-2 h-4 w-4" />
             Upload Receipt
           </Button>
-          <p className="text-xs text-muted-foreground text-center">
-            Max size: 5MB per
+          <p className="text-xs text-gray-500 text-center">
+            Max size: 5MB per image
           </p>
         </div>
 
-        <div className="space-y-2">
-          {/* Display existing images */}
+        <div className="space-y-3">
+          {/* Existing Images */}
           {existingImages?.map((preview, index) => (
-            <div key={index} className="relative">
+            <div key={index} className="relative group">
               <img
                 src={preview}
-                alt={`Preview ${index + 1}`}
-                className="h-[120px] w-full object-cover rounded-md"
+                alt={`Receipt ${index + 1}`}
+                className="h-[120px] w-full object-cover rounded-md transition-opacity group-hover:opacity-75"
               />
               <Button
                 type="button"
                 variant="destructive"
                 size="icon"
-                className="absolute top-2 right-2 h-6 w-6 rounded-full"
-                onClick={() => removeImage(index, false)} // Remove existing image
+                className="absolute top-2 right-2 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => removeImage(index, false)}
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
           ))}
 
-          {/* Display new images */}
+          {/* New Images */}
           {imagePreviews?.map((preview, index) => (
-            <div key={index} className="relative">
+            <div key={index} className="relative group">
               <img
                 src={preview}
-                alt={`Preview ${index + 1}`}
-                className="h-[120px] w-full object-cover rounded-md"
+                alt={`Receipt ${index + 1}`}
+                className="h-[120px] w-full object-cover rounded-md transition-opacity group-hover:opacity-75"
               />
               <Button
                 type="button"
                 variant="destructive"
                 size="icon"
-                className="absolute top-2 right-2 h-6 w-6 rounded-full"
-                onClick={() => removeImage(index, true)} // Remove new image
+                className="absolute top-2 right-2 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => removeImage(index, true)}
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
           ))}
 
-          {/* Display placeholder if no images */}
+          {/* Empty State */}
           {existingImages?.length === 0 && imagePreviews.length === 0 && (
-            <div className="h-[120px] w-full rounded-md border border-dashed border-gray-200 flex items-center justify-center">
-              <div className="text-sm text-muted-foreground text-center p-4">
+            <div className="h-[120px] w-full rounded-md border border-dashed border-gray-200 bg-gray-50 flex items-center justify-center">
+              <div className="text-sm text-gray-500 text-center p-4">
                 <ImageIcon className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p>No images uploaded</p>
+                <p>No receipts uploaded</p>
               </div>
             </div>
           )}
         </div>
+
         {errorMessage && (
           <p className="text-sm text-red-500 text-center">{errorMessage}</p>
         )}
