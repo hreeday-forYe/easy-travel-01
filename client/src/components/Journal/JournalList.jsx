@@ -20,17 +20,28 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "react-toastify";
-import { AddJournal } from "..";
+import { AddJournal, DashboardNav } from "..";
+import { useEffect, useState } from "react";
 
 export default function JournalList() {
   const user = useSelector((state) => state.auth.user);
   const { data, isLoading, error, refetch } = useGetJournalQuery();
   const [deleteJournal, { isLoading: isDeleting }] = useDeleteJournalMutation();
-
   const stripHtmlTags = (htmlString) => {
     const doc = new DOMParser().parseFromString(htmlString, "text/html");
     return doc.body.textContent || ""; // Extract plain text from the HTML
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const journals = Array.isArray(data?.allJournals) ? data.allJournals : [];
+  const reversedData = [...journals].reverse();
+  const [SearchData, setSearchData] = useState([]);
+  useEffect(() => {
+    if (journals.length) {
+      const reversedData = [...journals].reverse();
+      setSearchData(reversedData);
+    }
+  }, [journals]);
+
   const handleDelete = async (id) => {
     try {
       await deleteJournal(id).unwrap();
@@ -62,8 +73,6 @@ export default function JournalList() {
     );
   }
 
-  const journals = Array.isArray(data?.allJournals) ? data.allJournals : [];
-
   if (journals.length === 0) {
     return (
       <div className="text-center py-10">
@@ -72,10 +81,13 @@ export default function JournalList() {
     );
   }
 
-  const reversedData = [...journals].reverse();
-
   return (
     <>
+      <DashboardNav
+        SearchData={SearchData}
+        setSearchData={setSearchData}
+        originalData={reversedData}
+      />
       <div className="px-8 mt-6">
         <div className="pb-8 flex justify-between items-center ">
           <div className="">
@@ -87,9 +99,9 @@ export default function JournalList() {
           <AddJournal />
         </div>
 
-        <ScrollArea className="h-[calc(100vh-18vh)] ">
+        <ScrollArea className="h-[calc(100vh-29vh)] ">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 bg-gray-50 p-8 ">
-            {reversedData.map((journal) => {
+            {SearchData.map((journal) => {
               const isOwner = user?.id === journal.userId;
 
               return (

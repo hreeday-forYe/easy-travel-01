@@ -22,6 +22,7 @@ import Faq from './FAQ';
 import Testimonial from './Testimonial';
 import Work from './Work';
 import PageNotFound from './PageNotFound';
+import DashboardNav from './Header/DashboardNav';
 
 export {
   Login,
@@ -48,4 +49,5 @@ export {
   AddGroup,
   Profile,
   PageNotFound,
+  DashboardNav,
 };
