@@ -54,9 +54,13 @@ export default function AddGroup() {
       <DialogTrigger asChild>
         <Button className="m-6">
           <PlusCircle className="mr-2 h-4 w-4" />
-          Add Group
+          Create Group
         </Button>
       </DialogTrigger>
+      <Button className="m-6">
+        <PlusCircle className="mr-2 h-4 w-4" />
+        Join  Group
+      </Button>
       <DialogContent className="max-w-[70vw] overflow-y-auto h-[440px]">
         <DialogTitle>Add New Group Entry</DialogTitle>
         <hr />
