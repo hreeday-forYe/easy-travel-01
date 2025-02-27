@@ -7,15 +7,43 @@ import AddGroup from "./AddGroup";
 import { DashboardNav } from "..";
 import { useEffect, useState } from "react";
 
-
 function ListGroup() {
   const { data } = useGetGroupQuery();
   const group = Array.isArray(data?.data) ? data.data : [];
   const getData = [...group].reverse();
+  const [SearchData, setSearchData] = useState([]);
+
   useEffect(() => {
-    setSearchData(getData);
+    if (group.length) {
+      const reversedData = [...group].reverse();
+      setSearchData(reversedData);
+    }
   }, [group]);
-  const [SearchData, setSearchData] = useState(getData);
+  if (group.length === 0) {
+    return (
+      <>
+        <DashboardNav
+          SearchData={SearchData}
+          setSearchData={setSearchData}
+          originalData={getData}
+        />
+        <div className="px-8 mt-6">
+          <div className="pb-8 flex justify-between items-center ">
+            <div className="">
+              <h1 className="text-4xl font-bold">Journal</h1>
+              <p className="text-muted-foreground">
+                View and manage your travel journal entries
+              </p>
+            </div>
+            <AddGroup />
+          </div>
+        </div>
+        <div className="text-center py-10">
+          <p className="text-xl text-gray-500">You have no Group yet.</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -95,13 +123,6 @@ function ListGroup() {
                               </span>
                             </div>
                           </div>
-
-                          {/* {expense.notes && (
-                      <div className="mt-4 flex items-start text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-                        <AlertCircle className="flex-shrink-0 mr-2 h-4 w-4 text-gray-400 mt-0.5" />
-                        <p className="line-clamp-2">{expense.notes}</p>
-                      </div>
-                    )} */}
                         </div>
                       </div>
                     </Link>

@@ -75,9 +75,27 @@ export default function JournalList() {
 
   if (journals.length === 0) {
     return (
-      <div className="text-center py-10">
-        <p className="text-xl text-gray-500">You have no journals yet.</p>
-      </div>
+      <>
+        <DashboardNav
+          SearchData={SearchData}
+          setSearchData={setSearchData}
+          originalData={reversedData}
+        />
+        <div className="px-8 mt-6">
+          <div className="pb-8 flex justify-between items-center ">
+            <div className="">
+              <h1 className="text-4xl font-bold">Journal</h1>
+              <p className="text-muted-foreground">
+                View and manage your travel journal entries
+              </p>
+            </div>
+            <AddJournal />
+          </div>
+        </div>
+        <div className="text-center py-10">
+          <p className="text-xl text-gray-500">You have no journals yet.</p>
+        </div>
+      </>
     );
   }
 
