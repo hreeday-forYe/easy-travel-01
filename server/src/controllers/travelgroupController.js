@@ -84,7 +84,10 @@ class TravelGroupController {
         .populate("members.user", "name email");
       // TODO: MOdify the Groups --> Not found groups === 404 error
       if (!groups || groups.length === 0) {
-        return next(new ErrorHandler("No groups found", 404));
+        return res.status(200).json({
+          success:false,
+          message:"No Group Found"
+        })
       }
       // Return the groups
       res.status(200).json({
