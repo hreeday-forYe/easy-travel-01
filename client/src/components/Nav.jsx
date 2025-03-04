@@ -9,7 +9,6 @@ import {
   FileCog,
   UserCircle,
   Settings,
-  LogOut,
 } from "lucide-react";
 import Menu from "./Menu";
 import LogoutButton from "@/components/Header/LogoutButton";
