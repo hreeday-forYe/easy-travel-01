@@ -196,7 +196,6 @@ class TravelGroupController {
 
   static joinGroup = asyncHandler(async (req, res, next) => {
     try {
-      console.log("I am here atleast");
       const user = await User.findById(req.user._id);
 
       if (!user) {
