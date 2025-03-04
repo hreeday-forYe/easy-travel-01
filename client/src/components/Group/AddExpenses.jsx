@@ -37,7 +37,7 @@ export default function AddExpenses() {
     { value: "food", label: "Food" },
     { value: "activities", label: "Activities" },
     { value: "shopping", label: "Shopping" },
-    { value: "others", label: "Others" },
+    { value: "other", label: "Others" },
   ];
 
   const {
@@ -59,16 +59,18 @@ export default function AddExpenses() {
     try {
       const updatedData = { ...data, groupId: id };
       const res = await createExpense(updatedData).unwrap();
-      console.log("Expense created:", res);
-      reset();
-      toast.success("Expense entry created successfully!");
-      setOpen(false);
-      setImagePreviews([]);
-      await re();
-      await refetch();
+      if (res.success) {
+        toast.success("Expense entry created successfully!");
+        await re();
+        await refetch();
+      }
     } catch (error) {
       console.error("Error creating Expense:", error);
       toast.error(error?.data?.message || "Failed to create Expense entry");
+    } finally {
+      reset();
+      setOpen(false);
+      setImagePreviews([]);
     }
   };
 

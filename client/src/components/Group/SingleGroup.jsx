@@ -157,7 +157,7 @@ function SingleGroup() {
                       <p className="text-md font-bold flex gap-2 bg-green-100 text-green-700 p-1.5 rounded-2xl ">
                         <Wallet />
                         {expense.amount.value.toFixed(2)}{" "}
-                        {expense.amount.currency}
+                        {groupData?.group?.currency}
                       </p>
                     </div>
                   </div>
@@ -239,7 +239,6 @@ function SingleGroup() {
       </main>
 
       {/* Add Expense Button */}
-
 
       <AddExpenses />
     </div>

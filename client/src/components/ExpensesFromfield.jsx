@@ -146,24 +146,7 @@ export default function ExpensesFromfield({
             Amount
           </Label>
           <div className="flex gap-2">
-            <Controller
-              name="currency"
-              control={control}
-              defaultValue="NPR"
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-[100px]">
-                    <SelectValue placeholder="Currency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="NPR">NPR</SelectItem>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="INR">INR</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
+
             <Input
               type="number"
               id="amount"
