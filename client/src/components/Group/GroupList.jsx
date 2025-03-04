@@ -30,9 +30,9 @@ function ListGroup() {
         <div className="px-8 mt-6">
           <div className="pb-8 flex justify-between items-center ">
             <div className="">
-              <h1 className="text-4xl font-bold">Journal</h1>
+              <h1 className="text-4xl font-bold">My Groups</h1>
               <p className="text-muted-foreground">
-                View and manage your travel journal entries
+                View and Manage your groups
               </p>
             </div>
             <AddGroup />

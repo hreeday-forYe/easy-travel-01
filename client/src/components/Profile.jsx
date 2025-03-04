@@ -13,16 +13,18 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { useGetUserProfileQuery } from "@/app/slices/userApiSlice";
 
 function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const { data, refetch, isLoading } = useGetUserProfileQuery();
+  const user = data?.user;
   const [profile, setProfile] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    location: "San Francisco, CA",
-    occupation: "Senior Software Engineer",
+    phone: "Add your phone number",
+    location:"Add your Address",
     joinDate: "January 2024",
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
@@ -62,7 +64,6 @@ function Profile() {
     reset(profile);
     setIsEditing(false);
   };
-
   const InputField = ({
     icon: Icon,
     label,
@@ -114,7 +115,7 @@ function Profile() {
       )}
     </div>
   );
-
+  if (isLoading) return <p>Loading...</p>;
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -178,7 +179,7 @@ function Profile() {
                     )}
                   />
                 ) : (
-                  <p className="mt-1 text-gray-500">{profile.occupation}</p>
+                  <p className="mt-1 text-gray-500">{profile.journalStats}</p>
                 )}
               </div>
             </div>
@@ -190,7 +191,7 @@ function Profile() {
           {/* Contact Information */}
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Contact Information
+              Account Information
             </h2>
             <div className="space-y-4">
               <InputField

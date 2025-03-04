@@ -68,16 +68,18 @@ export default function AddGroup() {
     try {
       const updatedData = { ...data, groupId: id };
       const res = await createExpense(updatedData).unwrap();
-      console.log("Expense created:", res);
-      location.reload();
-      refetch();
-      reset();
+      if (res.success) {
+        await refetch();
+        location.reload();
+      }
       toast.success("Expense entry created successfully!");
-      setOpen(false);
-      setImagePreviews([]);
     } catch (error) {
       console.error("Error creating Expense:", error);
       toast.error(error?.data?.message || "Failed to create Expense entry");
+    } finally {
+      reset();
+      setOpen(false);
+      setImagePreviews([]);
     }
   };
 
