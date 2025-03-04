@@ -32,6 +32,7 @@ travelGroupRouter.get(
   TravelGroupController.fetchGroupExpenses
 );
 
+
 travelGroupRouter.post(
   "/invite-code/:id",
   isAuthenticated,

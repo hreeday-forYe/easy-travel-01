@@ -196,24 +196,43 @@ class TravelGroupController {
 
   static joinGroup = asyncHandler(async (req, res, next) => {
     try {
+      console.log("I am here atleast");
       const user = await User.findById(req.user._id);
-      const userId = user._id
+
+      if (!user) {
+        return next(new ErrorHandler("User not found", 400));
+      }
+
       const { groupId } = req.body;
       const group = await TravelGroup.findById(groupId);
-      const isMember = group.members.some(
-        (member) => member.user.toString() === userId.toString()
-      );
+      const isMember = await TravelGroup.findOne({
+        _id: groupId,
+        "members.user": user._id,
+      });
       if (isMember) {
         return next(
           new ErrorHandler("User is already a member of this group", 400)
         );
       }
-      group.members.push({
-        user: userId,
-        role: "member",
-        joinedAt: new Date(),
-      });
-      await group.save();
+      // Add the user to the group
+      const updatedGroup = await TravelGroup.findByIdAndUpdate(
+        groupId,
+        {
+          $push: {
+            members: {
+              user: user._id,
+              role: "member",
+              joinedAt: new Date(),
+            },
+          },
+        },
+        { new: true } // Return the updated document
+      );
+
+      if (!updatedGroup) {
+        return next(new ErrorHandler("Group not found", 404));
+      }
+
       res.status(200).json({
         success: true,
         message: "Group Joined Successfully",
@@ -226,7 +245,6 @@ class TravelGroupController {
 
   static fetchGroupExpenses = asyncHandler(async (req, res, next) => {
     const groupid = req.params.id;
-    console.log(groupid); // Use query params instead of body for GET requests
 
     try {
       // Find the group
