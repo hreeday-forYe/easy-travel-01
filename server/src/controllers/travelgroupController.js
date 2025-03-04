@@ -3,7 +3,8 @@ import User from "../models/UserModel.js";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import Expense from "../models/ExpenseModel.js";
-
+import crypto from "crypto";
+import { group } from "console";
 class TravelGroupController {
   /** GROUPS CREATION AND DELETION FUNCTIONALITY */
   static createGroup = asyncHandler(async (req, res, next) => {
@@ -62,7 +63,6 @@ class TravelGroupController {
   /* TOGGLE MEMBERS FUNCTIONALITY */
   static addOrRemoveMembers = asyncHandler(async (req, res, next) => {
     try {
-      const { userIds } = req.body;
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -82,12 +82,11 @@ class TravelGroupController {
       })
         .populate("creator", "name email")
         .populate("members.user", "name email");
-      // TODO: MOdify the Groups --> Not found groups === 404 error
       if (!groups || groups.length === 0) {
         return res.status(200).json({
-          success:false,
-          message:"No Group Found"
-        })
+          success: false,
+          message: "No Group Found",
+        });
       }
       // Return the groups
       res.status(200).json({
@@ -98,7 +97,6 @@ class TravelGroupController {
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-    // Logic to fetch the groups if your are  part or you have created.
   });
 
   static fetchSingleGroup = asyncHandler(async (req, res, next) => {
@@ -118,7 +116,7 @@ class TravelGroupController {
 
       // Check if the user is the creator or a member of the group
       const isCreator = group.creator._id.toString() === userId.toString();
-      console.log(isCreator)
+      console.log(isCreator);
       const isMember = group.members.some(
         (member) => member.user._id.toString() === userId.toString()
       );
@@ -132,6 +130,93 @@ class TravelGroupController {
 
       return res.status(200).json({
         success: true,
+        group,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  static getGroupInvitationCode = asyncHandler(async (req, res, next) => {
+    try {
+      const groupId = req.params.id;
+      const userId = req.user._id;
+      // Find the travel group by ID
+      const group = await TravelGroup.findById(groupId);
+      if (!group) {
+        return next(new ErrorHandler("Group not found", 404));
+      }
+      // add logic such that only the creator of the group can create the code if group.
+      if (group.creator.toString() !== userId.toString()) {
+        return next(new ErrorHandler("You are not the group admin", 404));
+      }
+
+      // Generate a 10-character random code
+      const joinCode = crypto.randomBytes(5).toString("hex").toUpperCase();
+
+      // Set join code and expiration time (10 minutes from now)
+      group.joinCode = joinCode;
+      group.joinCodeExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+      // Save the updated group
+      await group.save();
+
+      res.json({
+        success: true,
+        message: "Join code generated successfully!",
+        data: {
+          code: group.joinCode,
+          expires: group.joinCodeExpiresAt,
+        },
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  // Join Group Functionality
+  static verifyJoinGroupCode = asyncHandler(async (req, res, next) => {
+    try {
+      const { joinCode } = req.body;
+      // Find group with this join code
+      const group = await TravelGroup.findOne({ joinCode });
+      if (!group) {
+        return next(new ErrorHandler("Invalid or Expired Join code", 404));
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Group code verified",
+        group,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  static joinGroup = asyncHandler(async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user._id);
+      const userId = user._id
+      const { groupId } = req.body;
+      const group = await TravelGroup.findById(groupId);
+      const isMember = group.members.some(
+        (member) => member.user.toString() === userId.toString()
+      );
+      if (isMember) {
+        return next(
+          new ErrorHandler("User is already a member of this group", 400)
+        );
+      }
+      group.members.push({
+        user: userId,
+        role: "member",
+        joinedAt: new Date(),
+      });
+      await group.save();
+      res.status(200).json({
+        success: true,
+        message: "Group Joined Successfully",
         group,
       });
     } catch (error) {

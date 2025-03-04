@@ -165,11 +165,16 @@ class UserController {
   });
 
   /*********** PROFILE MANAGEMENT CONTROLLERS *****************/
-  static getUserDetails = asyncHandler(async (req, res, next) => {
+  static getUserProfile = asyncHandler(async (req, res, next) => {
     try {
-      const user = req.user;
+      const user = await User.findById(req.user._id);
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
       return res.status(200).json({
         success: true,
+        message: "User profile fetched",
         user,
       });
     } catch (error) {
@@ -196,13 +201,6 @@ class UserController {
     }
   });
 
-  static updateUserAvatar = asyncHandler(async (req, res, next) => {
-    try {
-      const { avatar } = req.body;
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  });
 
   static deleteUserDetails = asyncHandler(async (req, res, next) => {});
 

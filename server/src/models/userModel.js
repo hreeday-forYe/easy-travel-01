@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+import { create } from "domain";
 dotenv.config();
 
 const emailRegexPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,12 +49,26 @@ const userSchema = new mongoose.Schema(
       privateEntries: { type: Number, default: 0 },
     },
 
+    groupStats: {
+      totalGroups: {
+        type: Number,
+        default: 0,
+      },
+      createdGroups: {
+        type: Number,
+        default: 0,
+      },
+    },
+
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
-
+    bio: {
+      type: String,
+      maxlength: 100,
+    },
     avatar: {
       public_id: String,
       url: String,
