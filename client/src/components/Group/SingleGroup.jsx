@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Calendar,
   Users,
-  PlusCircle,
   ArrowLeft,
   PieChart,
   Wallet,
@@ -55,7 +54,6 @@ const StatusBadge = ({ status }) => {
 
 function SingleGroup() {
   const [activeTab, setActiveTab] = useState("activity");
-  const [showAddExpenses, setShowAddExpenses] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -65,7 +63,6 @@ function SingleGroup() {
     useGetSingleTravelGroupQuery(id);
 
   const handleBack = () => navigate(-1);
-  const toggleAddExpenses = () => setShowAddExpenses(!showAddExpenses);
 
   if (groupLoading || expensesLoading) return <div>Loading...</div>;
 
@@ -242,16 +239,9 @@ function SingleGroup() {
       </main>
 
       {/* Add Expense Button */}
-      <button
-        onClick={toggleAddExpenses}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-[#FE9935] text-white rounded-full shadow-lg hover:bg-[#FE9935]/90 flex items-center justify-center"
-      >
-        <PlusCircle className="w-6 h-6" />
-      </button>
 
-      {showAddExpenses && (
-        <AddExpenses onClose={toggleAddExpenses} groupId={id} />
-      )}
+
+      <AddExpenses />
     </div>
   );
 }
