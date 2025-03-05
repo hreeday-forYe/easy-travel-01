@@ -178,10 +178,22 @@ class TravelGroupController {
   static verifyJoinGroupCode = asyncHandler(async (req, res, next) => {
     try {
       const { joinCode } = req.body;
+
       // Find group with this join code
       const group = await TravelGroup.findOne({ joinCode });
       if (!group) {
         return next(new ErrorHandler("Invalid or Expired Join code", 404));
+      }
+
+      // check if the user is already a member of the group
+      const isMember = group.members.some(
+        (member) => member.user.toString() === req.user._id.toString()
+      );
+      if (isMember) {
+        return res.status(200).json({
+          success:true,
+          message: "You are already the member of this"
+        })
       }
 
       return res.status(200).json({
