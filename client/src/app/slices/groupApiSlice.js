@@ -29,10 +29,18 @@ export const groupApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     verifyCode: builder.mutation({
-      query: ({joinCode}) => ({
+      query: ({ joinCode }) => ({
         url: `${group_url}/verify-code/`,
         method: "POST",
-        body: {joinCode},
+        body: { joinCode },
+        credentials: "include",
+      }),
+    }),
+    joinGroup: builder.mutation({
+      query: ({groupId}) => ({
+        url: `${group_url}/join/`,
+        method: "POST",
+        body: {groupId},
         credentials: "include",
       }),
     }),
@@ -70,5 +78,6 @@ export const {
   useDeleteGroupMutation,
   useGetSingleGroupQuery,
   useInviteCodeMutation,
-  useVerifyCodeMutation
+  useVerifyCodeMutation,
+  useJoinGroupMutation
 } = groupApiSlice;

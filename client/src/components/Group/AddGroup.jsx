@@ -27,6 +27,7 @@ export default function AddGroup() {
     getValues,
     handleSubmit,
     setValue,
+    watch,
     register,
     formState: { errors },
     reset,
@@ -48,6 +49,7 @@ export default function AddGroup() {
       toast.error(error?.data?.message || "Failed to create Group entry");
     }
   };
+  const startDate = watch("startDate");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -74,6 +76,7 @@ export default function AddGroup() {
             getValues={getValues}
             errorMessage={errorMessage}
             setErrorMessage={setErrorMessage}
+            startDate={startDate}
           />
 
           <DialogFooter>
