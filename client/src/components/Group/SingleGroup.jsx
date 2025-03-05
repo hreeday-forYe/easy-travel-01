@@ -74,6 +74,7 @@ function SingleGroup() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -89,7 +90,7 @@ function SingleGroup() {
             {groupData?.group?.name || "Travel Group"}
           </h1>
           <div className="flex gap-6">
-            <ShareCodeGenerator />
+            <ShareCodeGenerator groupId ={id} />
             <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
               GROUP DETAILS
             </button>
@@ -158,7 +159,7 @@ function SingleGroup() {
                     <div className="ml-6">
                       <p className="text-md font-bold flex gap-2 bg-green-100 text-green-700 p-1.5 rounded-2xl ">
                         <Wallet />
-                        {expense.amount.value.toFixed(2)}{" "}
+                        {expense.amount?.toFixed(2)}{" "}
                         {groupData?.group?.currency}
                       </p>
                     </div>
