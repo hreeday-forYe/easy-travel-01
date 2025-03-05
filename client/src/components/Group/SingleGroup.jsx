@@ -18,6 +18,7 @@ import {
 } from "@/app/slices/travelGroupApiSlice";
 import { useParams, useNavigate } from "react-router-dom";
 import AddExpenses from "./AddExpenses";
+import ShareCodeGenerator from "./ShareCodeGenerator";
 
 const StatusBadgeConfig = {
   pending: {
@@ -81,16 +82,18 @@ function SingleGroup() {
             className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Back</span>
+            Back
           </button>
 
           <h1 className="text-xl font-semibold text-gray-900">
             {groupData?.group?.name || "Travel Group"}
           </h1>
-
-          <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-            GROUP DETAILS
-          </button>
+          <div className="flex gap-6">
+            <ShareCodeGenerator />
+            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+              GROUP DETAILS
+            </button>
+          </div>
         </div>
       </header>
 
@@ -120,7 +123,6 @@ function SingleGroup() {
           </button>
         </div>
 
-        {/* Content Sections */}
         {activeTab === "activity" ? (
           <div className="space-y-4">
             {reversedExpenses.length > 0 ? (
@@ -176,6 +178,7 @@ function SingleGroup() {
                 </p>
               </div>
             )}
+            <AddExpenses />
           </div>
         ) : (
           <div className="bg-gradient-to-br from-[#2a44a3] to-[#1b07f0e1] rounded-2xl p-1">
@@ -239,8 +242,6 @@ function SingleGroup() {
       </main>
 
       {/* Add Expense Button */}
-
-      <AddExpenses />
     </div>
   );
 }

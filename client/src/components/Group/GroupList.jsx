@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import AddGroup from "./AddGroup";
 import { DashboardNav } from "..";
 import { useEffect, useState } from "react";
+import JoinGroup from "./JoinGroup";
 
 function ListGroup() {
   const { data } = useGetGroupQuery();
@@ -29,13 +30,14 @@ function ListGroup() {
         />
         <div className="px-8 mt-6">
           <div className="pb-8 flex justify-between items-center ">
-            <div className="">
+            <div className="mb-6">
               <h1 className="text-4xl font-bold"> My Groups</h1>
               <p className="text-muted-foreground">
                 View and manage your group entries
               </p>
             </div>
             <AddGroup />
+            <JoinGroup />
           </div>
         </div>
         <div className="text-center py-10">
@@ -61,6 +63,7 @@ function ListGroup() {
             </p>
           </div>
           <AddGroup />
+          <JoinGroup />
         </div>
         <ScrollArea className="h-[calc(100vh-176px)] ">
           <div className="min-h-screen bg-[#F9FAFB] ">
