@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,19 +14,31 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import {  Key, Users2 } from "lucide-react";
+import { Key, UserPlus, Users2 } from "lucide-react";
+import { useVerifyCodeMutation } from "@/app/slices/groupApiSlice";
+import { AlertDialogFooter } from "../ui/alert-dialog";
+import { Label } from "../ui/label";
 
 const JoinGroup = () => {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
+  const [detail, setDetail] = useState(false);
+
+  const [verifyCode, { isError, isLoading }] = useVerifyCodeMutation();
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically handle the code verification
-    console.log("Submitted code:", code);
-    setOpen(false); // Close dialog after submission
-    setCode(""); // Reset code
+    try {
+      const res = await verifyCode({ joinCode: code }).unwrap();
+      console.log(res);
+      if (res.success) {
+        setDetail(true);
+        // setGeneratedCode(res.data.code);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -37,7 +50,7 @@ const JoinGroup = () => {
               <Users2 /> Join Group
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] bg-white rounded-xl shadow-2xl">
+          <DialogContent className="max-w-[650px] bg-white rounded-xl shadow-2xl">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center">
                 <Key className="mr-3 text-blue-600" /> Group Access
@@ -49,13 +62,13 @@ const JoinGroup = () => {
             <form onSubmit={handleSubmit} className="space-y-6 p-4">
               <div className="flex flex-col items-center space-y-4">
                 <InputOTP
-                  maxLength={6}
+                  maxLength={10}
                   value={code}
                   onChange={(value) => setCode(value)}
                   className="w-full"
                 >
                   <InputOTPGroup className="flex justify-center space-x-2">
-                    {Array.from({ length: 6 }).map((_, index) => (
+                    {Array.from({ length: 10 }).map((_, index) => (
                       <InputOTPSlot
                         key={index}
                         index={index}
@@ -71,105 +84,12 @@ const JoinGroup = () => {
               <Button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={code.length !== 6}
+                disabled={code.length !== 10}
               >
                 Join Group
               </Button>
             </form>
-    {/* {groupInfo ? ( */}
 
-              {/* <>
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-semibold">
-                    {groupStatus === "already"
-                      ? "Already in Group"
-                      : "Group Details"}
-                  </DialogTitle>
-                  <DialogDescription className="text-muted-foreground mt-2">
-                    {groupStatus === "already"
-                      ? "You are already a member of this group"
-                      : "Review the group details before joining"}
-                  </DialogDescription>
-                </DialogHeader>
- 
-                <div className="grid gap-6 py-6">
-                  <Card className="border-none shadow-none">
-                    <CardContent className="space-y-6 p-0">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                          Group Name
-                        </Label>
-                        <div className="rounded-lg border bg-muted/50 p-3">
-                          <p className="text-base font-medium">
-                            {groupInfo.name}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium text-muted-foreground">
-                            Members
-                          </Label>
-                          <div className="rounded-lg border bg-muted/50 p-3 flex items-center gap-2">
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                            <p className="text-base font-medium">
-                              {groupInfo.members}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium text-muted-foreground">
-                            Status
-                          </Label>
-                          <div className="rounded-lg border bg-muted/50 p-3 flex items-center gap-2">
-                            <Badge
-                              variant={
-                                groupStatus === "already"
-                                  ? "secondary"
-                                  : "default"
-                              }
-                            >
-                              {groupStatus === "already"
-                                ? "Member"
-                                : "Not Joined"}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                          Description
-                        </Label>
-                        <div className="rounded-lg border bg-muted/50 p-3">
-                          <p className="text-base text-muted-foreground leading-relaxed">
-                            {groupInfo.description}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <DialogFooter className="flex justify-end gap-2 pt-2">
-                    {groupStatus === "new" && (
-                      <Button
-                        onClick={handleJoin}
-                        className="bg-primary hover:bg-primary/90"
-                        size="lg"
-                      >
-                        <UserPlus className="mr-2 h-4 w-4" />
-                        Join Group
-                      </Button>
-                    )}
-                    <Button onClick={handleCancel} variant="outline" size="lg">
-                      {groupStatus === "already" ? "Close" : "Cancel"}
-                    </Button>
-                  </DialogFooter>
-                </div>
-              </> */}
-            {/* )} */}
           </DialogContent>
         </Dialog>
       </div>

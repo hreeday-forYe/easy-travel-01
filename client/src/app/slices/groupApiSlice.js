@@ -20,6 +20,22 @@ export const groupApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+
+    inviteCode: builder.mutation({
+      query: (groupId) => ({
+        url: `${group_url}/invite-code/${groupId}`,
+        method: "POST",
+        credentials: "include",
+      }),
+    }),
+    verifyCode: builder.mutation({
+      query: ({joinCode}) => ({
+        url: `${group_url}/verify-code/`,
+        method: "POST",
+        body: {joinCode},
+        credentials: "include",
+      }),
+    }),
     // Gets all the journals of the user
     getGroup: builder.query({
       query: () => ({
@@ -53,4 +69,6 @@ export const {
   useGetGroupQuery,
   useDeleteGroupMutation,
   useGetSingleGroupQuery,
+  useInviteCodeMutation,
+  useVerifyCodeMutation
 } = groupApiSlice;

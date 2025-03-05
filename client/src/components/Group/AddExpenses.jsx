@@ -129,9 +129,9 @@ export default function AddExpenses() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-[#FE9935] text-white rounded-full shadow-lg hover:bg-[#FE9935]/40 transition-colors flex items-center justify-center"
+          className="fixed bottom-6 right-6 w-14 h-14 bg-[#FE9935] text-white rounded-full  hover:bg-[#FE9935]/90 hover:shadow-2xl transition-colors flex items-center justify-center"
         >
-          <PlusCircle className="w-6 h-6 hover:animate-spin" />
+          <PlusCircle className="w-6 h-6 hover:animate-spin hover:sha" />
         </button>
       )}
 

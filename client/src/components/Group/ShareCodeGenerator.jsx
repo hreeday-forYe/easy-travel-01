@@ -9,21 +9,28 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "react-toastify";
 import { ClipboardCopy, CheckCircle, Share2 } from "lucide-react";
+import { useInviteCodeMutation } from "@/app/slices/groupApiSlice";
 
-const ShareCodeGenerator = () => {
-  const [generatedCode, setGeneratedCode] = useState("");
+const ShareCodeGenerator = ({ groupId }) => {
+  const [generatedCode, setGeneratedCode] = useState();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  console.log(generatedCode)
 
-  const generateCode = () => {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let randomCode = "";
-    for (let i = 0; i < 6; i++) {
-      randomCode += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
+  const [inviteCode, { isLoading, isError }] = useInviteCodeMutation();
+
+  const generateCode = async () => {
+    try {
+      const res = await inviteCode(groupId).unwrap();
+      console.log(res);
+      if (res.success) {
+        setGeneratedCode(res.data.code);
+
+      }
+    } catch (error) {
+      console.log(error);
     }
-    setGeneratedCode(randomCode);
+
     setOpen(true); // Open dialog after generating code
   };
 

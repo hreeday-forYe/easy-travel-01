@@ -45,7 +45,7 @@ export default function ExpensesFromfield({
               },
             })}
           />
-          {errors.description && (
+          {errors?.description && (
             <p className="text-sm text-red-500">{errors.description.message}</p>
           )}
         </div>
