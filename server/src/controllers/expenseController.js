@@ -61,7 +61,7 @@ class ExpenseController {
       });
 
       // Update group's total expenses
-      group.totalExpenses += amount.value;
+      group.totalExpenses += amount;
       await group.save();
 
       res.status(201).json({
