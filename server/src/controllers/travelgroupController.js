@@ -178,7 +178,6 @@ class TravelGroupController {
   static verifyJoinGroupCode = asyncHandler(async (req, res, next) => {
     try {
       const { joinCode } = req.body;
-      console.log(req.body);
       // Find group with this join code
       const group = await TravelGroup.findOne({ joinCode });
       if (!group) {
@@ -193,12 +192,14 @@ class TravelGroupController {
           success: true,
           isMember:true,
           message: "You are already the member of this group",
+          group,
         });
       }
 
       return res.status(200).json({
         success: true,
         message: "Group code verified",
+        isMember: false,
         group,
       });
     } catch (error) {
@@ -207,6 +208,7 @@ class TravelGroupController {
   });
 
   static joinGroup = asyncHandler(async (req, res, next) => {
+    console.log(req.body)
     try {
       const user = await User.findById(req.user._id);
 
