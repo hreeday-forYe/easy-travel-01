@@ -8,6 +8,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import sendMail from "../utils/sendMail.js";
 import createActivationToken from "../utils/activation.js";
 import { sendToken } from "../utils/jwt.js";
+import cloudinary from "cloudinary";
 
 class UserController {
   /********** AUTHENTICATION CONTROLLERS **********/
@@ -184,23 +185,38 @@ class UserController {
 
   static updateUserDetails = asyncHandler(async (req, res, next) => {
     try {
-      const { name, address, phone } = req.body;
-      const user = req.user;
-      const updatedUser = User.findByIdAndUpdate(
-        user._id,
+      const { name, address, avatar, bio, phone } = req.body;
+      const userId = req.user;
+      const user = await User.findById(userId);
+      // handle avatar change functionality
+      // Upload the image to Cloudinary
+      const result = await cloudinary.v2.uploader.upload(avatar, {
+        folder: "avatars", // Optional: Save images in a specific folder
+        resource_type: "auto", // Automatically detect the file type
+      });
+      const uploadedImage = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
         {
-          name,
-          address,
-          phone,
+          name: name || user.name,
+          address: address || user.address,
+          phone: phone || user.phone,
+          avatar: uploadedImage || user.avatar,
+          bio: bio || user.bio,
         },
         { new: true }
       );
-      return res.status(201).json({ success: true, updatedUser });
+      return res
+        .status(201)
+        .json({ success: true, message: "Profile Updated Successfully" });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   });
-
 
   static deleteUserDetails = asyncHandler(async (req, res, next) => {});
 

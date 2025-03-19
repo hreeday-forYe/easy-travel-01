@@ -66,7 +66,6 @@ const travelGroupSchema = new mongoose.Schema(
     joinCodeExpiresAt: {
       type: Date,
       default: null, // Initially null
-      index: { expires: "10m" }, // Automatically removes after 10 minutes
     },
   },
   {

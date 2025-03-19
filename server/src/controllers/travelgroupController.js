@@ -116,7 +116,6 @@ class TravelGroupController {
 
       // Check if the user is the creator or a member of the group
       const isCreator = group.creator._id.toString() === userId.toString();
-      console.log(isCreator);
       const isMember = group.members.some(
         (member) => member.user._id.toString() === userId.toString()
       );
@@ -183,14 +182,20 @@ class TravelGroupController {
       if (!group) {
         return next(new ErrorHandler("Invalid or Expired Join code", 404));
       }
-      // check if the user is already a member of the group
+
+      // Also check if the group.joinCodeExpire is greater than 10 minutes if yes then please throw error invalid or expire code
+      // 🔹 Check if the join code has expired
+      if (group.joinCodeExpiresAt && new Date() > group.joinCodeExpiresAt) {
+        return next(new ErrorHandler("Invalid or Expired Join Code", 400));
+      }
+      // check if  the user is already a member of the group
       const isMember = group.members.some(
         (member) => member.user.toString() === req.user._id.toString()
       );
       if (isMember) {
         return res.status(200).json({
           success: true,
-          isMember:true,
+          isMember: true,
           message: "You are already the member of this group",
           group,
         });
@@ -208,7 +213,7 @@ class TravelGroupController {
   });
 
   static joinGroup = asyncHandler(async (req, res, next) => {
-    console.log(req.body)
+    console.log(req.body);
     try {
       const user = await User.findById(req.user._id);
 
