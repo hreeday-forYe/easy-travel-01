@@ -49,6 +49,8 @@ class ExpenseController {
         };
       }
 
+      
+
       // Create the expense
       const expense = await Expense.create({
         group: groupId,
