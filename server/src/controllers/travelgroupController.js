@@ -196,6 +196,7 @@ class TravelGroupController {
       group.joinCode = joinCode;
       group.joinCodeExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
+
       // Save the updated group
       await group.save();
 
@@ -251,7 +252,6 @@ class TravelGroupController {
   });
 
   static joinGroup = asyncHandler(async (req, res, next) => {
-    console.log(req.body);
     try {
       const user = await User.findById(req.user._id);
 
