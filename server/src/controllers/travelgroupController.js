@@ -60,9 +60,46 @@ class TravelGroupController {
   });
   static deleteGroup = asyncHandler(async (req, res, next) => {});
 
-  /* TOGGLE MEMBERS FUNCTIONALITY */
+  // Group Management
   static addOrRemoveMembers = asyncHandler(async (req, res, next) => {
     try {
+      const { userId } = req.body;
+      const groupId = req.params.id;
+      console.log(userId, groupId)
+      // Find the group by ID
+      const group = await TravelGroup.findById(groupId);
+      if (!group) {
+        return next(new ErrorHandler("No Group found", 400));
+      }
+
+      // Check if the user is already a member
+      const isMember = group.members.some(
+        (member) => member.user.toString() === userId
+      );
+
+      if (isMember) {
+        // If the user is a member, remove them
+        group.members = group.members.filter(
+          (member) => member.user.toString() !== userId
+        );
+      } else {
+        // If the user is not a member, add them with a default role
+        group.members.push({
+          user: userId,
+          role: "member", // Default role
+          joinedAt: Date.now(),
+        });
+      }
+
+      // Save the updated group
+      await group.save();
+
+      // Return the updated group
+      res.status(200).json({
+        success: true,
+        message: isMember ? "User removed from group" : "User added to group",
+        group,
+      });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -105,7 +142,7 @@ class TravelGroupController {
     try {
       // Find the group by ID
       const group = await TravelGroup.findById(id)
-        .populate("creator", "name email") // Populate creator details
+        .populate("creator", "name email avatar") // Populate creator details
         .populate("members.user", "name email avatar"); // Populate member details
 
       // If the group doesn't exist, return a 404 error
@@ -136,6 +173,8 @@ class TravelGroupController {
     }
   });
 
+  // Join Group Functionality
+
   static getGroupInvitationCode = asyncHandler(async (req, res, next) => {
     try {
       const groupId = req.params.id;
@@ -157,6 +196,7 @@ class TravelGroupController {
       group.joinCode = joinCode;
       group.joinCodeExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
+
       // Save the updated group
       await group.save();
 
@@ -173,7 +213,6 @@ class TravelGroupController {
     }
   });
 
-  // Join Group Functionality
   static verifyJoinGroupCode = asyncHandler(async (req, res, next) => {
     try {
       const { joinCode } = req.body;
@@ -213,7 +252,6 @@ class TravelGroupController {
   });
 
   static joinGroup = asyncHandler(async (req, res, next) => {
-    console.log(req.body);
     try {
       const user = await User.findById(req.user._id);
 
@@ -261,6 +299,7 @@ class TravelGroupController {
     }
   });
 
+  // Group Expenses
   static fetchGroupExpenses = asyncHandler(async (req, res, next) => {
     const groupid = req.params.id;
 

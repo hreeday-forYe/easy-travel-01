@@ -56,9 +56,9 @@ export const groupApiSlice = apiSlice.injectEndpoints({
     addOrRemoveMembers: builder.mutation({
       query:({groupId,userId}) =>({
         url:`${group_url}/${groupId}`,
+        body: {userId},
         method: "PUT",
-        credentials:"include",
-        data: {userId}
+        credentials:"include"
       })
     }),
 
@@ -88,5 +88,6 @@ export const {
   useGetSingleGroupQuery,
   useInviteCodeMutation,
   useVerifyCodeMutation,
-  useJoinGroupMutation
+  useJoinGroupMutation,
+  useAddOrRemoveMembersMutation
 } = groupApiSlice;

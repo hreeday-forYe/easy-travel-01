@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetGroupQuery } from "@/app/slices/groupApiSlice";
+import { useAddOrRemoveMembersMutation } from "@/app/slices/groupApiSlice";
 import {
   Sheet,
   SheetContent,
@@ -11,11 +11,13 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
 
 const GroupDetails = ({ isView }) => {
   const [isOpen, setIsOpen] = useState(false);
   // const { data: groupData, isLoading, isError } = useGetGroupQuery();
+  const [removeMembers, { isLoading, isError }] =
+    useAddOrRemoveMembersMutation();
 
   // Ensure data is available before proceeding
   // if (isLoading) {
@@ -33,7 +35,17 @@ const GroupDetails = ({ isView }) => {
   console.log(isView);
   const userdata = useSelector((state) => state.auth?.user?._id);
 
-
+  const handleRemoveMembers = async (groupId, userId) => {
+    // API call
+    try {
+      const response = await removeMembers({ groupId, userId }).unwrap();
+      if (response.success) {
+        toast.success("Member removed sucessfully");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div>
       {isView.length != 0 && (
@@ -73,16 +85,27 @@ const GroupDetails = ({ isView }) => {
                     <Button variant="destructive">Remove User</Button>
                   )} */}
                   {isView?.group?.creator._id.toString() ===
-                    userdata.toString() && (
-                    <Button variant="destructive">Remove User</Button>
-                  )}
-                </div>
-              ))}
-              {/* <Badge
+                    userdata.toString() &&
+                    member.role !== "admin" && (
+                      <Button
+                        variant="destructive"
+                        onClick={() =>
+                          handleRemoveMembers(
+                            isView?.group?._id,
+                            member.user._id
+                          )
+                        }
+                      >
+                        Remove User
+                      </Button>
+                    )}
+                  <Badge
                     variant={member.role === "admin" ? "default" : "outline"}
                   >
                     {member.role}
-                  </Badge> */}
+                  </Badge>
+                </div>
+              ))}
             </div>
           </div>
         </SheetContent>

@@ -339,8 +339,8 @@ function Profile() {
                 rules={{
                   required: "Bio is required",
                   maxLength: {
-                    value: 100,
-                    message: "Bio must be less than 100 characters",
+                    value: 200,
+                    message: "Bio must be less than 200 characters",
                   },
                 }}
                 render={({ field }) => (
