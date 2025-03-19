@@ -15,8 +15,7 @@ import {
 } from "@/components/ui/input-otp";
 import {
   ArrowBigLeft,
-  Calendar,
-  Clock,
+
   Crown,
   Key,
   MapPin,
@@ -24,13 +23,12 @@ import {
   Users2,
 } from "lucide-react";
 import {
-  useGetGroupQuery,
   useJoinGroupMutation,
   useVerifyCodeMutation,
 } from "@/app/slices/groupApiSlice";
 import { toast } from "react-toastify";
 
-const JoinGroup = () => {
+const JoinGroup = ({ refetch }) => {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
   const [groupInfo, setGroupInfo] = useState({});
@@ -38,7 +36,6 @@ const JoinGroup = () => {
   const [verifyCode, { isError: verifyError, isLoading }] =
     useVerifyCodeMutation();
   const [joinGroup, { isLoading: joinLoading }] = useJoinGroupMutation();
-  const { refetch } = useGetGroupQuery();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,14 +78,6 @@ const JoinGroup = () => {
       setGroupInfo({});
       setCode("");
     }
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   return (
@@ -154,7 +143,6 @@ const JoinGroup = () => {
                   <Users className=" text-blue-600" /> Group Details
                 </DialogTitle>
               </DialogHeader>
-
               {/* Group Header */}
               <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-lg">
                 <div className="flex flex-col md:flex-row justify-between items-start ">
@@ -185,7 +173,6 @@ const JoinGroup = () => {
                   </div>
                 </div>
               </div>
-
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-4 ">
                 <div className="bg-blue-50 rounded-lg p-4">
@@ -218,34 +205,6 @@ const JoinGroup = () => {
                 </div>
               </div>
 
-              {/* Dates */}
-              <div className="bg-gray-50 rounded-lg p-2">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Calendar className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-lg font-bold text-gray-900">
-                    Trip Duration
-                  </h2>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded-lg p-3 shadow-sm">
-                    <p className="text-xs text-blue-600 font-medium mb-1">
-                      Start Date
-                    </p>
-                    <p className="text-sm font-semibold text-gray-900">
-                      {formatDate(groupInfo.trip?.startDate)}
-                    </p>
-                  </div>
-                  <div className="bg-white rounded-lg p-3 shadow-sm">
-                    <p className="text-xs text-blue-600 font-medium mb-1">
-                      End Date
-                    </p>
-                    <p className="text-sm font-semibold text-gray-900">
-                      {formatDate(groupInfo.trip?.endDate)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
               {/* Members List */}
               <div className="bg-gray-50 rounded-lg p-2 ">
                 <div className="flex items-center space-x-2">
@@ -255,50 +214,43 @@ const JoinGroup = () => {
                   </h2>
                 </div>
                 <div className="space-y-2 max-h-44 overflow-y-auto">
-                  {groupInfo.members?.map((member, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-3 bg-white rounded-lg hover:shadow-sm transition-shadow"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-blue-100 rounded-full p-1.5">
-                          <Users className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <div>
-                          <div className="flex items-center space-x-1">
-                            <p className="font-medium text-gray-900">
-                              User {member.user.slice(-6)}
-                            </p>
-                            {member.role === "admin" && (
-                              <Crown className="h-3 w-3 text-yellow-500" />
-                            )}
-                          </div>
+                  <div className="flex items-center justify-between p-3 bg-white rounded-lg hover:shadow-sm transition-shadow">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-blue-100 rounded-full p-1.5">
+                        <Users className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="flex items-center space-x-1">
+                          <p className="font-medium text-gray-900">
+                            {groupInfo.members[0].user?.name}
+                          </p>
+                          {groupInfo.members[0].role === "admin" && (
+                            <Crown className="h-3 w-3 text-yellow-500" />
+                          )}
                         </div>
                       </div>
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          member.role === "admin"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-blue-100 text-blue-800"
-                        }`}
-                      >
-                        {member.role}
-                      </span>
                     </div>
-                  ))}
+                    <span className="px-2 py-0.5 rounded-full  font-medium ">
+                      + {groupInfo.members?.length} Others...
+                    </span>
+                  </div>
                 </div>
               </div>
-
               {/* Action Button */}
+              {console.log(groupInfo)}
               <Button
-                className="w-full rounded-lg font-medium flex items-center justify-center space-x-2"
+                className="w-64 rounded-lg font-medium flex   mx-auto space-x-2"
                 disabled={isLoading}
-                onClick={() => !groupInfo.groupStatus && joinGroupHandler()}
+                onClick={() =>
+                  !groupInfo.groupStatus && joinGroupHandler(groupInfo?._id)
+                }
               >
                 {groupInfo.groupStatus ? (
                   <>
                     <ArrowBigLeft className="h-5 w-5" />
-                    <span>Back to Dashboard</span>
+                    <Button onClick={() => setOpen(false)}>
+                      Back to Dashboard
+                    </Button>
                   </>
                 ) : (
                   <>

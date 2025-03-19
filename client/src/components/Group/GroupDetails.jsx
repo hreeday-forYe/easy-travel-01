@@ -14,26 +14,33 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { User, UserMinus, UserPlus, Users } from "lucide-react";
+import { User, UserMinus, Users } from "lucide-react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const GroupDetails = ({ isView, refetch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [removeMembers, { isLoading }] = useAddOrRemoveMembersMutation();
   const userdata = useSelector((state) => state.auth?.user?._id);
+  const nav = useNavigate();
 
   const handleViewDetails = () => {
     setIsOpen(true);
   };
 
-  const handleRemoveMembers = async (groupId, userId) => {
+  const handleRemoveMembers = async (groupId, userId, isNavigate = false) => {
     try {
       const response = await removeMembers({ groupId, userId }).unwrap();
       if (response.success) {
-        toast.success("Member removed successfully");
         refetch();
         setIsOpen(false);
+      }
+      if (isNavigate) {
+        nav("/groups");
+        toast.success("Member Left successfully");
+      } else {
+        toast.success("Member removed successfully");
       }
     } catch (error) {
       toast.error(error?.message || "Failed to remove member");
@@ -131,9 +138,16 @@ const GroupDetails = ({ isView, refetch }) => {
           </ScrollArea>
 
           <SheetFooter className="mt-6">
-            <Button onClick={() => setIsOpen(false)} className="w-full">
-              Close
-            </Button>
+            {!isCreator && (
+              <Button
+                onClick={() =>
+                  handleRemoveMembers(isView?.group?._id, userdata, true)
+                }
+                className="w-full "
+              >
+                Left
+              </Button>
+            )}
           </SheetFooter>
         </SheetContent>
       </Sheet>

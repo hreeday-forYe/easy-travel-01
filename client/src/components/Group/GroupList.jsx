@@ -9,12 +9,13 @@ import { useEffect, useState } from "react";
 import JoinGroup from "./JoinGroup";
 
 function ListGroup() {
-  const { data } = useGetGroupQuery();
+  const { data, refetch } = useGetGroupQuery();
   const group = Array.isArray(data?.data) ? data.data : [];
   const getData = [...group].reverse();
   const [SearchData, setSearchData] = useState([]);
 
   useEffect(() => {
+    refetch();
     if (group.length) {
       const reversedData = [...group].reverse();
       setSearchData(reversedData);
@@ -38,7 +39,7 @@ function ListGroup() {
               </p>
             </div>
             <AddGroup />
-            <JoinGroup />
+            <JoinGroup refetch={refetch} />
           </div>
         </div>
         <div className="text-center py-10">

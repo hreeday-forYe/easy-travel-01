@@ -65,7 +65,7 @@ class TravelGroupController {
     try {
       const { userId } = req.body;
       const groupId = req.params.id;
-      console.log(userId, groupId)
+      console.log(userId, groupId);
       // Find the group by ID
       const group = await TravelGroup.findById(groupId);
       if (!group) {
@@ -74,7 +74,7 @@ class TravelGroupController {
 
       // Check if the user is already a member
       const isMember = group.members.some(
-        (member) => member.user.toString() === userId
+        (member) => member.user.toString() === userId.toString()
       );
 
       if (isMember) {
@@ -196,7 +196,6 @@ class TravelGroupController {
       group.joinCode = joinCode;
       group.joinCodeExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-
       // Save the updated group
       await group.save();
 
@@ -217,7 +216,9 @@ class TravelGroupController {
     try {
       const { joinCode } = req.body;
       // Find group with this join code
-      const group = await TravelGroup.findOne({ joinCode });
+      const group = await TravelGroup.findOne({ joinCode })
+        .populate("creator", "name email avatar")
+        .populate("members.user", "name email avatar");
       if (!group) {
         return next(new ErrorHandler("Invalid or Expired Join code", 404));
       }
@@ -228,9 +229,10 @@ class TravelGroupController {
         return next(new ErrorHandler("Invalid or Expired Join Code", 400));
       }
       // check if  the user is already a member of the group
-      const isMember = group.members.some(
-        (member) => member.user.toString() === req.user._id.toString()
-      );
+      const isMember = group.members.some((member) => {
+       return member.user._id.toString() === req.user._id.toString();
+      });
+      console.log(isMember)
       if (isMember) {
         return res.status(200).json({
           success: true,
@@ -260,6 +262,7 @@ class TravelGroupController {
       }
 
       const { groupId } = req.body;
+      console.log(groupId)
       const group = await TravelGroup.findById(groupId);
       const isMember = await TravelGroup.findOne({
         _id: groupId,
