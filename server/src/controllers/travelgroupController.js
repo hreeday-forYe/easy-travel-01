@@ -65,7 +65,7 @@ class TravelGroupController {
     try {
       const { userId } = req.body;
       const groupId = req.params.id;
-
+      console.log(userId, groupId)
       // Find the group by ID
       const group = await TravelGroup.findById(groupId);
       if (!group) {

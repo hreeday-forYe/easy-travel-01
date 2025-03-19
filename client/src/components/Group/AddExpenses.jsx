@@ -18,7 +18,7 @@ export default function AddExpenses() {
   const [createExpense, { isLoading }] = useCreateExpenseMutation();
   const { id } = useParams();
   const { refetch } = useGetTravelExpensesQuery(id);
-  const { refetch: re } = useGetSingleTravelGroupQuery(id);
+  const { data,refetch: re } = useGetSingleTravelGroupQuery(id);
 
   const statusOptions = [
     { value: "pending", label: "Pending" },
@@ -56,6 +56,7 @@ export default function AddExpenses() {
   });
 
   const onSubmit = async (data) => {
+    console.log(data)
     try {
       const updatedData = { ...data, groupId: id };
       const res = await createExpense(updatedData).unwrap();
@@ -173,6 +174,7 @@ export default function AddExpenses() {
                 statusOptions={statusOptions}
                 paymentOptions={paymentOptions}
                 categoryOptions={categoryOptions}
+                groupMembers={data?.group?.members}
               />
 
               <div className="flex justify-end gap-4">
