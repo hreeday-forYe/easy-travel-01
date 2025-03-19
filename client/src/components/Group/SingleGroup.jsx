@@ -95,7 +95,7 @@ function SingleGroup() {
             {userdata === groupData?.group?.creator?._id && (
               <ShareCodeGenerator groupId={id} />
             )}
-            <GroupDetails isView={reversedExpenses}/>
+            <GroupDetails isView={groupData} />
           </div>
         </div>
       </header>

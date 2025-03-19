@@ -106,7 +106,7 @@ class TravelGroupController {
       // Find the group by ID
       const group = await TravelGroup.findById(id)
         .populate("creator", "name email") // Populate creator details
-        .populate("members.user", "name email"); // Populate member details
+        .populate("members.user", "name email avatar"); // Populate member details
 
       // If the group doesn't exist, return a 404 error
       if (!group) {
