@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, X } from "lucide-react"; // Import X for close icon
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { useCreateExpenseMutation } from "@/app/slices/expenseApiSlice";
@@ -138,7 +138,15 @@ export default function AddExpenses() {
       {/* Form Content */}
       {open && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-[70vw] overflow-y-auto h-[470px] p-6">
+          <div className="bg-white rounded-lg max-w-[70vw] overflow-y-auto h-[470px] p-6 relative">
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="absolute top-5 right-5 text-xl text-gray-500 hover:text-gray-700"
+            >
+              <X />
+            </button>
             <div className="mb-4">
               <h2 className="text-xl font-bold">Add New Expense Entry</h2>
               <p>Fill in the details below</p>
