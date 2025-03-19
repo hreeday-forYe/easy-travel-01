@@ -116,7 +116,7 @@ const JoinGroup = () => {
               </Button>
             </div>
           </DialogTrigger>
-          <DialogContent className="max-w-[650px] bg-white rounded-xl shadow-2xl">
+          <DialogContent className="max-w-[650px] h-full bg-white rounded-xl shadow-2xl">
             {Object.keys(groupInfo).length === 0 ? (
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center">
@@ -128,14 +128,14 @@ const JoinGroup = () => {
               </DialogHeader>
             ) : (
               <DialogHeader>
-                <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center">
+                <DialogTitle className="text-2xl font-bold text-gray-800 flex items-center justify-center ">
                   <Users className="mr-3 text-blue-600" /> Group Details
                 </DialogTitle>
               </DialogHeader>
             )}
 
             {Object.keys(groupInfo).length === 0 ? (
-              <form onSubmit={handleSubmit} className="space-y-6 p-4">
+              <form onSubmit={handleSubmit} className="space-y-3 p-4">
                 <div className="flex flex-col items-center space-y-4">
                   <InputOTP
                     maxLength={10}
@@ -160,7 +160,7 @@ const JoinGroup = () => {
                 </div>
                 {verifyError && (
                   <div className="text-center py-4 text-red-600">
-                    <p>Failed to verify code. Please try again.</p>
+                    <p>Invalid or Expired Join code</p>
                   </div>
                 )}
                 <Button
@@ -172,339 +172,181 @@ const JoinGroup = () => {
                 </Button>
               </form>
             ) : (
-              <div className=" bg-gradient-to-br from-blue-50 to-indigo-50 ">
-                <div className="  bg-white rounded-2xl shadow-xl overflow-hidden">
-                  {/* Header */}
-                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 text-white flex justify-between ">
-                    <div className="">
-                      <h1 className="text-xl font-bold mb-1 ml-2">
-                        {groupInfo.name}
-                      </h1>
-                      <div className="flex items-center space-x-2 ml-1">
-                        <MapPin className="h-5 w-5" />
-                        <span className="text-lg">
-                          {groupInfo.trip.destination}
-                        </span>
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 ">
+                <div className="max-w-4xl mx-auto">
+                  {/* Header Card */}
+                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
+                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8">
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div className="mb-6 md:mb-0">
+                          <h1 className="text-3xl font-bold text-white mb-3">
+                            {groupInfo.name}
+                          </h1>
+                          <div className="flex items-center space-x-2 text-blue-100">
+                            <MapPin className="h-5 w-5" />
+                            <span className="text-lg">
+                              {groupInfo.trip.destination}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end space-y-3">
+                          <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                            <div className="flex items-center space-x-2 text-blue-100 mb-1">
+                              <Clock className="h-4 w-4" />
+                              <span className="text-sm font-medium">
+                                JOIN CODE
+                              </span>
+                            </div>
+                            <p className="text-2xl font-mono font-bold text-white tracking-wider">
+                              {groupInfo.joinCode}
+                            </p>
+                          </div>
+                          <span
+                            className={`px-4 py-1 rounded-full text-sm font-medium ${
+                              groupInfo.groupStatus
+                                ? "bg-green-100 text-green-800"
+                                : "bg-blue-100 text-blue-800"
+                            }`}
+                          >
+                            {groupInfo.groupStatus ? "Member" : "Not Joined"}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex flex-col gap-2 justify-center ">
-                      <Badge
-                        variant={
-                          groupInfo.groupStatus ? "secondary" : "default"
-                        }
-                        className="tex-sm flex"
-                      >
-                        {groupInfo.groupStatus
-                          ? `Already Joined`
-                          : "Not Joined"}
-                      </Badge>
                     </div>
 
-                    <div className="flex gap-2 flex-col">
-                      <div className="flex items-center gap-3 ">
-                        <Clock className="h-6 w-6  text-gray-200" />
-                        <h2 className="text-lg font-semibold">JOIN CODE</h2>
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+                      <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 transform hover:scale-105 transition-transform duration-200">
+                        <h3 className="text-blue-600 font-medium mb-2">
+                          Budget
+                        </h3>
+                        <p className="text-2xl font-bold text-blue-900">
+                          {groupInfo.currency}{" "}
+                          {groupInfo.budget.toLocaleString()}
+                        </p>
                       </div>
-                      <p className="flex justify-end">{groupInfo.joinCode}</p>
+                      <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6 transform hover:scale-105 transition-transform duration-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-indigo-600 font-medium">
+                            Members
+                          </h3>
+                          <Users className="h-5 w-5 text-indigo-600" />
+                        </div>
+                        <p className="text-2xl font-bold text-indigo-900">
+                          {groupInfo.members?.length}
+                        </p>
+                      </div>
+                      <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 transform hover:scale-105 transition-transform duration-200">
+                        <h3 className="text-purple-600 font-medium mb-2">
+                          Total Expenses
+                        </h3>
+                        <p className="text-2xl font-bold text-purple-900">
+                          {groupInfo.currency}{" "}
+                          {groupInfo.totalExpenses.toLocaleString()}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Main Content */}
-                  <div className="p-5 space-y-4">
-                    {/* Key Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="bg-blue-50 rounded-xl p-2">
-                        <div className="flex items-center space-x-3">
-                          {/* <DollarSign className="h-8 w-8 text-blue-600" /> */}
-                          <p className="text-blue-700  text-2xl font-bold    "></p>
-                          <div>
-                            <p className="text-sm text-gray-600">Budget</p>
-                            <p className="text-xl font-bold text-gray-900">
-                              {groupInfo.currency}{" "}
-                              {groupInfo.budget.toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-indigo-50 rounded-xl p-4">
-                        <div className="flex items-center space-x-3">
-                          <Users className="h-8 w-8 text-indigo-600" />
-                          <div>
-                            <p className="text-sm text-gray-600">Members</p>
-                            <p className="text-xl font-bold text-gray-900">
-                              {groupInfo.members?.length}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-purple-50 rounded-xl p-4">
-                        <div className="flex items-center space-x-3">
-                          <div>
-                            <p className="text-sm text-gray-600">
-                              Total Expenses
-                            </p>
-                            <p className="text-xl font-bold text-gray-900">
-                              {groupInfo.currency}{" "}
-                              {groupInfo.totalExpenses.toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Trip Details */}
-                    <div className="bg-gray-50 rounded-xl px-6 pt-6 pb-2 ">
-                      <h2 className="text-lg font-semibold mb-2 flex items-center">
-                        <Calendar className="h-4 w-4 mr-2 text-blue-600" />
+                  {/* Trip Details Card */}
+                  <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                    <div className="flex items-center space-x-2 mb-6">
+                      <Calendar className="h-6 w-6 text-blue-600" />
+                      <h2 className="text-xl font-bold text-gray-900">
                         Trip Duration
                       </h2>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <div>
-                          <p className="text-sm text-gray-600">Start Date</p>
-                          <p className="text-md font-medium">
-                            {formatDate(groupInfo.trip?.startDate)}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-gray-600">End Date</p>
-                          <p className="text-md font-medium">
-                            {formatDate(groupInfo.trip?.endDate)}
-                          </p>
-                        </div>
-                      </div>
-                      {!groupInfo.groupStatus ? (
-                        <Button
-                          className=" flex justify-self-end"
-                          disabled={verifyLoading || joinLoading}
-                          onClick={() => joinGroupHandler(groupInfo._id)}
-                        >
-                          <Users2 /> Join Group
-                        </Button>
-                      ) : (
-                        <Button
-                          className=" flex justify-self-end"
-                          onClick={() => setOpen(false)}
-                        >
-                          <ArrowBigLeft /> BACK
-                        </Button>
-                      )}
                     </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                      <div className="bg-blue-50 rounded-xl p-4">
+                        <p className="text-sm text-blue-600 font-medium mb-1">
+                          Start Date
+                        </p>
+                        <p className="text-lg font-semibold text-gray-900">
+                          {formatDate(groupInfo.trip?.startDate)}
+                        </p>
+                      </div>
+                      <div className="bg-blue-50 rounded-xl p-4">
+                        <p className="text-sm text-blue-600 font-medium mb-1">
+                          End Date
+                        </p>
+                        <p className="text-lg font-semibold text-gray-900">
+                          {formatDate(groupInfo.trip?.endDate)}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      className={`w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center justify-center space-x-2 transition-colors duration-200 ${
+                        (verifyLoading || joinLoading) &&
+                        "opacity-75 cursor-not-allowed"
+                      }`}
+                      disabled={verifyLoading || joinLoading}
+                      onClick={() =>
+                        !groupInfo.groupStatus &&
+                        joinGroupHandler(groupInfo._id)
+                      }
+                    >
+                      {groupInfo.groupStatus ? (
+                        <>
+                          <ArrowBigLeft className="h-5 w-5" />
+                          <span>Back to Dashboard</span>
+                        </>
+                      ) : (
+                        <>
+                          <Users2 className="h-5 w-5" />
+                          <span>Join Group</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
 
-                    {/* Members List */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-4  ">
-                      <h2 className="text-xl font-semibold mb-1 flex items-center">
-                        <Users className="h-4 w-4 mr-2 text-blue-600" />
+                  {/* Members List Card */}
+                  <div className="bg-white rounded-2xl shadow-xl p-6">
+                    <div className="flex items-center space-x-2 mb-6">
+                      <Users className="h-6 w-6 text-blue-600" />
+                      <h2 className="text-xl font-bold text-gray-900">
                         Group Members
                       </h2>
-                      <div className="space-y-2">
-                        {groupInfo.members?.map((member, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
-                          >
-                            <div className="flex items-center space-x-3">
-                              {member.role === "admin" && (
-                                <Crown className="h-5 w-5 text-yellow-500" />
-                              )}
-                              <div>
-                                <p className="font-medium">
+                    </div>
+                    <div className="space-y-4">
+                      {groupInfo.members?.map((member, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl hover:shadow-md transition-shadow duration-200"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="bg-blue-100 rounded-full p-2">
+                              <Users className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <div className="flex items-center space-x-2">
+                                <p className="font-semibold text-gray-900">
                                   User {member.user.slice(-6)}
                                 </p>
-                                <p className="text-sm text-gray-500">
-                                  Joined{" "}
-                                  {new Date(
-                                    member.joinedAt
-                                  ).toLocaleDateString()}
-                                </p>
+                                {member.role === "admin" && (
+                                  <Crown className="h-4 w-4 text-yellow-500" />
+                                )}
                               </div>
+                              <p className="text-sm text-gray-500">
+                                Joined{" "}
+                                {new Date(member.joinedAt).toLocaleDateString()}
+                              </p>
                             </div>
-                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-                              {member.role}
-                            </span>
                           </div>
-                        ))}
-                      </div>
+                          <span
+                            className={`px-4 py-1 rounded-full text-sm font-medium ${
+                              member.role === "admin"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-blue-100 text-blue-800"
+                            }`}
+                          >
+                            {member.role}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-
-              // TODO: Another part is this
-              // <div className="relative">
-              //   {/* Header Banner */}
-              //   <div className="bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 p-8">
-              //     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-              //       <div className="space-y-3">
-              //         <h1 className="text-3xl font-bold text-white">
-              //           {groupInfo.name}
-              //         </h1>
-              //         <div className="flex items-center space-x-3 text-white/90">
-              //           <MapPin className="h-5 w-5" />
-              //           <span className="text-lg">
-              //             {groupInfo.trip.destination}
-              //           </span>
-              //         </div>
-              //       </div>
-
-              //       <div className="flex flex-col items-end gap-3">
-              //         <div
-              //           className={`px-4 py-2 rounded-full text-sm font-semibold ${
-              //             groupInfo.groupStatus
-              //               ? "bg-green-500 text-white"
-              //               : "bg-white text-indigo-900"
-              //           }`}
-              //         >
-              //           {groupInfo.groupStatus
-              //             ? "Already a Member"
-              //             : "Not Joined"}
-              //         </div>
-              //         <div className="flex items-center gap-2 text-white/90">
-              //           <Clock className="h-5 w-5" />
-              //           <span className="font-medium">Code: </span>
-              //           <span className="font-mono">{groupInfo.joinCode}</span>
-              //         </div>
-              //       </div>
-              //     </div>
-              //   </div>
-
-              //   {/* Stats Cards */}
-              //   <div className="p-8">
-              //     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              //       <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-              //         <div className="flex items-center gap-4">
-              //           <div className="p-3 bg-blue-50 rounded-lg">
-              //             <Wallet className="h-6 w-6 text-blue-600" />
-              //           </div>
-              //           <div>
-              //             <p className="text-sm text-gray-500">Budget</p>
-              //             <p className="text-xl font-bold text-gray-900">
-              //               {groupInfo.currency}{" "}
-              //               {groupInfo.budget.toLocaleString()}
-              //             </p>
-              //           </div>
-              //         </div>
-              //       </div>
-
-              //       <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-              //         <div className="flex items-center gap-4">
-              //           <div className="p-3 bg-indigo-50 rounded-lg">
-              //             <Users className="h-6 w-6 text-indigo-600" />
-              //           </div>
-              //           <div>
-              //             <p className="text-sm text-gray-500">Members</p>
-              //             <p className="text-xl font-bold text-gray-900">
-              //               {groupInfo.members?.length}
-              //             </p>
-              //           </div>
-              //         </div>
-              //       </div>
-
-              //       <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-              //         <div className="flex items-center gap-4">
-              //           <div className="p-3 bg-purple-50 rounded-lg">
-              //             <Receipt className="h-6 w-6 text-purple-600" />
-              //           </div>
-              //           <div>
-              //             <p className="text-sm text-gray-500">
-              //               Total Expenses
-              //             </p>
-              //             <p className="text-xl font-bold text-gray-900">
-              //               {groupInfo.currency}{" "}
-              //               {groupInfo.totalExpenses.toLocaleString()}
-              //             </p>
-              //           </div>
-              //         </div>
-              //       </div>
-              //     </div>
-
-              //     {/* Trip Details */}
-              //     <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
-              //       <h2 className="text-xl font-semibold mb-4 flex items-center text-gray-900">
-              //         <Calendar className="h-5 w-5 mr-2 text-indigo-600" />
-              //         Trip Duration
-              //       </h2>
-              //       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              //         <div className="bg-gray-50 rounded-lg p-4">
-              //           <p className="text-sm text-gray-500">Start Date</p>
-              //           <p className="text-lg font-semibold text-gray-900">
-              //             {formatDate(groupInfo.trip?.startDate)}
-              //           </p>
-              //         </div>
-              //         <div className="bg-gray-50 rounded-lg p-4">
-              //           <p className="text-sm text-gray-500">End Date</p>
-              //           <p className="text-lg font-semibold text-gray-900">
-              //             {formatDate(groupInfo.trip?.endDate)}
-              //           </p>
-              //         </div>
-              //       </div>
-              //     </div>
-
-              //     {/* Members List */}
-              //     <div className="bg-white rounded-xl p-6 shadow-sm">
-              //       <h2 className="text-xl font-semibold mb-4 flex items-center text-gray-900">
-              //         <Users className="h-5 w-5 mr-2 text-indigo-600" />
-              //         Group Members
-              //       </h2>
-              //       <div className="space-y-3">
-              //         {groupInfo.members?.map((member, index) => (
-              //           <div
-              //             key={index}
-              //             className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              //           >
-              //             <div className="flex items-center gap-4">
-              //               <div className="p-2 bg-white rounded-full shadow-sm">
-              //                 {member.role === "admin" ? (
-              //                   <Crown className="h-6 w-6 text-yellow-500" />
-              //                 ) : (
-              //                   <Users className="h-6 w-6 text-gray-400" />
-              //                 )}
-              //               </div>
-              //               <div>
-              //                 <p className="font-semibold text-gray-900">
-              //                   User {member.user.slice(-6)}
-              //                 </p>
-              //                 <p className="text-sm text-gray-500">
-              //                   Joined{" "}
-              //                   {new Date(member.joinedAt).toLocaleDateString()}
-              //                 </p>
-              //               </div>
-              //             </div>
-              //             <span
-              //               className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-              //                 member.role === "admin"
-              //                   ? "bg-yellow-100 text-yellow-800"
-              //                   : "bg-blue-100 text-blue-800"
-              //               }`}
-              //             >
-              //               {member.role}
-              //             </span>
-              //           </div>
-              //         ))}
-              //       </div>
-              //     </div>
-
-              //     {/* Action Buttons */}
-              //     <div className="mt-8 flex justify-end gap-4">
-              //       <Button
-              //         onClick={() => setOpen(false)}
-              //         className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
-              //       >
-              //         <ArrowBigLeft className="w-5 h-5" />
-              //         Back
-              //       </Button>
-              //       {!groupInfo.groupStatus && (
-              //         <Button
-              //           onClick={() => joinGroupHandler(groupInfo._id)}
-              //           disabled={verifyLoading || joinLoading}
-              //           className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 disabled:opacity-50"
-              //         >
-              //           <Users2 className="w-5 h-5" />
-              //           Join Group
-              //         </Button>
-              //       )}
-              //     </div>
-              //   </div>
-              // </div>
             )}
           </DialogContent>
         </Dialog>

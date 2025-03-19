@@ -19,6 +19,8 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import AddExpenses from "./AddExpenses";
 import ShareCodeGenerator from "./ShareCodeGenerator";
+import { useSelector } from "react-redux";
+import GroupDetails from "./GroupDetails";
 
 const StatusBadgeConfig = {
   pending: {
@@ -64,6 +66,7 @@ function SingleGroup() {
     useGetSingleTravelGroupQuery(id);
 
   const handleBack = () => navigate(-1);
+  const userdata = useSelector((state) => state.auth?.user?._id);
 
   if (groupLoading || expensesLoading) return <div>Loading...</div>;
 
@@ -74,7 +77,6 @@ function SingleGroup() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -90,10 +92,10 @@ function SingleGroup() {
             {groupData?.group?.name || "Travel Group"}
           </h1>
           <div className="flex gap-6">
-            <ShareCodeGenerator groupId ={id} />
-            <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-              GROUP DETAILS
-            </button>
+            {userdata === groupData?.group?.creator?._id && (
+              <ShareCodeGenerator groupId={id} />
+            )}
+            <GroupDetails isView={reversedExpenses}/>
           </div>
         </div>
       </header>
