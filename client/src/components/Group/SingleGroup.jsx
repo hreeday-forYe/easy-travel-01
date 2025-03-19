@@ -62,7 +62,7 @@ function SingleGroup() {
 
   const { data: expensesData, isLoading: expensesLoading } =
     useGetTravelExpensesQuery(id);
-  const { data: groupData, isLoading: groupLoading } =
+  const { data: groupData, refetch, isLoading: groupLoading } =
     useGetSingleTravelGroupQuery(id);
 
   const handleBack = () => navigate(-1);
@@ -95,7 +95,7 @@ function SingleGroup() {
             {userdata === groupData?.group?.creator?._id && (
               <ShareCodeGenerator groupId={id} />
             )}
-            <GroupDetails isView={groupData} />
+            <GroupDetails isView={groupData} refetch={refetch} />
           </div>
         </div>
       </header>

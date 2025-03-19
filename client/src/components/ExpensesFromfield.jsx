@@ -13,14 +13,15 @@ import {
   ImageIcon,
   X,
   Users,
-  UserCheck,
   SplitSquareVertical as SplitSquare,
+  User,
 } from "lucide-react";
 
 import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { Card, CardContent } from "./ui/card";
 
 export default function ExpensesFromfield({
   control,
@@ -181,40 +182,20 @@ export default function ExpensesFromfield({
           )}
         </div>
         {/* Paid By Section */}
-        <Controller
-          name="paidBy"
-          control={control}
-          defaultValue={null} // Default to no selection
-          render={({ field }) => (
-            <div className="space-y-4">
-              {/* Paid By Section */}
-              <div className="flex items-center space-x-2">
-                <UserCheck className="h-5 w-5 text-primary" />
-                <Label>Paid By</Label>
+        <Card className="w-full max-w-md shadow-sm">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-gray-100 p-2 rounded-full">
+                <User className="h-5 w-5 text-gray-500" />
               </div>
-              <div className="bg-muted/50 p-3 rounded-lg">
-                {groupMembers.map((member) => (
-                  <div
-                    key={member.user._id}
-                    className={`flex items-center space-x-2 p-2 rounded cursor-pointer ${
-                      field.value?.user._id === member.user._id
-                        ? "bg-gray-200"
-                        : ""
-                    }`}
-                    onClick={() => field.onChange(member)} // Set full user object
-                  >
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-sm font-medium">
-                        {member.user.name[0].toUpperCase()}
-                      </span>
-                    </div>
-                    <span className="font-medium">{member.user.name}</span>
-                  </div>
-                ))}
+              <div>
+                <Label className="text-xs text-gray-500">Paid by</Label>
+                <p className="font-medium">{userdata?.name}</p>
               </div>
             </div>
-          )}
-        />
+          </CardContent>
+        </Card>
+
         {/* Split Options */}
         <div className="space-y-4">
           <div className="flex items-center space-x-2">
