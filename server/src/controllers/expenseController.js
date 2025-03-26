@@ -1,9 +1,15 @@
+import cloudinary from "cloudinary";
+import mongoose from "mongoose";
 import Expense from "../models/ExpenseModel.js";
 import TravelGroup from "../models/TravelGroupModel.js";
 import User from "../models/UserModel.js";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
-import cloudinary from "cloudinary";
+import path from "path";
+import { fileURLToPath } from "url";
+import sendMail from "../utils/sendMail.js";
+import { group } from "console";
+import ejs from 'ejs'
 
 class ExpenseController {
   static createExpense = asyncHandler(async (req, res, next) => {
@@ -14,7 +20,7 @@ class ExpenseController {
       category,
       status,
       receipt,
-      splitAmong,
+      splitMembers,
     } = req.body;
     const paidBy = req.user._id;
 
@@ -39,10 +45,10 @@ class ExpenseController {
 
       // Validate splitAmong users
       let usersToSplit =
-        splitAmong && splitAmong.length > 0
-          ? splitAmong
+        splitMembers && splitMembers.length > 0
+          ? splitMembers
           : group.members
-              .map((member) => member._id.toString())
+              .map((member) => member.user.toString())
               .filter((id) => id !== paidBy.toString());
 
       if (usersToSplit.length === 0) {
@@ -56,7 +62,7 @@ class ExpenseController {
 
       // Check if all selected users are in the group
       const groupMemberIds = group.members.map((member) =>
-        member._id.toString()
+        member.user.toString()
       );
       const invalidUsers = usersToSplit.filter(
         (userId) => !groupMemberIds.includes(userId)
@@ -72,10 +78,11 @@ class ExpenseController {
       }
 
       // Calculate equal split share
-      const shareAmount = (amount / usersToSplit.length).toFixed(2);
+      const shareAmount = (amount / (usersToSplit.length + 1)).toFixed(2);
+
       const splitDetails = usersToSplit.map((userId) => ({
-        user: userId,
-        share: shareAmount,
+        user: new mongoose.Types.ObjectId(userId), // ✅ Correct ObjectId conversion
+        share: Number(shareAmount), // Ensure 'share' is a number
       }));
 
       // Upload receipt to Cloudinary if provided
@@ -209,8 +216,12 @@ class ExpenseController {
 
       // Fetch all expenses for the group
       const expenses = await Expense.find({ group: groupId })
-        .populate("paidBy.user", "name email")
-        .populate("splitBetween.user", "name email");
+        .populate("paidBy", "name email")
+        .populate({
+          path: "splitBetween.user",
+          select: "name email",
+        })
+        .exec();
 
       res.status(200).json({
         success: true,
@@ -239,6 +250,178 @@ class ExpenseController {
         success: true,
         data: expense,
       });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  static expenseSummary = asyncHandler(async (req, res, next) => {
+    try {
+      const userId = req.user._id;
+      const groupId = req.params.id;
+
+      // Validate input
+      if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return next(new ErrorHandler("Invalid group ID format", 400));
+      }
+
+      // Validate group exists and user is a member
+      const group = await TravelGroup.findOne({
+        _id: groupId,
+        "members.user": userId,
+      });
+
+      if (!group) {
+        return next(
+          new ErrorHandler("Group not found or you're not a member", 404)
+        );
+      }
+
+      // Find all unsettled expenses for the group
+      const expenses = await Expense.find({
+        group: groupId,
+        status: { $ne: "settled" },
+      })
+        .populate("paidBy", "name email")
+        .populate("splitBetween.user", "name email");
+
+      // Calculate amounts
+      let totalOwed = 0; // What the user owes others
+      let totalToReceive = 0; // What others owe the user
+      const debts = []; // Detailed debts the user owes
+      const receivables = []; // Detailed amounts owed to the user
+
+      expenses.forEach((expense) => {
+        // Check if user is the payer
+        if (expense.paidBy._id.equals(userId)) {
+          // Calculate total owed to the user (sum of all shares except user's own)
+          const othersShare = expense.splitBetween
+            .filter((split) => !split.user._id.equals(userId))
+            .reduce((sum, split) => sum + split.share, 0);
+
+          if (othersShare > 0) {
+            totalToReceive += othersShare;
+            receivables.push({
+              expenseId: expense._id,
+              description: expense.description,
+              totalAmount: expense.amount,
+              owedToYou: othersShare,
+              date: expense.createdAt,
+              category: expense.category,
+              debtors: expense.splitBetween
+                .filter((split) => !split.user._id.equals(userId))
+                .map((split) => ({
+                  user: split.user,
+                  amount: split.share,
+                })),
+            });
+          }
+        }
+        // Check if user is in splitBetween (owes money)
+        else {
+          const userSplit = expense.splitBetween.find((split) =>
+            split.user._id.equals(userId)
+          );
+
+          if (userSplit) {
+            totalOwed += userSplit.share;
+            debts.push({
+              expenseId: expense._id,
+              description: expense.description,
+              amount: expense.amount,
+              yourShare: userSplit.share,
+              owedTo: expense.paidBy,
+              date: expense.createdAt,
+              category: expense.category,
+            });
+          }
+        }
+      });
+
+      const netBalance = totalToReceive - totalOwed;
+
+      res.status(200).json({
+        success: true,
+        data: {
+          debts, // Expenses where user owes money
+          receivables, // Expenses where others owe user
+          totals: {
+            totalOwed,
+            totalToReceive,
+            netBalance,
+          },
+        },
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  static requestSettlement = asyncHandler(async (req, res, next) => {
+    try {
+      // Validate expense exists and user is the payer
+      const userId = req.user._id;
+      const user = await User.findById(userId)
+      const expenseId = req.params.id;
+      const expense = await Expense.findById(expenseId)
+        .populate("paidBy", "name email")
+        .populate("splitBetween.user", "name email")
+        .populate("group", "name");
+
+      if (!expense) {
+        return next(new ErrorHandler("Expense not found", 404));
+      }
+
+      // Check if the requesting user is the one who paid
+
+      if (!expense.paidBy._id.equals(userId)) {
+        return next(
+          new ErrorHandler("Only the payer can request settlement", 403)
+        );
+      }
+
+      // Get all users who owe money (excluding the payer)
+      const debtors = expense.splitBetween.filter(
+        (split) => !split.user._id.equals(userId)
+      );
+
+      if (debtors.length === 0) {
+        return next(
+          new ErrorHandler("No users owe money for this expense", 400)
+        );
+      }
+
+      // Now send the email to all the debtors
+      // getting the current directory
+      const __filename = fileURLToPath(import.meta.url);
+      const currentDirectory = path.dirname(__filename);
+
+      const mailPath = path.join(
+        currentDirectory,
+        "../mails/requestSettlement.ejs"
+      );
+      const emailPromises = debtors.map(async (debtor) => {
+        const data = {
+          debtorName: debtor.user.name,
+          payerName: user.name,
+          amount: debtor.share,
+          expenseDescription: expense.description,
+          groupName: group.name,
+          expenseId: expense._id,
+        };
+      await ejs.renderFile(mailPath, data);
+      console.log(debtor.user.email);
+      await sendMail({
+        email: debtor.user.email,
+        subject: "Settlement Request",
+        template: "requestSettlement.ejs",
+        data,
+      });
+      });
+      await Promise.all(emailPromises);
+      res.status(200).json({
+        messsage: "Sent"
+      })
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }

@@ -11,6 +11,9 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
+  Send,
+  BanknoteIcon,
+  Eye,
 } from "lucide-react";
 import {
   useGetTravelExpensesQuery,
@@ -21,6 +24,8 @@ import AddExpenses from "./AddExpenses";
 import ShareCodeGenerator from "./ShareCodeGenerator";
 import { useSelector } from "react-redux";
 import GroupDetails from "./GroupDetails";
+import ExpenseDetailsDialog from "./ExpenseDetailsDialog";
+import { useGetExpenseSummaryQuery, useRequestMoneyMutation } from "../../app/slices/expenseApiSlice";
 
 const StatusBadgeConfig = {
   pending: {
@@ -57,16 +62,45 @@ const StatusBadge = ({ status }) => {
 
 function SingleGroup() {
   const [activeTab, setActiveTab] = useState("activity");
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { data: expensesData, isLoading: expensesLoading } =
     useGetTravelExpensesQuery(id);
-  const { data: groupData, refetch, isLoading: groupLoading } =
-    useGetSingleTravelGroupQuery(id);
+  const {
+    data: groupData,
+    refetch,
+    isLoading: groupLoading,
+  } = useGetSingleTravelGroupQuery(id);
+
+  const { data: summaryData, isLoading: summaryLoading } =
+    useGetExpenseSummaryQuery(id);
+
+  const [requestMoney, {isloading:requestMoneyLoading}] = useRequestMoneyMutation()
 
   const handleBack = () => navigate(-1);
   const userdata = useSelector((state) => state.auth?.user?._id);
+
+  const handleSettleExpense = (expenseId) => {
+    // Handle settle expense logic
+    console.log("Settling expense:", expenseId);
+  };
+
+  const handleRequestMoney = async (expenseId) => {
+    // Handle request money logic
+    console.log("Requesting money for expense:", expenseId);
+    const response = await requestMoney(expenseId).unwarp();
+    if(response.sucess){
+      toast.sucess("Email sent to all the debtors")
+    }
+  };
+
+  const handleViewDetails = (expense) => {
+    setSelectedExpense(expense);
+    setIsDetailsOpen(true);
+  };
 
   if (groupLoading || expensesLoading) return <div>Loading...</div>;
 
@@ -157,6 +191,44 @@ function SingleGroup() {
                             expense.category.slice(1)}
                         </div>
                       </div>
+                      {/* Action Buttons */}
+                      <div className="mt-4 flex gap-3">
+                        <button
+                          onClick={() => handleViewDetails(expense)}
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View Details
+                        </button>
+                        {expense.status !== "settled" && (
+                          <>
+                            {expense.splitBetween.some(
+                              (entry) =>
+                                String(entry.user._id) === String(userdata)
+                            ) &&
+                              expense.paidBy._id !== String(userdata) && (
+                                <button
+                                  onClick={() =>
+                                    handleSettleExpense(expense._id)
+                                  }
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
+                                >
+                                  <Send className="w-4 h-4" />
+                                  Settle Expense
+                                </button>
+                              )}
+                            {expense.paidBy._id === userdata && (
+                              <button
+                                onClick={() => handleRequestMoney(expense._id)}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                              >
+                                <BanknoteIcon className="w-4 h-4" />
+                                Request Money
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
                     <div className="ml-6">
                       <p className="text-md font-bold flex gap-2 bg-green-100 text-green-700 p-1.5 rounded-2xl ">
@@ -244,7 +316,13 @@ function SingleGroup() {
         )}
       </main>
 
-      {/* Add Expense Button */}
+      {/* Expense Details Dialog */}
+      <ExpenseDetailsDialog
+        expense={selectedExpense}
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        currency={groupData?.group?.currency}
+      />
     </div>
   );
 }

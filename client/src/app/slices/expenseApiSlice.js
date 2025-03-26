@@ -12,15 +12,15 @@ export const expenseApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    updateExpense: builder.mutation({
-      query: (data) => ({
-        url: `${expense_url}/${data._id}`,
-        method: "PUT",
-        body: data,
-        credentials: "include",
-      }),
-    }),
-    // Gets all the journals of the user
+    // updateExpense: builder.mutation({
+    //   query: (data) => ({
+    //     url: `${expense_url}/${data._id}`,
+    //     method: "PUT",
+    //     body: data,
+    //     credentials: "include",
+    //   }),
+    // }),
+    // Gets all the expenses of the user
     getExpense: builder.query({
       query: () => ({
         url: `${expense_url}/`,
@@ -29,18 +29,34 @@ export const expenseApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    deleteExpense: builder.mutation({
-      query: (journalId) => ({
-        url: `${expense_url}/${journalId}`,
-        method: "DELETE",
-        credentials: "include",
-      }),
-    }),
+    // deleteExpense: builder.mutation({
+    //   query: (journalId) => ({
+    //     url: `${expense_url}/${journalId}`,
+    //     method: "DELETE",
+    //     credentials: "include",
+    //   }),
+    // }),
 
     getSingleExpense: builder.query({
       query: (id) => ({
         url: `${expense_url}/${id}`,
         method: "GET",
+        credentials: "include",
+      }),
+    }),
+
+    getExpenseSummary: builder.query({
+      query: (id) => ({
+        url: `${expense_url}/expense-summary/${id}`,
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
+
+    requestMoney: builder.mutation({
+      query: (expenseId) => ({
+        url: `${expense_url}/request-money/${expenseId}`,
+        method: "POST",
         credentials: "include",
       }),
     }),
@@ -51,6 +67,7 @@ export const {
   useCreateExpenseMutation,
   useUpdateExpenseMutation,
   useGetExpenseQuery,
-  useDeleteJournalMutation,
-  useGetSingleExpenseQuery
+  useGetExpenseSummaryQuery,
+  useGetSingleExpenseQuery,
+  useRequestMoneyMutation,
 } = expenseApiSlice;
