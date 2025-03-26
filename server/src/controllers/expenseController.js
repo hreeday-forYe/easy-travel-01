@@ -426,6 +426,7 @@ class ExpenseController {
       return next(new ErrorHandler(error.message, 500));
     }
   });
+  
 }
 
 export default ExpenseController;
