@@ -10,7 +10,9 @@ import {
   Clock,
 } from "lucide-react";
 import { useSelector } from "react-redux";
+
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 export default function ExpenseDetailsDialog({
   expense,
@@ -162,7 +164,24 @@ export default function ExpenseDetailsDialog({
                         Owes {currency} {person.share}
                       </div>
                     )}
+
+
+
+
+                    <div className="font-medium text-gray-900">
+                      {currency} {person.share}
+                    </div>
+
+                    <Badge
+                      variant={`${
+                        person.status === "paid" ? "outline" : "destructive"
+                      }`}
+                      className='capitalize'
+                    >
+                      {person.status}
+                    </Badge>
                   </div>
+
                 </div>
               ))}
             </div>
@@ -176,6 +195,7 @@ export default function ExpenseDetailsDialog({
                 Receipt
               </h3>
               <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="border rounded-lg overflow-hidden">
                 {expense.receipt.url ? (
                   <img
                     src={expense.receipt.url}
@@ -192,15 +212,15 @@ export default function ExpenseDetailsDialog({
           )}
 
           {/* Notes */}
-          {expense.notes && (
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-amber-600" />
+          {expense.notes.length > 0 && (
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5" />
                 Notes
               </h3>
-              <div className="bg-amber-50 border border-amber-100 rounded-lg p-4">
-                <p className="text-gray-700">{expense.notes}</p>
-              </div>
+              {expense.notes.map((note) => (
+                <p className="text-gray-600">{note}</p>
+              ))}
             </div>
           )}
         </div>

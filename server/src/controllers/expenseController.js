@@ -379,9 +379,11 @@ class ExpenseController {
         );
       }
 
-      // Get all users who owe money (excluding the payer)
       const debtors = expense.splitBetween.filter(
-        (split) => !split.user._id.equals(userId)
+        (split) =>
+          !split.user._id.equals(userId) && // Not the current user
+          split.share > 0 && // Has outstanding balance
+          split.status !== "paid" // Not already marked as paid
       );
 
       if (debtors.length === 0) {
@@ -420,6 +422,134 @@ class ExpenseController {
       await Promise.all(emailPromises);
       res.status(200).json({
         messsage: "Sent",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  static settleExpense = asyncHandler(async (req, res, next) => {
+    const expenseId = req.params.id;
+    const userId = req.user._id;
+    const { note } = req.body;
+
+    // Find the expense with group and user details populated
+    const expense = await Expense.findById(expenseId)
+      .populate("paidBy", "name")
+      .populate("splitBetween.user", "name");
+
+    if (!expense) {
+      return next(new ErrorResponse("Expense not found", 404));
+    }
+
+    // Check if user is in splitBetween
+    const userSplit = expense.splitBetween.find((split) =>
+      split.user.equals(userId)
+    );
+
+    if (!userSplit) {
+      return next(
+        new ErrorResponse("User not part of this expense split", 400)
+      );
+    }
+
+    // Store original status for comparison
+    const originalStatus = userSplit.status;
+
+    // Update user's share and status
+    userSplit.share = 0;
+    userSplit.status = "paid";
+
+    // If user was disputing, add resolution note
+    if (originalStatus === "dispute") {
+      expense.notes.push(
+        `${req.user.name}: Resolved their dispute and marked as paid. Note: ${
+          note || "No resolution notes provided"
+        }`
+      );
+    } else {
+      expense.notes.push(
+        `${req.user.name}: ${note || "No notes provided"}`
+      );
+    }
+
+    // Calculate expense status based on all splits
+    const paidCount = expense.splitBetween.filter(
+      (split) => split.status === "paid" || split.share === 0
+    ).length;
+
+    const disputeCount = expense.splitBetween.filter(
+      (split) => split.status === "dispute"
+    ).length;
+
+    const allPaid = paidCount === expense.splitBetween.length;
+    const anyDispute = disputeCount > 0;
+
+    // Determine new expense status
+    if (allPaid) {
+      expense.status = "settled";
+    } else if (anyDispute) {
+      expense.status = "disputed";
+    } else {
+      expense.status = "pending";
+    }
+
+    await expense.save();
+
+    // Create settlement record 
+    /*
+    await Settlement.create({
+        expense: expenseId,
+        settledBy: userId,
+        settledWith: expense.paidBy,
+        amount: userSplit.share, // Original share before setting to 0
+        settledAt: new Date(),
+        resolutionNote: originalStatus === 'dispute' ? note : undefined
+    });
+    */
+
+    res.status(200).json({
+      success: true,
+      data: expense,
+      message: allPaid
+        ? "Expense fully settled"
+        : originalStatus === "dispute"
+        ? "Dispute resolved and marked as paid"
+        : "Your share has been marked as paid",
+    });
+  });
+
+  static disputeExpense = asyncHandler(async (req, res, next) => {
+    try {
+      const expenseId = req.params.id;
+      const userId = req.user._id;
+      const { note } = req.body;
+      // Find the expense
+      const expense = await Expense.findById(expenseId);
+      if (!expense) {
+        return next(new ErrorResponse("Expense not found", 404));
+      }
+
+      // Check if user is in splitBetween
+      const userSplit = expense.splitBetween.find((split) =>
+        split.user.equals(userId)
+      );
+
+      if (!userSplit) {
+        return next(
+          new ErrorResponse("User not part of this expense split", 400)
+        );
+      }
+      userSplit.status = "dispute";
+      expense.status = "disputed";
+      // Save the updated expense
+      expense.notes.push(`${req.user.name}: ${note ?? "No notes provided"}`);
+      await expense.save();
+
+      // TODO: SEND NOTIFICATIONS FOR THE USERS REGARDING THIS disputationg
+      res.status(200).json({
+        success: true,
+        message: "Expense has been disputed",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

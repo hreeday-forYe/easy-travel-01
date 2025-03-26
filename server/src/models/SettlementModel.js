@@ -12,30 +12,20 @@ const settlementSchema = new mongoose.Schema(
       ref: "Expense",
       required: true,
     },
-    from: {
-      user: {
+    payer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-      },
     },
-    to: {
-      user: {
+    receiver: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-      },
     },
     amount: {
-      value: {
         type: Number,
         required: true,
         min: [0, "Amount cannot be negative"],
-      },
-      currency: {
-        type: String,
-        required: true,
-      },
     },
     status: {
       type: String,
@@ -44,7 +34,7 @@ const settlementSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["cash", "upi", "bank_transfer", "other"],
+      enum: ["cash", "khalti", "other"],
       required: true,
     },
     paymentDetails: {
@@ -60,3 +50,5 @@ const settlementSchema = new mongoose.Schema(
 );
 
 
+const Settlement = mongoose.model("Settlement", settlementSchema);
+export default Settlement;

@@ -60,14 +60,31 @@ export const expenseApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    expenseSettlement: builder.mutation({
+      query: (data) => ({
+        url: `${expense_url}/settle-expense/${data.expenseId}`,
+        method: "PUT",
+        body: data,
+        credentials: "include",
+      }),
+    }),
+    disputeExpense: builder.mutation({
+      query: (data) => ({
+        url: `${expense_url}/dispute-expense/${data.expenseId}`,
+        method: "PUT",
+        body: data,
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
 export const {
   useCreateExpenseMutation,
-  useUpdateExpenseMutation,
+  useExpenseSettlementMutation,
   useGetExpenseQuery,
   useGetExpenseSummaryQuery,
   useGetSingleExpenseQuery,
   useRequestMoneyMutation,
+  useDisputeExpenseMutation
 } = expenseApiSlice;

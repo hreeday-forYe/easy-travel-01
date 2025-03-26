@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { SideBar } from "..";
 import GroupNav from "./GroupNav";
-import { useGetSingleExpenseQuery } from "@/app/slices/expenseApiSlice";
+import { useDisputeExpenseMutation, useGetSingleExpenseQuery } from "@/app/slices/expenseApiSlice";
 import {
   CalendarDays,
   Receipt,
@@ -15,9 +15,9 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSelector } from "react-redux";
-import { Button } from "../ui/button";
+import {useExpenseSettlementMutation} from '../../app/slices/expenseApiSlice'
 import { toast } from "react-toastify";
-
+import { useNavigate } from "react-router-dom";
 const Settlement = () => {
   const location = useLocation();
   const id = location.state?.groupId;
@@ -28,7 +28,10 @@ const Settlement = () => {
   const [note, setNote] = useState("");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cash");
   const userdata = useSelector((state) => state.auth?.user?._id);
+  const [expenseSettlement] = useExpenseSettlementMutation()
+  const [disputeExpense] = useDisputeExpenseMutation()
 
+  const navigate = useNavigate()
   if (!data) return null;
 
   const expense = data.data;
@@ -38,35 +41,34 @@ const Settlement = () => {
     day: "numeric",
   });
 
-  const handleSettlement = async (splitId, action) => {
+  const handleSettlement = async (action) => {
     try {
-      const payload = {
-        expenseId, // Ensure this variable is available in scope
-        splitId,
-        action,
-        note,
-        paymentMethod: action === "settle" ? selectedPaymentMethod : null, // Send only for settlement
-      };
-
-      console.log("Sending Payload:", payload);
-
-      if (action === "settle") {
-        try {
-          const res = "";
-          if (res.success) {
-            toast.success(success.message);
-          }
-        } catch (error) {
-          toast.error(error.message);
-        }
-        return;
+      
+      const data =  {
+        expenseId,
+        payment: selectedPaymentMethod,
+        note
       }
+      if(action === 'settle'){
+        const response  = await expenseSettlement(data).unwrap()
+        if(response.success){
+          toast.success(response.messsage)
+          navigate(-1)
+        }
+      }else if(action === 'dispute'){
+        const response = await disputeExpense(data).unwrap()
+        if(response.success){
+          toast.success(response.messsage)
+          navigate(-1)
+        }
+      }
+      
+    } catch (error) {
+      console.error("Settlement failed:", error);
+    }finally{
       setShowSettleModal(false);
       setNote("");
       setSelectedAction(null);
-      setSelectedPaymentMethod(null);
-    } catch (error) {
-      console.error("Settlement failed:", error);
     }
   };
 
