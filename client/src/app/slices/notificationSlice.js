@@ -20,7 +20,7 @@ export const expenseApiSlice = apiSlice.injectEndpoints({
     //     credentials: "include",
     //   }),
     // }),
-    // Gets all the expenses of the user
+    // Gets all the expenses of the +
     getExpense: builder.query({
       query: () => ({
         url: `${expense_url}/`,
@@ -38,8 +38,8 @@ export const expenseApiSlice = apiSlice.injectEndpoints({
     // }),
 
     getSingleExpense: builder.query({
-      query: (expenseId) => ({
-        url: `${expense_url}/${expenseId}`,
+      query: (id) => ({
+        url: `${expense_url}/${id}`,
         method: "GET",
         credentials: "include",
       }),

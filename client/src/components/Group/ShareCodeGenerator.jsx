@@ -15,7 +15,6 @@ const ShareCodeGenerator = ({ groupId }) => {
   const [generatedCode, setGeneratedCode] = useState();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  console.log(generatedCode)
 
   const [inviteCode, { isLoading, isError }] = useInviteCodeMutation();
 
