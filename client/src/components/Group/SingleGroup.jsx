@@ -81,10 +81,8 @@ function SingleGroup() {
   const { data: summaryData, isLoading: summaryLoading } =
     useGetExpenseSummaryQuery(id);
 
-  const [requestMoney, { isloading: requestMoneyLoading }] =
+  const [requestMoney, { isLoading: requestMoneyLoading }] =
     useRequestMoneyMutation();
-
-  const handleBack = () => navigate(-1);
   const userdata = useSelector((state) => state.auth?.user?._id);
 
   const handleSettleExpense = (expenseId) => {
@@ -95,11 +93,15 @@ function SingleGroup() {
   };
 
   const handleRequestMoney = async (expenseId) => {
-    // Handle request money logic
-    console.log("Requesting money for expense:", expenseId);
-    const response = await requestMoney(expenseId).unwarp();
-    if (response.success) {
+    try {
+      const response = await requestMoney(expenseId).unwrap();
       toast.success("Email sent to all the debtors");
+      if (response.success) {
+        toast.success("Email sent to all the debtors");
+      }
+    } catch (error) {
+      toast.error("Failed to send email");
+      console.error("Error requesting money:", error);
     }
   };
 
@@ -180,7 +182,7 @@ function SingleGroup() {
                         <div className="mt-4 flex gap-3">
                           <button
                             onClick={() => handleViewDetails(expense)}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                           >
                             <Eye className="w-4 h-4" />
                             View Details
@@ -207,10 +209,17 @@ function SingleGroup() {
                                   onClick={() =>
                                     handleRequestMoney(expense._id)
                                   }
+                                  disabled={requestMoneyLoading}
                                   className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                                 >
-                                  <BanknoteIcon className="w-4 h-4" />
-                                  Request Money
+                                  {requestMoneyLoading ? (
+                                    <>Requesting...</>
+                                  ) : (
+                                    <>
+                                      <BanknoteIcon className="w-4 h-4" />
+                                      Request Money
+                                    </>
+                                  )}
                                 </button>
                               )}
                             </>

@@ -56,7 +56,6 @@ const GroupDetails = ({ isView, refetch }) => {
         <Button
           onClick={handleViewDetails}
           className="flex items-center gap-2"
-          variant="outline"
         >
           <Users size={16} />
           View Group Details

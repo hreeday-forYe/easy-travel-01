@@ -8,13 +8,11 @@ const GroupNav = ({ id }) => {
   const {
     data: groupData,
     refetch,
-    isLoading: groupLoading,
   } = useGetSingleTravelGroupQuery(id);
   const nav = useNavigate();
   const handleBack = () => nav(-1);
   const userdata = useSelector((state) => state.auth?.user?._id);
-  console.log(id)
-
+  
   return (
     <>
       <header className="bg-white shadow-sm">

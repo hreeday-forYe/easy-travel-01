@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSelector } from "react-redux";
+import { Button } from "../ui/button";
+import { toast } from "react-toastify";
 
 const Settlement = () => {
   const location = useLocation();
@@ -27,8 +29,6 @@ const Settlement = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cash");
   const userdata = useSelector((state) => state.auth?.user?._id);
 
-
-
   if (!data) return null;
 
   const expense = data.data;
@@ -40,42 +40,52 @@ const Settlement = () => {
 
   const handleSettlement = async (splitId, action) => {
     try {
-      // const payload = {
-      //   expenseId,
-      //   splitId,
-      //   action,
-      //   note,
-      //   paymentMethod: selectedPaymentMethod,
-      // };
-      console.log(splitId, action);
+      const payload = {
+        expenseId, // Ensure this variable is available in scope
+        splitId,
+        action,
+        note,
+        paymentMethod: action === "settle" ? selectedPaymentMethod : null, // Send only for settlement
+      };
 
-      // Here you would make the API call to settle/dispute the payment
-      // const response = await settleExpense(payload);
+      console.log("Sending Payload:", payload);
 
+      if (action === "settle") {
+        try {
+          const res = "";
+          if (res.success) {
+            toast.success(success.message);
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+        return;
+      }
       setShowSettleModal(false);
       setNote("");
       setSelectedAction(null);
+      setSelectedPaymentMethod(null);
     } catch (error) {
       console.error("Settlement failed:", error);
     }
   };
 
   return (
-    <div className="flex w-full min-h-screen bg-gray-50">
+    <div className="flex w-full bg-gray-50">
       <SideBar />
       <div className="flex-1">
         <GroupNav id={id} />
 
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4  mt-10">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-white">
+            <div className="bg-gradient-to-r from-[#5751b8] to-[#3b358e] px-6 py-4 text-white">
               <h1 className="text-3xl font-bold mb-2">₹{expense.amount}</h1>
               <p className="text-blue-100">{expense.description}</p>
               <div className="mt-4 flex items-center">
                 <Avatar>
                   <AvatarImage src={expense.paidBy?.avatar?.url} />
-                  <AvatarFallback className="text-gray-800">
+                  <AvatarFallback className="text-gray-800 font-semibold text-xl">
                     {expense.paidBy.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
@@ -158,15 +168,14 @@ const Settlement = () => {
                         <span className="font-semibold text-lg">
                           ₹{split.share}
                         </span>
-                        <button
+                        <Button
                           onClick={() => {
                             setShowSettleModal(true);
                             setSelectedAction(null);
                           }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                         >
                           Settle
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   ) : null;
@@ -272,23 +281,41 @@ const Settlement = () => {
                         >
                           Back
                         </button>
-                        <button
-                          onClick={() =>
-                            handleSettlement(
-                              expense.splitBetween[0]._id,
-                              selectedAction
-                            )
-                          }
-                          className={`flex-1 px-4 py-2 text-white rounded-lg ${
-                            selectedAction === "settle"
-                              ? "bg-blue-600 hover:bg-blue-700"
-                              : "bg-red-600 hover:bg-red-700"
-                          }`}
-                        >
-                          {selectedAction === "settle"
-                            ? "Confirm Payment"
-                            : "Submit Dispute"}
-                        </button>
+
+                        {selectedAction === "settle" &&
+                          selectedPaymentMethod && (
+                            <Button
+                              onClick={() =>
+                                handleSettlement(
+                                  expense.splitBetween[0]._id,
+                                  "settle"
+                                )
+                              }
+                              className={`flex-1 px-4 py-2 text-white rounded-lg ${
+                                selectedPaymentMethod === "cash"
+                                  ? "text-black"
+                                  : "bg-purple-600 hover:bg-purple-700"
+                              }`}
+                            >
+                              {selectedPaymentMethod === "cash"
+                                ? "Settle with Cash"
+                                : "Pay via Khalti"}
+                            </Button>
+                          )}
+
+                        {selectedAction !== "settle" && (
+                          <Button
+                            onClick={() =>
+                              handleSettlement(
+                                expense.splitBetween[0]._id,
+                                "dispute"
+                              )
+                            }
+                            className="flex-1 px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg"
+                          >
+                            Submit Dispute
+                          </Button>
+                        )}
                       </div>
                     </div>
                   )}

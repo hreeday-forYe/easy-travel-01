@@ -16,7 +16,7 @@ const ShareCodeGenerator = ({ groupId }) => {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const [inviteCode, { isLoading, isError }] = useInviteCodeMutation();
+  const [inviteCode] = useInviteCodeMutation();
 
   const generateCode = async () => {
     try {
@@ -24,12 +24,10 @@ const ShareCodeGenerator = ({ groupId }) => {
       console.log(res);
       if (res.success) {
         setGeneratedCode(res.data.code);
-
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
-
     setOpen(true); // Open dialog after generating code
   };
 
@@ -37,7 +35,6 @@ const ShareCodeGenerator = ({ groupId }) => {
     if (generatedCode) {
       navigator.clipboard.writeText(generatedCode);
       setCopied(true); // Show "Copied!" animation
-      toast.success("Copied!");
       setTimeout(() => setCopied(false), 1500);
     }
   };
@@ -49,7 +46,7 @@ const ShareCodeGenerator = ({ groupId }) => {
           <DialogTrigger asChild>
             <Button
               onClick={generateCode}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+              className="bg-[#554CCF] hover:bg-[#554CCF]/90 text-white"
             >
               <Share2 />
               Share
@@ -71,7 +68,7 @@ const ShareCodeGenerator = ({ groupId }) => {
                 </span>
                 <Button
                   onClick={copyToClipboard}
-                  className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md flex items-center gap-1 transition-all duration-300"
+                  className="bg-[#554CCF] hover:bg-[#554CCF]/90 text-white"
                 >
                   {copied ? (
                     <CheckCircle size={18} />
