@@ -39,7 +39,7 @@ const Nav = () => {
               >
                 <Layers className="h-8 w-8" />
                 <span className="font-bold text-xl hidden sm:block">
-                  EXPENSE TRACKER
+                  Easy Travel
                 </span>
               </Link>
             </div>

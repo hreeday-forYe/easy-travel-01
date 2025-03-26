@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { SideBar } from "..";
 import GroupNav from "./GroupNav";
-import { useDisputeExpenseMutation, useGetSingleExpenseQuery } from "@/app/slices/expenseApiSlice";
+import {
+  useDisputeExpenseMutation,
+  useGetSingleExpenseQuery,
+} from "@/app/slices/expenseApiSlice";
 import {
   CalendarDays,
   Receipt,
@@ -15,9 +18,10 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSelector } from "react-redux";
-import {useExpenseSettlementMutation} from '../../app/slices/expenseApiSlice'
+import { useExpenseSettlementMutation } from "../../app/slices/expenseApiSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 const Settlement = () => {
   const location = useLocation();
   const id = location.state?.groupId;
@@ -28,10 +32,10 @@ const Settlement = () => {
   const [note, setNote] = useState("");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cash");
   const userdata = useSelector((state) => state.auth?.user?._id);
-  const [expenseSettlement] = useExpenseSettlementMutation()
-  const [disputeExpense] = useDisputeExpenseMutation()
+  const [expenseSettlement] = useExpenseSettlementMutation();
+  const [disputeExpense] = useDisputeExpenseMutation();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   if (!data) return null;
 
   const expense = data.data;
@@ -43,29 +47,28 @@ const Settlement = () => {
 
   const handleSettlement = async (action) => {
     try {
-      
-      const data =  {
+      const data = {
         expenseId,
         payment: selectedPaymentMethod,
-        note
-      }
-      if(action === 'settle'){
-        const response  = await expenseSettlement(data).unwrap()
-        if(response.success){
-          toast.success(response.messsage)
-          navigate(-1)
+        note,
+      };
+      console.log(data)
+      if (action === "settle") {
+        const response = await expenseSettlement(data).unwrap();
+        if (response.success) {
+          toast.success(response.messsage);
+          navigate(-1);
         }
-      }else if(action === 'dispute'){
-        const response = await disputeExpense(data).unwrap()
-        if(response.success){
-          toast.success(response.messsage)
-          navigate(-1)
+      } else if (action === "dispute") {
+        const response = await disputeExpense(data).unwrap();
+        if (response.success) {
+          toast.success(response.messsage);
+          navigate(-1);
         }
       }
-      
     } catch (error) {
       console.error("Settlement failed:", error);
-    }finally{
+    } finally {
       setShowSettleModal(false);
       setNote("");
       setSelectedAction(null);
@@ -287,12 +290,7 @@ const Settlement = () => {
                         {selectedAction === "settle" &&
                           selectedPaymentMethod && (
                             <Button
-                              onClick={() =>
-                                handleSettlement(
-                                  expense.splitBetween[0]._id,
-                                  "settle"
-                                )
-                              }
+                              onClick={() => handleSettlement("settle")}
                               className={`flex-1 px-4 py-2 text-white rounded-lg ${
                                 selectedPaymentMethod === "cash"
                                   ? "text-black"
@@ -307,12 +305,7 @@ const Settlement = () => {
 
                         {selectedAction !== "settle" && (
                           <Button
-                            onClick={() =>
-                              handleSettlement(
-                                expense.splitBetween[0]._id,
-                                "dispute"
-                              )
-                            }
+                            onClick={() => handleSettlement("dispute")}
                             className="flex-1 px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg"
                           >
                             Submit Dispute

@@ -1,30 +1,25 @@
+import React from "react";
 import {
   X,
-  Receipt,
-  Users,
-  AlertCircle,
+  User,
   Calendar,
   Tag,
-  Wallet,
-  User,
   Clock,
+  Users,
+  Receipt,
+  AlertCircle,
 } from "lucide-react";
-import { useSelector } from "react-redux";
-
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
-export default function ExpenseDetailsDialog({
-  expense,
-  isOpen,
-  onClose,
-  currency,
-}) {
-  if (!isOpen) return null;
+const ExpenseDetailsModal = ({ expense, currency, isOpen, onClose }) => {
+  // Ensure the component has a fallback if no expense is provided
+ if (!isOpen) return null;
+  
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white rounded-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-xl">
+      <div className="bg-white rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-2xl animate-modal-slide-up">
         {/* Header */}
         <div className="sticky top-0 bg-white z-10 flex justify-between items-center p-6 border-b">
           <h2 className="text-2xl font-bold text-gray-800">Expense Details</h2>
@@ -46,71 +41,72 @@ export default function ExpenseDetailsDialog({
                 </h3>
                 <p className="text-gray-500 mt-1">{expense.category}</p>
               </div>
-              <div className="text-2xl font-bold text-green-600 bg-green-50 px-4 py-2 rounded-lg">
+              <div className="text-2xl font-bold text-green-600 bg-green-50 px-4 py-2 rounded-xl">
                 {currency} {expense.amount?.toFixed(2)}
               </div>
             </div>
 
+            {/* Info Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="p-2 bg-blue-100 rounded-full text-blue-600">
-                  <User className="w-5 h-5" />
+              {[
+                {
+                  icon: <User className="w-5 h-5" />,
+                  iconBg: "bg-blue-100 text-blue-600",
+                  label: "Paid By",
+                  value: expense.paidBy.name,
+                },
+                {
+                  icon: <Calendar className="w-5 h-5" />,
+                  iconBg: "bg-purple-100 text-purple-600",
+                  label: "Date",
+                  value: new Date(expense.date).toLocaleDateString("en-US", {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  }),
+                },
+                {
+                  icon: <Tag className="w-5 h-5" />,
+                  iconBg: "bg-amber-100 text-amber-600",
+                  label: "Category",
+                  value: expense.category,
+                },
+                {
+                  icon: <Clock className="w-5 h-5" />,
+                  iconBg: "bg-emerald-100 text-emerald-600",
+                  label: "Status",
+                  value: expense.status,
+                  valueClass:
+                    expense.status === "Pending"
+                      ? "text-amber-600"
+                      : "text-emerald-600",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <div className={`p-2 rounded-full ${item.iconBg}`}>
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">{item.label}</p>
+                    <p
+                      className={`font-medium capitalize ${
+                        item.valueClass || ""
+                      }`}
+                    >
+                      {item.value}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500">Paid By</p>
-                  <p className="font-medium">{expense.paidBy.name}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="p-2 bg-purple-100 rounded-full text-purple-600">
-                  <Calendar className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Date</p>
-                  <p className="font-medium">
-                    {new Date(expense.date).toLocaleDateString("en-US", {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="p-2 bg-amber-100 rounded-full text-amber-600">
-                  <Tag className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Category</p>
-                  <p className="font-medium capitalize">{expense.category}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="p-2 bg-emerald-100 rounded-full text-emerald-600">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Status</p>
-                  <p
-                    className={`font-medium capitalize ${
-                      expense.status === "Pending"
-                        ? "text-amber-600"
-                        : "text-emerald-600"
-                    }`}
-                  >
-                    {expense.status}
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Split Details */}
-          <div className="bg-gray-50 rounded-xl p-1">
+          <div className="bg-gray-50 rounded-2xl p-1">
             <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 px-4 pt-3">
               <Users className="w-5 h-5 text-blue-600" />
               Split Details
@@ -119,27 +115,31 @@ export default function ExpenseDetailsDialog({
               {expense.splitBetween.map((person) => (
                 <div
                   key={person.user._id}
-                  className={`flex justify-between items-center p-3 rounded-lg ${
+                  className={`flex justify-between items-center p-3 rounded-xl transition-colors ${
                     person._id === expense.paidBy._id
-                      ? "bg-blue-50"
-                      : "bg-white"
+                      ? "bg-blue-50 hover:bg-blue-100"
+                      : "bg-white hover:bg-gray-50"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div
-                      className={`w-9 h-9 rounded-full flex items-center justify-center ${
+                    <Avatar
+                      className={`w-10 h-10 border ${
                         person._id === expense.paidBy._id
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-gray-100 text-gray-800"
+                          ? "bg-blue-100"
+                          : "bg-gray-100"
                       }`}
                     >
-                      <Avatar className="h-10 w-10 border">
-                        <AvatarImage src={person.user?.avatar?.url} />
-                        <AvatarFallback className="bg-primary/10 text-primary">
-                          {person.user.name.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
+                      <AvatarImage src={person.user?.avatar?.url} />
+                      <AvatarFallback
+                        className={`${
+                          person._id === expense.paidBy._id
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {person.user.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
                       <span className="font-medium">{person.user.name}</span>
                       {person._id === expense.paidBy._id && (
@@ -157,31 +157,18 @@ export default function ExpenseDetailsDialog({
                           : "text-gray-900"
                       }`}
                     >
-                      {currency} {person.share}
-                    </div>
-                    {person._id !== expense.paidBy._id && (
-                      <div className="text-xs text-gray-500">
-                        Owes {currency} {person.share}
-                      </div>
-                    )}
-
-
-
-
-                    <div className="font-medium text-gray-900">
-                      {currency} {person.share}
+                      {currency} {Number(person.share).toFixed(2)}
                     </div>
 
                     <Badge
-                      variant={`${
+                      variant={
                         person.status === "paid" ? "outline" : "destructive"
-                      }`}
-                      className='capitalize'
+                      }
+                      className="capitalize mt-2"
                     >
                       {person.status}
                     </Badge>
                   </div>
-
                 </div>
               ))}
             </div>
@@ -194,13 +181,12 @@ export default function ExpenseDetailsDialog({
                 <Receipt className="w-5 h-5 text-indigo-600" />
                 Receipt
               </h3>
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <div className="border rounded-lg overflow-hidden">
+              <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
                 {expense.receipt.url ? (
                   <img
                     src={expense.receipt.url}
                     alt="Expense receipt"
-                    className="w-full h-auto max-h-64 object-contain bg-gray-100"
+                    className="w-full h-auto max-h-64 object-contain bg-gray-100 hover:scale-105 transition-transform"
                   />
                 ) : (
                   <div className="p-8 text-center bg-gray-50">
@@ -212,14 +198,19 @@ export default function ExpenseDetailsDialog({
           )}
 
           {/* Notes */}
-          {expense.notes.length > 0 && (
+          {expense.notes?.length > 0 && (
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-2 flex items-center gap-2">
-                <AlertCircle className="w-5 h-5" />
+                <AlertCircle className="w-5 h-5 text-red-500" />
                 Notes
               </h3>
-              {expense.notes.map((note) => (
-                <p className="text-gray-600">{note}</p>
+              {expense.notes.map((note, index) => (
+                <p
+                  key={index}
+                  className="text-gray-600 bg-gray-50 p-3 rounded-xl mb-2"
+                >
+                  {note}
+                </p>
               ))}
             </div>
           )}
@@ -227,4 +218,6 @@ export default function ExpenseDetailsDialog({
       </div>
     </div>
   );
-}
+};
+
+export default ExpenseDetailsModal;

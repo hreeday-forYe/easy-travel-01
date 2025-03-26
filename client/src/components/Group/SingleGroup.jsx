@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Calendar,
   Users,
@@ -13,6 +13,7 @@ import {
   Send,
   BanknoteIcon,
   Eye,
+  CircleCheck,
 } from "lucide-react";
 import {
   useGetTravelExpensesQuery,
@@ -29,6 +30,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { toast } from "react-toastify";
 import GroupNav from "./GroupNav";
 import { useSelector } from "react-redux";
+import { Badge } from "../ui/badge";
 
 const StatusBadgeConfig = {
   pending: {
@@ -65,21 +67,28 @@ const StatusBadge = ({ status }) => {
 
 function SingleGroup() {
   const [activeTab, setActiveTab] = useState("activity");
+  const [activeSecondaryTab, setActiveSecondaryTab] = useState("received");
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data: expensesData, isLoading: expensesLoading, refetch:expenseRefetch } =
-    useGetTravelExpensesQuery(id);
+  const {
+    data: expensesData,
+    isLoading: expensesLoading,
+    refetch: expenseRefetch,
+  } = useGetTravelExpensesQuery(id);
   const {
     data: groupData,
-    refetch:groupRefetch,
+    refetch: groupRefetch,
     isLoading: groupLoading,
   } = useGetSingleTravelGroupQuery(id);
 
-  const { data: summaryData, isLoading: summaryLoading, refetch:summaryRefetch } =
-    useGetExpenseSummaryQuery(id);
+  const {
+    data: summaryData,
+    isLoading: summaryLoading,
+    refetch: summaryRefetch,
+  } = useGetExpenseSummaryQuery(id);
 
   const [requestMoney, { isLoading: requestMoneyLoading }] =
     useRequestMoneyMutation();
@@ -117,23 +126,14 @@ function SingleGroup() {
     : [];
   const reversedExpenses = [...expenses].reverse();
 
-
-  // useEffect(() =>{
-  //   const reloadData = async () =>{
-  //     await groupRefetch()
-  //     await expenseRefetch()
-  //     await summaryRefetch()
-  //   }
-  //   reloadData()
-  // },[navigate])
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className=" bg-gray-50">
       {/* Header */}
       <GroupNav id={id} />
       {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-4 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-6">
         {/* Tabs */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-6">
           <button
             onClick={() => setActiveTab("activity")}
             className={`px-8 py-3 rounded-full font-medium ${
@@ -155,8 +155,8 @@ function SingleGroup() {
             Your Summary
           </button>
         </div>
-        <ScrollArea className="h-[calc(100vh-220px)]">
-          {activeTab === "activity" ? (
+        {activeTab === "activity" ? (
+          <ScrollArea className="h-[calc(100vh-192px)]">
             <div className="space-y-4">
               {reversedExpenses.length > 0 ? (
                 reversedExpenses.map((expense) => (
@@ -200,19 +200,33 @@ function SingleGroup() {
                             <>
                               {expense.splitBetween.some(
                                 (entry) =>
-                                  String(entry.user._id) === String(userdata) && entry.status !== 'paid'
-                              ) &&
-                                expense.paidBy._id !== String(userdata) && (
-                                  <button
-                                    onClick={() =>
-                                      handleSettleExpense(expense._id)
-                                    }
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
+                                  String(entry.user._id) === String(userdata) &&
+                                  entry.status !== "paid"
+                              ) ? (
+                                <>
+                                  {expense.paidBy._id !== String(userdata) && (
+                                    <button
+                                      onClick={() =>
+                                        handleSettleExpense(expense._id)
+                                      }
+                                      className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
+                                    >
+                                      <Send className="w-4 h-4" />
+                                      Settle Expense
+                                    </button>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  <Badge
+                                    variant={"secondary"}
+                                    className="capitalize  bg-green-100 text-green-700 shadow-sm hover:bg-green-100 rounded-xl "
                                   >
-                                    <Send className="w-4 h-4" />
-                                    Settle Expense
-                                  </button>
-                                )}
+                                    <CircleCheck className="w-[18px] mr-1 text-green-500" />
+                                    Already Settled
+                                  </Badge>
+                                </>
+                              )}
                               {expense.paidBy._id === userdata && (
                                 <button
                                   onClick={() =>
@@ -260,14 +274,16 @@ function SingleGroup() {
               )}
               <AddExpenses />
             </div>
-          ) : (
-            <div className="bg-gradient-to-br from-[#1c4dd3] to-[#061d5b] rounded-2xl p-1">
-              <div className="bg-white/[0.02] backdrop-blur-sm rounded-xl p-8">
-                <div className="grid grid-cols-4 gap-8">
+          </ScrollArea>
+        ) : (
+          <div>
+            <div className="bg-gradient-to-r from-[#6a5af9] to-[#4941d3] rounded-2xl p-1 shadow-lg">
+              <div className="bg-white/[0.02] backdrop-blur-sm rounded-xl p-3 ">
+                <div className="grid grid-cols-4 gap-4">
                   {/* Total Expenses */}
-                  <div className="flex flex-col items-center p-6 rounded-lg bg-white/10 border border-white/20  ">
-                    <Wallet className="w-6 h-6 mb-2 text-white/80" />
-                    <h3 className="text-white/60 text-sm font-medium mb-2">
+                  <div className="flex flex-col items-center justify-center  py-3  rounded-lg bg-white/10 border border-white/20">
+                    <Wallet className="w-6 h-6 mb-1 text-white/80" />
+                    <h3 className="text-white/60 text-sm font-medium mb-1">
                       Total Group Expenses
                     </h3>
                     <div className="text-white">
@@ -279,9 +295,9 @@ function SingleGroup() {
                   </div>
 
                   {/* Total Budget */}
-                  <div className="flex flex-col items-center p-6 rounded-lg bg-white/10 border border-white/20">
-                    <PiggyBank className="w-6 h-6 mb-2 text-white/80" />
-                    <h3 className="text-white/60 text-sm font-medium mb-2">
+                  <div className="flex flex-col items-center justify-center  py-3 rounded-lg bg-white/10 border border-white/20">
+                    <PiggyBank className="w-6 h-6 mb-1 text-white/80" />
+                    <h3 className="text-white/60 text-sm font-medium mb-1">
                       Group Budget
                     </h3>
                     <div className="text-white">
@@ -292,12 +308,11 @@ function SingleGroup() {
                   </div>
 
                   {/* You Owe */}
-                  <div className="flex flex-col items-center p-6 rounded-lg bg-white/10 border border-white/20">
-                    <ArrowUpRight className="w-6 h-6 mb-2 text-red-300" />
-                    <h3 className="text-white/60 text-sm font-medium mb-2">
+                  <div className="flex flex-col items-center justify-center  py-3 rounded-lg bg-white/10 border border-white/20">
+                    <ArrowUpRight className="w-6 h-6 mb-1 text-red-300" />
+                    <h3 className="text-white/60 text-sm font-medium mb-1">
                       You Owe
                     </h3>
-
                     <div className="text-white">
                       <span className="text-2xl font-semibold">
                         {groupData.group.currency} {""}
@@ -307,9 +322,9 @@ function SingleGroup() {
                   </div>
 
                   {/* People Owe You */}
-                  <div className="flex flex-col items-center p-6 rounded-lg bg-white/10 border border-white/20">
-                    <ArrowDownRight className="w-6 h-6 mb-2 text-green-300" />
-                    <h3 className="text-white/60 text-sm font-medium mb-2">
+                  <div className="flex flex-col items-center justify-center py-3 rounded-lg bg-white/10 border border-white/20">
+                    <ArrowDownRight className="w-6 h-6 mb-1 text-green-300" />
+                    <h3 className="text-white/60 text-sm font-medium mb-1">
                       Owed to You
                     </h3>
                     <div className="text-white">
@@ -322,8 +337,122 @@ function SingleGroup() {
                 </div>
               </div>
             </div>
-          )}
-        </ScrollArea>
+
+            <div className="flex gap-4 mt-7 mb-5">
+              <button
+                onClick={() => setActiveSecondaryTab("received")}
+                className={`px-5 py-2 rounded-xl font-medium ${
+                  activeSecondaryTab === "received"
+                    ? "bg-stone-200 text-gray-900"
+                    : "text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                Received
+              </button>
+              <button
+                onClick={() => setActiveSecondaryTab("paying")}
+                className={`px-5 py-2 rounded-xl font-medium ${
+                  activeSecondaryTab === "paying"
+                    ? "bg-[#554CCF]/80 text-black"
+                    : "text-gray-500 hover:bg-gray-50"
+                }`}
+              >
+                Paying
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "summary" && (
+          <ScrollArea className="h-[calc(100vh-435px)]">
+            {activeSecondaryTab === "received" ? (
+              <>
+                <>
+                  <div className="space-y-4">
+                    {summaryData?.data?.receivables?.map((receivable) => (
+                      <div
+                        key={receivable.expenseId}
+                        className="bg-white rounded-xl p-6 border border-gray-100"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex justify-between mb-3">
+                              <span className="text-lg font-semibold">
+                                {receivable.description}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-6">
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Calendar className="w-4 h-4 text-indigo-500" />
+                                {new Date(receivable.date).toLocaleDateString()}
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Users className="w-4 h-4 text-green-500" />
+                                Total Amount: NPR{" "}
+                                {receivable.totalAmount.toFixed(0)}
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <PieChart className="w-4 h-4 text-orange-500" />
+                                {receivable.category.charAt(0).toUpperCase() +
+                                  receivable.category.slice(1)}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="ml-6">
+                            <p className="text-md font-bold flex gap-2 bg-green-100 text-green-700 p-1.5 rounded-2xl">
+                              <Wallet />
+                              NPR {receivable.owedToYou.toFixed(0)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              </>
+            ) : (
+              <div className="space-y-4">
+                {summaryData?.data?.debts?.map((debt) => (
+                  <div
+                    key={debt.expenseId}
+                    className="bg-white rounded-xl p-6 border border-gray-100"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex justify-between mb-3">
+                          <span className="text-lg font-semibold">
+                            {debt.description}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-6">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Calendar className="w-4 h-4 text-indigo-500" />
+                            {new Date(debt.date).toLocaleDateString()}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Users className="w-4 h-4 text-green-500" />
+                            Owed to: {debt.owedTo.name}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <PieChart className="w-4 h-4 text-orange-500" />
+                            {debt.category.charAt(0).toUpperCase() +
+                              debt.category.slice(1)}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="ml-6">
+                        <p className="text-md font-bold flex gap-2 bg-red-100 text-red-700 p-1.5 rounded-2xl">
+                          <Wallet />
+                          NPR {debt.amount.toFixed(0)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </ScrollArea>
+        )}
       </main>
 
       {/* Expense Details Dialog */}
