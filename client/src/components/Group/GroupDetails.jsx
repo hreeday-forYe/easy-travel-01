@@ -87,7 +87,7 @@ const GroupDetails = ({ isView, refetch }) => {
             </h3>
           </div>
 
-          <ScrollArea className="h-72 mt-2 pr-4">
+          <ScrollArea className="h-[65vh] mt-2 pr-4">
             <div className="space-y-2">
               {isView?.group?.members?.map((member) => (
                 <Card key={member.user._id} className="overflow-hidden">
@@ -143,9 +143,9 @@ const GroupDetails = ({ isView, refetch }) => {
                 onClick={() =>
                   handleRemoveMembers(isView?.group?._id, userdata, true)
                 }
-                className="w-full "
+                className="w-full bg-red-600 text-white hover:bg-red-500 "
               >
-                Left
+                Leave Group
               </Button>
             )}
           </SheetFooter>

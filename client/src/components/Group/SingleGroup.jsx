@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Calendar,
   Users,
@@ -70,15 +70,15 @@ function SingleGroup() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data: expensesData, isLoading: expensesLoading } =
+  const { data: expensesData, isLoading: expensesLoading, refetch:expenseRefetch } =
     useGetTravelExpensesQuery(id);
   const {
     data: groupData,
-    refetch,
+    refetch:groupRefetch,
     isLoading: groupLoading,
   } = useGetSingleTravelGroupQuery(id);
 
-  const { data: summaryData, isLoading: summaryLoading } =
+  const { data: summaryData, isLoading: summaryLoading, refetch:summaryRefetch } =
     useGetExpenseSummaryQuery(id);
 
   const [requestMoney, { isloading: requestMoneyLoading }] =
@@ -115,6 +115,15 @@ function SingleGroup() {
     : [];
   const reversedExpenses = [...expenses].reverse();
 
+
+  // useEffect(() =>{
+  //   const reloadData = async () =>{
+  //     await groupRefetch()
+  //     await expenseRefetch()
+  //     await summaryRefetch()
+  //   }
+  //   reloadData()
+  // },[navigate])
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -189,7 +198,7 @@ function SingleGroup() {
                             <>
                               {expense.splitBetween.some(
                                 (entry) =>
-                                  String(entry.user._id) === String(userdata)
+                                  String(entry.user._id) === String(userdata) && entry.status !== 'paid'
                               ) &&
                                 expense.paidBy._id !== String(userdata) && (
                                   <button
@@ -220,7 +229,7 @@ function SingleGroup() {
                       <div className="ml-6">
                         <p className="text-md font-bold flex gap-2 bg-green-100 text-green-700 p-1.5 rounded-2xl ">
                           <Wallet />
-                          {expense.amount?.toFixed(2)}{" "}
+                          {expense.amount?.toFixed(0)}{" "}
                           {groupData?.group?.currency}
                         </p>
                       </div>

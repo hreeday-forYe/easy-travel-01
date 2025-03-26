@@ -1,5 +1,6 @@
 import { X, Receipt, Users, AlertCircle } from "lucide-react";
 import { useSelector } from "react-redux";
+import { Badge } from "@/components/ui/badge";
 
 export default function ExpenseDetailsDialog({
   expense,
@@ -53,7 +54,15 @@ export default function ExpenseDetailsDialog({
               </div>
               <div>
                 <span className="text-gray-500">Status</span>
-                <p className={`${expense.status === "Pending" ? "bg-yellow-100": "bg-green-100"}font-medium capitalize`}>{expense.status}</p>
+                <p
+                  className={`${
+                    expense.status === "Pending"
+                      ? "bg-yellow-100"
+                      : "bg-green-100"
+                  }font-medium capitalize`}
+                >
+                  {expense.status}
+                </p>
               </div>
             </div>
           </div>
@@ -80,12 +89,17 @@ export default function ExpenseDetailsDialog({
                   </div>
                   <div className="text-right">
                     <div className="font-medium text-gray-900">
-                      {currency}{" "}
-                      {person.share}
+                      {currency} {person.share}
                     </div>
-                    <div className="text-sm text-gray-500">
-                      {person._id === expense.paidBy._id ? "Paid" : "Owes"}
-                    </div>
+
+                    <Badge
+                      variant={`${
+                        person.status === "paid" ? "outline" : "destructive"
+                      }`}
+                      className='capitalize'
+                    >
+                      {person.status}
+                    </Badge>
                   </div>
                 </div>
               ))}
@@ -100,32 +114,31 @@ export default function ExpenseDetailsDialog({
                 Receipt
               </h3>
               <div className="border rounded-lg overflow-hidden">
-                {
-                  expense.receipt.url ? (
-                    <img
-                      src={expense.receipt.url}
-                      alt="Expense receipt"
-                      className="w-full h-auto"
-                    />
-                  ):(
-                    <p className="text-sm">Receipt not Available</p>
-                  )
-                }
+                {expense.receipt.url ? (
+                  <img
+                    src={expense.receipt.url}
+                    alt="Expense receipt"
+                    className="w-full h-auto"
+                  />
+                ) : (
+                  <p className="text-sm">Receipt not Available</p>
+                )}
               </div>
             </div>
           )}
 
           {/* Notes */}
-          {expense.notes && (
+          {expense.notes.length > 0 && (
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-2 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5" />
                 Notes
               </h3>
-              <p className="text-gray-600">{expense.notes}</p>
+              {expense.notes.map((note) => (
+                <p className="text-gray-600">{note}</p>
+              ))}
             </div>
           )}
-
         </div>
       </div>
     </div>

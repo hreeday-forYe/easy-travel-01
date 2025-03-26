@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { SideBar } from "..";
 import GroupNav from "./GroupNav";
-import { useGetSingleExpenseQuery } from "@/app/slices/expenseApiSlice";
+import { useDisputeExpenseMutation, useGetSingleExpenseQuery } from "@/app/slices/expenseApiSlice";
 import {
   CalendarDays,
   Receipt,
@@ -15,7 +15,9 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSelector } from "react-redux";
-
+import {useExpenseSettlementMutation} from '../../app/slices/expenseApiSlice'
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const Settlement = () => {
   const location = useLocation();
   const id = location.state?.groupId;
@@ -26,9 +28,10 @@ const Settlement = () => {
   const [note, setNote] = useState("");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cash");
   const userdata = useSelector((state) => state.auth?.user?._id);
+  const [expenseSettlement] = useExpenseSettlementMutation()
+  const [disputeExpense] = useDisputeExpenseMutation()
 
-
-
+  const navigate = useNavigate()
   if (!data) return null;
 
   const expense = data.data;
@@ -38,25 +41,34 @@ const Settlement = () => {
     day: "numeric",
   });
 
-  const handleSettlement = async (splitId, action) => {
+  const handleSettlement = async (action) => {
     try {
-      // const payload = {
-      //   expenseId,
-      //   splitId,
-      //   action,
-      //   note,
-      //   paymentMethod: selectedPaymentMethod,
-      // };
-      console.log(splitId, action);
-
-      // Here you would make the API call to settle/dispute the payment
-      // const response = await settleExpense(payload);
-
+      
+      const data =  {
+        expenseId,
+        payment: selectedPaymentMethod,
+        note
+      }
+      if(action === 'settle'){
+        const response  = await expenseSettlement(data).unwrap()
+        if(response.success){
+          toast.success(response.messsage)
+          navigate(-1)
+        }
+      }else if(action === 'dispute'){
+        const response = await disputeExpense(data).unwrap()
+        if(response.success){
+          toast.success(response.messsage)
+          navigate(-1)
+        }
+      }
+      
+    } catch (error) {
+      console.error("Settlement failed:", error);
+    }finally{
       setShowSettleModal(false);
       setNote("");
       setSelectedAction(null);
-    } catch (error) {
-      console.error("Settlement failed:", error);
     }
   };
 
@@ -275,7 +287,6 @@ const Settlement = () => {
                         <button
                           onClick={() =>
                             handleSettlement(
-                              expense.splitBetween[0]._id,
                               selectedAction
                             )
                           }
