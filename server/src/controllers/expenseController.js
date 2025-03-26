@@ -9,7 +9,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import sendMail from "../utils/sendMail.js";
 import { group } from "console";
-import ejs from 'ejs'
+import ejs from "ejs";
 
 class ExpenseController {
   static createExpense = asyncHandler(async (req, res, next) => {
@@ -235,11 +235,10 @@ class ExpenseController {
 
   static fetchSingleExpense = asyncHandler(async (req, res, next) => {
     const expenseId = req.params.id;
-
     try {
       // Find the expense
       const expense = await Expense.findById(expenseId)
-        .populate("paidBy.user", "name avatar")
+        .populate("paidBy", "name avatar")
         .populate("splitBetween.user", "name avatar");
 
       if (!expense) {
@@ -361,7 +360,7 @@ class ExpenseController {
     try {
       // Validate expense exists and user is the payer
       const userId = req.user._id;
-      const user = await User.findById(userId)
+      const user = await User.findById(userId);
       const expenseId = req.params.id;
       const expense = await Expense.findById(expenseId)
         .populate("paidBy", "name email")
@@ -409,19 +408,19 @@ class ExpenseController {
           groupName: group.name,
           expenseId: expense._id,
         };
-      await ejs.renderFile(mailPath, data);
-      console.log(debtor.user.email);
-      await sendMail({
-        email: debtor.user.email,
-        subject: "Settlement Request",
-        template: "requestSettlement.ejs",
-        data,
-      });
+        await ejs.renderFile(mailPath, data);
+        console.log(debtor.user.email);
+        await sendMail({
+          email: debtor.user.email,
+          subject: "Settlement Request",
+          template: "requestSettlement.ejs",
+          data,
+        });
       });
       await Promise.all(emailPromises);
       res.status(200).json({
-        messsage: "Sent"
-      })
+        messsage: "Sent",
+      });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
