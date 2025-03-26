@@ -15,7 +15,7 @@ import SingleGroup from './Group/SingleGroup';
 import ListGroup from './Group/GroupList';
 import AddGroup from './Group/AddGroup';
 import Profile from './Profile';
-import Top from './Top';
+import Top from './Hero';
 import Features from './Features';
 import BentoBox from './BentoBox';
 import Faq from './FAQ';
