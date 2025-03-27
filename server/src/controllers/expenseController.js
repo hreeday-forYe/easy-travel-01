@@ -365,7 +365,7 @@ class ExpenseController {
       const expense = await Expense.findById(expenseId)
         .populate("paidBy", "name email")
         .populate("splitBetween.user", "name email")
-        .populate("group", "name");
+        .populate("group", "name currency");
 
       if (!expense) {
         return next(new ErrorHandler("Expense not found", 404));
@@ -407,7 +407,8 @@ class ExpenseController {
           payerName: user.name,
           amount: debtor.share,
           expenseDescription: expense.description,
-          groupName: group.name,
+          groupName: expense.group.name,
+          currency: expense.group.currency,
           expenseId: expense._id,
         };
         await ejs.renderFile(mailPath, data);
@@ -468,9 +469,7 @@ class ExpenseController {
         }`
       );
     } else {
-      expense.notes.push(
-        `${req.user.name}: ${note || "No notes provided"}`
-      );
+      expense.notes.push(`${req.user.name}: ${note || "No notes provided"}`);
     }
 
     // Calculate expense status based on all splits
@@ -496,7 +495,7 @@ class ExpenseController {
 
     await expense.save();
 
-    // Create settlement record 
+    // Create settlement record
     /*
     await Settlement.create({
         expense: expenseId,

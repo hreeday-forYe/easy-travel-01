@@ -19,7 +19,7 @@ import {
   useGetTravelExpensesQuery,
   useGetSingleTravelGroupQuery,
 } from "@/app/slices/travelGroupApiSlice";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import AddExpenses from "./AddExpenses";
 import ExpenseDetailsDialog from "./ExpenseDetailsDialog";
 import {
@@ -31,6 +31,7 @@ import { toast } from "react-toastify";
 import GroupNav from "./GroupNav";
 import { useSelector } from "react-redux";
 import { Badge } from "../ui/badge";
+import { useEffect } from "react";
 
 const StatusBadgeConfig = {
   pending: {
@@ -72,23 +73,31 @@ function SingleGroup() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const [requestingExpenseId, setRequestingExpenseId] = useState(null);
 
   const {
     data: expensesData,
     isLoading: expensesLoading,
     refetch: expenseRefetch,
-  } = useGetTravelExpensesQuery(id);
+  } = useGetTravelExpensesQuery(id, {
+    pollingInterval: 3000, // Refetch every 30 seconds
+  });
+
   const {
     data: groupData,
     refetch: groupRefetch,
     isLoading: groupLoading,
-  } = useGetSingleTravelGroupQuery(id);
+  } = useGetSingleTravelGroupQuery(id, {
+    pollingInterval: 3000,
+  });
 
   const {
     data: summaryData,
     isLoading: summaryLoading,
     refetch: summaryRefetch,
-  } = useGetExpenseSummaryQuery(id);
+  } = useGetExpenseSummaryQuery(id, {
+    pollingInterval: 3000,
+  });
 
   const [requestMoney, { isLoading: requestMoneyLoading }] =
     useRequestMoneyMutation();
@@ -99,10 +108,12 @@ function SingleGroup() {
     navigate(`/groups/settlement/${expenseId}`, {
       state: { groupId: id },
     });
+    window.location.reload()
   };
 
   const handleRequestMoney = async (expenseId) => {
     try {
+      setRequestingExpenseId(expenseId);
       const response = await requestMoney(expenseId).unwrap();
       toast.success("Email sent to all the debtors");
       if (response.success) {
@@ -111,6 +122,8 @@ function SingleGroup() {
     } catch (error) {
       toast.error("Failed to send email");
       console.error("Error requesting money:", error);
+    } finally {
+      setRequestingExpenseId(null);
     }
   };
 
@@ -167,7 +180,7 @@ function SingleGroup() {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex justify-between mb-3">
-                          <span className="text-lg font-semibold">
+                          <span className="text-lg font-semibold capitalize">
                             {expense.description}
                           </span>
                           <StatusBadge status={expense.status} />
@@ -232,10 +245,10 @@ function SingleGroup() {
                                   onClick={() =>
                                     handleRequestMoney(expense._id)
                                   }
-                                  disabled={requestMoneyLoading}
+                                  disabled={requestingExpenseId === expense._id}
                                   className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                                 >
-                                  {requestMoneyLoading ? (
+                                  {requestingExpenseId === expense._id ? (
                                     <>Requesting...</>
                                   ) : (
                                     <>
@@ -347,7 +360,7 @@ function SingleGroup() {
                     : "text-gray-600 hover:bg-gray-200"
                 }`}
               >
-                Received
+                To Receive From
               </button>
               <button
                 onClick={() => setActiveSecondaryTab("paying")}
@@ -357,7 +370,7 @@ function SingleGroup() {
                     : "text-gray-500 hover:bg-gray-50"
                 }`}
               >
-                Paying
+                To Pay
               </button>
             </div>
           </div>

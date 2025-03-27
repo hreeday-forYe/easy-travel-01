@@ -14,8 +14,7 @@ import { Badge } from "@/components/ui/badge";
 
 const ExpenseDetailsModal = ({ expense, currency, isOpen, onClose }) => {
   // Ensure the component has a fallback if no expense is provided
- if (!isOpen) return null;
-  
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
@@ -36,7 +35,7 @@ const ExpenseDetailsModal = ({ expense, currency, isOpen, onClose }) => {
           <div className="space-y-6">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">
+                <h3 className="text-xl font-semibold capitalize text-gray-900">
                   {expense.description}
                 </h3>
                 <p className="text-gray-500 mt-1">{expense.category}</p>
