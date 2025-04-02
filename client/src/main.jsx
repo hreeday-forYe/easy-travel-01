@@ -10,6 +10,8 @@ import {
   Activate,
   PageNotFound,
   Settlement,
+  ExploreJournalList,
+  SingleExploreJournal,
 } from "./components";
 import { Provider } from "react-redux";
 
@@ -22,6 +24,7 @@ import {
   GroupPage,
   JournalsPage,
   SingleGroupPage,
+  ExploreJournalPage
 } from "./pages";
 import AuthLayout from "./routes/AuthLayout";
 
@@ -111,7 +114,23 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
+      {
+        path: "/journals",
+        element: (
+          <AuthLayout authentication={true}>
+            <ExploreJournalPage />
+          </AuthLayout>
+        ),
+      },
 
+      {
+        path: "/journals/:id",
+        element: (
+          <AuthLayout authentication={true}>
+            <SingleExploreJournal />
+          </AuthLayout>
+        ),
+      },
       {
         path: "/journal/:id",
         element: (
