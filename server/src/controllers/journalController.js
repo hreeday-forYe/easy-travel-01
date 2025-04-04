@@ -1,9 +1,8 @@
-import Journal from "../models/JournalModel.js";
-import { v4 as uuidv4 } from "uuid";
 import User from "../models/UserModel.js";
 import cloudinary from "cloudinary";
 import { asyncHandler } from "../middlewares/asyncHandler.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
+import Journal from "../models/journalModel.js";
 
 class JournalController {
   static createJournal = asyncHandler(async (req, res, next) => {
@@ -79,12 +78,34 @@ class JournalController {
   static getAllJournal = asyncHandler(async (req, res, next) => {
     try {
       const user = req.user;
-      const allJournals = await Journal.find({ author: user._id });
+      const allJournals = await Journal.find({ author: user._id }).populate(
+        "author",
+        "name"
+      );;
       if (!allJournals || allJournals.length === 0) {
-                return res.status(200).json({
-                  success: false,
-                  message: "No Journals Found",
-                });
+        return res.status(200).json({
+          success: false,
+          message: "No Journals Found",
+        });
+      }
+      return res.status(200).json({ success: true, allJournals });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
+  static getPublicJournal = asyncHandler(async (req, res, next) => {
+    try {
+      const user = req.user;
+      const allJournals = await Journal.find({
+        author: user._id,
+        isPrivate: false,
+      }).populate("author", "name");
+      if (!allJournals || allJournals.length === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "No Journals Found",
+        });
       }
       return res.status(200).json({ success: true, allJournals });
     } catch (error) {
@@ -95,10 +116,8 @@ class JournalController {
   static updateJournal = asyncHandler(async (req, res, next) => {
     try {
       const id = req.params.id;
-      const { title, content, mood, location, tags, isPrivate } =
-        req.body;
+      const { title, content, mood, location, tags, isPrivate } = req.body;
 
-      // Handle Image Updation logic as well.
       // Handle Image section using cloudinary
       let images = [];
 

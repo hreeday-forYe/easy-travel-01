@@ -24,6 +24,8 @@ import Work from "./Work";
 import PageNotFound from "./PageNotFound";
 import DashboardNav from "./Header/DashboardNav";
 import Settlement from "./Group/Settlement";
+import ExploreJournalList from './Explore/ExploreJournalList'
+import SingleExploreJournal from "./Explore/SingleExploreJournal";
 
 export {
   Login,
@@ -45,11 +47,13 @@ export {
   AddJournal,
   EditJournal,
   JournalList,
+  ExploreJournalList,
   SingleGroup,
   ListGroup,
   AddGroup,
   Profile,
   PageNotFound,
   DashboardNav,
+  SingleExploreJournal,
   Settlement,
 };

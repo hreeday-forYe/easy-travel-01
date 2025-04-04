@@ -284,11 +284,10 @@ class ExpenseController {
         .populate("paidBy", "name email")
         .populate("splitBetween.user", "name email");
 
-      // Calculate amounts
-      let totalOwed = 0; // What the user owes others
-      let totalToReceive = 0; // What others owe the user
-      const debts = []; // Detailed debts the user owes
-      const receivables = []; // Detailed amounts owed to the user
+      let totalOwed = 0; 
+      let totalToReceive = 0; 
+      const debts = []; 
+      const receivables = []; 
 
       expenses.forEach((expense) => {
         // Check if user is the payer

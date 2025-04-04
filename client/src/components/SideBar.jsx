@@ -3,11 +3,11 @@ import {
   LayoutDashboard,
   PieChart,
   Settings,
-  Wallet,
   Menu,
   NotebookPen,
   UsersRound,
   Layers,
+  NotebookTabs,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,9 +25,9 @@ const SideBar = () => {
       label: "Dashboard",
       href: "/dashboard",
     },
-    { icon: NotebookPen, label: "Journal", href: "/journal" },
+    { icon: NotebookPen, label: "My Journal", href: "/journal" },
+    { icon: NotebookTabs, label: "Explore Journal", href: "/journals" },
     { icon: UsersRound, label: "Group", href: "/groups" },
-    { icon: Wallet, label: "Budgets", href: "/budgets" },
     { icon: PieChart, label: "Reports", href: "/reports" },
     { icon: Settings, label: "Settings", href: "/settings" },
   ];

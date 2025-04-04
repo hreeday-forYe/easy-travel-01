@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { setCredentials } from "../app/slices/authSlice";
 import { useLoginMutation } from "../app/slices/userApiSlice";
 import { toast } from "react-toastify";
-import { Lock, Mail, ArrowRight } from "lucide-react";
+import { Lock, Mail, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { useState } from "react"; // Import useState hook
 
 const Login = () => {
   const {
@@ -26,6 +27,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const [storeLogin, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
   const onSubmit = async (data) => {
     try {
@@ -94,13 +96,24 @@ const Login = () => {
                   <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
                     id="password"
-                    type="password"
-                    className="pl-10 input-transition"
+                    type={showPassword ? "text" : "password"} // Toggle input type
+                    className="pl-10 pr-10 input-transition" // Added pr-10 for the eye icon
                     {...register("password", {
                       required: "Password is required",
                     })}
                     placeholder="Enter your password"
                   />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowPassword(!showPassword)} // Toggle visibility
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
                 {errors.password && (
                   <p className="text-destructive text-sm mt-1">
