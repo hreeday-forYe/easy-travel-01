@@ -18,7 +18,7 @@ const AdminLayout = ({ children }) => {
       }
 
       // If userInfo is available, check the role
-      if (userInfo?.role !== "admin") {
+      if (userInfo?.role !== "user") {
         console.log("User is not an admin, redirecting to home...");
         navigate("/");
         toast.error("You are not authorized to access this page");

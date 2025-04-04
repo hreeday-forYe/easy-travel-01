@@ -10,8 +10,8 @@ import {
   Activate,
   PageNotFound,
   Settlement,
-  ExploreJournalList,
   SingleExploreJournal,
+  AdminDashboard,
 } from "./components";
 import { Provider } from "react-redux";
 
@@ -24,9 +24,11 @@ import {
   GroupPage,
   JournalsPage,
   SingleGroupPage,
-  ExploreJournalPage
+  ExploreJournalPage,
 } from "./pages";
 import AuthLayout from "./routes/AuthLayout";
+import AdminLayout from "./routes/AdminLayout";
+import AdminPage from "./pages/AdminPage";
 
 const router = createBrowserRouter([
   {
@@ -148,8 +150,33 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/admin",
+        element: (
+          <AuthLayout authentication={true}>
+            <AdminPage />
+          </AuthLayout>
+        ),
+      },
+
+      {
         path: "*",
         element: <PageNotFound />,
+      },
+    ],
+  },
+  
+  //Admin
+  {
+    path: "/admin",
+    element: <AdminPage />,
+    children: [
+      {
+        index: true,
+        element: (
+          <AdminLayout>
+            <AdminDashboard />
+          </AdminLayout>
+        ),
       },
     ],
   },

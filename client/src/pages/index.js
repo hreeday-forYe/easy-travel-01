@@ -8,6 +8,7 @@ import SingleGroupPage from "./SingleGroupPage";
 import JournalsPage from "./JournalsPage";
 import ExploreJournalPage from "./ExploreJournalPage";
 
+
 // import SingleJournalPage from './SingleJournalPage'
 export {
   HomePage,

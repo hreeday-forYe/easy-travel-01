@@ -26,6 +26,10 @@ import DashboardNav from "./Header/DashboardNav";
 import Settlement from "./Group/Settlement";
 import ExploreJournalList from './Explore/ExploreJournalList'
 import SingleExploreJournal from "./Explore/SingleExploreJournal";
+import AdminDashboard from "./Admin/AdminDashboard";
+import AdminNavbar from "./Admin/AdminNavbar";
+import AdminSidebar from "./Admin/AdminSidebar";
+
 
 export {
   Login,
@@ -56,4 +60,7 @@ export {
   DashboardNav,
   SingleExploreJournal,
   Settlement,
+  AdminDashboard,
+  AdminNavbar,
+  AdminSidebar,
 };
