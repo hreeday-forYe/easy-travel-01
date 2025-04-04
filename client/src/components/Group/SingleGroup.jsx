@@ -165,7 +165,7 @@ function SingleGroup() {
                 : "text-gray-500 hover:bg-gray-50"
             }`}
           >
-            Your Summary
+            My Summary
           </button>
         </div>
         {activeTab === "activity" ? (
