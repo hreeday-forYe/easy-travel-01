@@ -108,7 +108,7 @@ function SingleGroup() {
     navigate(`/groups/settlement/${expenseId}`, {
       state: { groupId: id },
     });
-    window.location.reload()
+    window.location.reload();
   };
 
   const handleRequestMoney = async (expenseId) => {
@@ -230,15 +230,22 @@ function SingleGroup() {
                                   )}
                                 </>
                               ) : (
-                                <>
-                                  <Badge
-                                    variant={"secondary"}
-                                    className="capitalize  bg-green-100 text-green-700 shadow-sm hover:bg-green-100 rounded-xl "
-                                  >
-                                    <CircleCheck className="w-[18px] mr-1 text-green-500" />
-                                    Already Settled
-                                  </Badge>
-                                </>
+                                expense.splitBetween.some(
+                                  (entry) =>
+                                    String(entry.user._id) ===
+                                      String(userdata) &&
+                                    entry.status === "paid"
+                                ) && (
+                                  <>
+                                    <Badge
+                                      variant={"secondary"}
+                                      className="capitalize  bg-green-100 text-green-700 shadow-sm hover:bg-green-100 rounded-xl "
+                                    >
+                                      <CircleCheck className="w-[18px] mr-1 text-green-500" />
+                                      Already Settled
+                                    </Badge>
+                                  </>
+                                )
                               )}
                               {expense.paidBy._id === userdata && (
                                 <button

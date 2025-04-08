@@ -54,16 +54,16 @@ export default function ExploreJournalList() {
         <div className="px-8 mt-6">
           <div className="pb-8 flex justify-between items-center ">
             <div className="">
-              <h1 className="text-4xl font-bold">Journal</h1>
+              <h1 className="text-4xl font-bold">Explore Journals</h1>
               <p className="text-muted-foreground">
-                View and manage your travel journal entries
+                View the Journals Written by fellow travellers
               </p>
             </div>
             <AddJournal />
           </div>
         </div>
         <div className="text-center py-10">
-          <p className="text-xl text-gray-500">You have no journals yet.</p>
+          <p className="text-xl text-gray-500">There are no public journals yet.</p>
         </div>
       </>
     );

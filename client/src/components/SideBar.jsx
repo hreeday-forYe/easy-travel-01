@@ -26,7 +26,7 @@ const SideBar = () => {
       href: "/dashboard",
     },
     { icon: NotebookPen, label: "My Journal", href: "/journal" },
-    { icon: NotebookTabs, label: "Explore Journal", href: "/journals" },
+    { icon: NotebookTabs, label: "Explore Journal", href: "/explore" },
     { icon: UsersRound, label: "Group", href: "/groups" },
     { icon: PieChart, label: "Reports", href: "/reports" },
     { icon: Settings, label: "Settings", href: "/settings" },

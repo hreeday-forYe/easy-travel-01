@@ -115,7 +115,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/journals",
+        path: "/explore",
         element: (
           <AuthLayout authentication={true}>
             <ExploreJournalPage />
