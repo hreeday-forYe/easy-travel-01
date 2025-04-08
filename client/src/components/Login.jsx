@@ -33,7 +33,12 @@ const Login = () => {
     try {
       const res = await storeLogin(data).unwrap();
       dispatch(setCredentials({ user: res.user }));
-      navigate("/dashboard");
+      console.log(res.user.role)
+      if (res.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
       toast.success("Login Successful");
     } catch (errors) {
       toast.error(errors.message || "Invalid email or password");
