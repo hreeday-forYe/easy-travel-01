@@ -24,12 +24,14 @@ import Work from "./Work";
 import PageNotFound from "./PageNotFound";
 import DashboardNav from "./Header/DashboardNav";
 import Settlement from "./Group/Settlement";
-import ExploreJournalList from './Explore/ExploreJournalList'
+import ExploreJournalList from "./Explore/ExploreJournalList";
 import SingleExploreJournal from "./Explore/SingleExploreJournal";
 import AdminDashboard from "./Admin/AdminDashboard";
 import AdminNavbar from "./Admin/AdminNavbar";
 import AdminSidebar from "./Admin/AdminSidebar";
-
+import TermsOfService from "./Resources/TermsOfService";
+import Support from "./Resources/Support";
+import PrivacyPolicy1 from "./Resources/PrivacyPolicy1";
 
 export {
   Login,
@@ -63,4 +65,7 @@ export {
   AdminDashboard,
   AdminNavbar,
   AdminSidebar,
+  PrivacyPolicy1,
+  TermsOfService,
+  Support,
 };

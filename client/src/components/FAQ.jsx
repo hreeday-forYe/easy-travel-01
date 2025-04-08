@@ -79,7 +79,7 @@ const Faq = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8" id="faq">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <div className="inline-block p-4 bg-blue-100 rounded-full mb-4">

@@ -12,6 +12,9 @@ import {
   Settlement,
   SingleExploreJournal,
   AdminDashboard,
+  TermsOfService,
+  PrivacyPolicy1,
+  Support,
 } from "./components";
 import { Provider } from "react-redux";
 
@@ -54,6 +57,30 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={false}>
             <Activate />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/terms",
+        element: (
+          <AuthLayout authentication={false}>
+            <TermsOfService />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/privacy",
+        element: (
+          <AuthLayout authentication={false}>
+            <PrivacyPolicy1 />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/support",
+        element: (
+          <AuthLayout authentication={false}>
+            <Support />
           </AuthLayout>
         ),
       },
@@ -164,7 +191,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  
+
   //Admin
   {
     path: "/admin",

@@ -25,17 +25,17 @@ const SideBar = () => {
       label: "Dashboard",
       href: "/admin",
     },
-    { icon: NotebookPen, label: "My Journal", href: "/journal" },
-    { icon: NotebookTabs, label: "Explore Journal", href: "/journals" },
-    { icon: UsersRound, label: "Group", href: "/groups" },
-    { icon: PieChart, label: "Reports", href: "/reports" },
-    { icon: Settings, label: "Settings", href: "/settings" },
+    { icon: NotebookPen, label: "My Journal", href: "/admin/journal" },
+    // { icon: NotebookTabs, label: "Explore Journal", href: "/journals" },
+    // { icon: UsersRound, label: "Group", href: "/groups" },
+    // { icon: PieChart, label: "Reports", href: "/reports" },
+    { icon: Settings, label: "Settings", href: "/admin/settings" },
   ];
 
   return (
     <div
       className={cn(
-        "flex h-screen flex-col border-r  bg-slate-100 transition-all duration-300 ",
+        "flex  flex-col border-r  bg-slate-100 transition-all duration-300 ",
         isSidebarCollapsed ? "w-[80px]" : "w-[250px]"
       )}
     >

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 const AdminLayout = ({ children }) => {
   const userInfo = useSelector((state) => state?.auth?.user);
+  console.log(userInfo)
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
@@ -18,7 +19,7 @@ const AdminLayout = ({ children }) => {
       }
 
       // If userInfo is available, check the role
-      if (userInfo?.role !== "user") {
+      if (userInfo?.role !== "admin") {
         console.log("User is not an admin, redirecting to home...");
         navigate("/");
         toast.error("You are not authorized to access this page");

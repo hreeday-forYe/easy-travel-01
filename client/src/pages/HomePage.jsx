@@ -1,3 +1,4 @@
+import ScrollToTop from "@/components/ScrollToTop";
 import {
   Header,
   Footer,
@@ -35,6 +36,7 @@ const HomePage = () => {
       <section className="bg-[#EEEEEE] ">
         <Testimonial />
       </section>
+      <ScrollToTop/>
       <Footer />
     </>
   );
