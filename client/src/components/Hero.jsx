@@ -8,7 +8,7 @@ const Top = () => {
 
   return (
     <>
-      <section className="px-4 md:px-10 lg:px-20 mt-[120px]  mb-20">
+      <section className="px-4 md:px-10 lg:px-20 mt-[120px]  mb-20" id="home" >
         <div className="flex flex-col-reverse md:flex-row items-center gap-0">
           <div className="flex-1">
             <p className="font-bold text-lg text-[#586BAF] mt-5 md:mt-0">

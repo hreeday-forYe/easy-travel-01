@@ -17,16 +17,16 @@ const HomePage = () => {
       <section id="top">
         <Top />
       </section>
-      <section className="bg-[#EEEEEE]" id="features">
+      <section className="bg-[#EEEEEE]">
         <Features />
       </section>
-      <section className="bg-[#5f5e5e]">
+      <section className="bg-[#5f5e5e]" >
         <BentoBox />
       </section>
-      <section id="about">
+      <section>
         <About />
       </section>
-      <section className="bg-[#EEEEEE] ">
+      <section className="bg-[#EEEEEE] " id="works">
         <Work />
       </section>
       <section>

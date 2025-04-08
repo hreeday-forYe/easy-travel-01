@@ -134,7 +134,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
-        <p>© {new Date().getFullYear()}Easy Travel. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Easy Travel. All rights reserved.</p>
       </div>
     </footer>
   );
