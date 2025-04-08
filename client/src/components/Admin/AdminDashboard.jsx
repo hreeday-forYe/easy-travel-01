@@ -143,7 +143,7 @@ const AdminDashboard = () => {
                 <Line
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#4F46E5"
+                  stroke="#6366F1"
                   strokeWidth={2}
                 />
               </LineChart>
@@ -174,7 +174,7 @@ const AdminDashboard = () => {
                 <XAxis dataKey="name" stroke="#6b7280" />
                 <YAxis stroke="#6b7280" />
                 <Tooltip />
-                <Bar dataKey="bookings" fill="#4F46E5" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="bookings" fill="#6366F1" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -232,7 +232,7 @@ const AdminDashboard = () => {
         <div className="bg-white p-6 rounded-xl shadow-sm">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              Recent Bookings
+              Recent Expense
             </h2>
             <button className="text-sm text-indigo-600 hover:text-indigo-800">
               View All
