@@ -80,7 +80,7 @@ function SingleGroup() {
     isLoading: expensesLoading,
     refetch: expenseRefetch,
   } = useGetTravelExpensesQuery(id, {
-    pollingInterval: 3000, // Refetch every 30 seconds
+    pollingInterval: 30000, // Refetch every 30 seconds
   });
 
   const {
@@ -88,7 +88,7 @@ function SingleGroup() {
     refetch: groupRefetch,
     isLoading: groupLoading,
   } = useGetSingleTravelGroupQuery(id, {
-    pollingInterval: 3000,
+    pollingInterval: 30000,
   });
 
   const {
@@ -96,7 +96,7 @@ function SingleGroup() {
     isLoading: summaryLoading,
     refetch: summaryRefetch,
   } = useGetExpenseSummaryQuery(id, {
-    pollingInterval: 3000,
+    pollingInterval: 30000,
   });
 
   const [requestMoney, { isLoading: requestMoneyLoading }] =

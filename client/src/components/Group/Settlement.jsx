@@ -22,6 +22,7 @@ import { useExpenseSettlementMutation } from "../../app/slices/expenseApiSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
+import { useInitiatePaymentMutation } from "@/app/slices/expenseApiSlice";
 const Settlement = () => {
   const location = useLocation();
   const id = location.state?.groupId;
@@ -34,6 +35,7 @@ const Settlement = () => {
   const userdata = useSelector((state) => state.auth?.user?._id);
   const [expenseSettlement] = useExpenseSettlementMutation();
   const [disputeExpense] = useDisputeExpenseMutation();
+  const [initiateKhalti] = useInitiatePaymentMutation();
 
   const navigate = useNavigate();
   if (!data) return null;
@@ -73,7 +75,25 @@ const Settlement = () => {
       setSelectedAction(null);
     }
   };
+  const userShare =
+    expense.splitBetween.find((split) => split.user._id === userdata)?.share ||
+    0;
 
+  const initiatePayment = async (data) => {
+    console.log(data);
+    try {
+      const response = await initiateKhalti(data);
+      console.log(response);
+      if (response.success) {
+        window.location.href = response?.payment_url;
+      }
+      if (response.error) {
+        toast.error(error.data.message);
+      }
+    } catch (error) {
+      toast.error(error.data.message);
+    }
+  };
   return (
     <div className="flex w-full bg-gray-50">
       <SideBar />
@@ -262,20 +282,25 @@ const Settlement = () => {
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           {selectedAction === "settle"
-                            ? "Add a note (optional)"
+                            ? selectedPaymentMethod === 'cash'? 
+                            "Add a note (optional)": ''
                             : "Reason for dispute"}
                         </label>
-                        <textarea
-                          value={note}
-                          onChange={(e) => setNote(e.target.value)}
-                          className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          rows={3}
-                          placeholder={
-                            selectedAction === "settle"
-                              ? "Add any additional information..."
-                              : "Please explain the reason for the dispute..."
-                          }
-                        />
+                        {selectedPaymentMethod === "khalti" ? (
+                          <></>
+                        ) : (
+                          <textarea
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            rows={3}
+                            placeholder={
+                              selectedAction === "settle"
+                                ? "Add any additional information..."
+                                : "Please explain the reason for the dispute..."
+                            }
+                          />
+                        )}
                       </div>
 
                       <div className="flex space-x-3 pt-4">
@@ -287,7 +312,7 @@ const Settlement = () => {
                         </button>
 
                         {selectedAction === "settle" &&
-                          selectedPaymentMethod && (
+                          selectedPaymentMethod === "cash" && (
                             <Button
                               onClick={() => handleSettlement("settle")}
                               className={`flex-1 px-4 py-2 text-white rounded-lg ${
@@ -296,9 +321,26 @@ const Settlement = () => {
                                   : "bg-purple-600 hover:bg-purple-700"
                               }`}
                             >
-                              {selectedPaymentMethod === "cash"
-                                ? "Settle with Cash"
-                                : "Pay via Khalti"}
+                              Settle with Cash
+                            </Button>
+                          )}
+                        {selectedAction === "settle" &&
+                          selectedPaymentMethod === "khalti" && (
+                            <Button
+                              onClick={() =>
+                                initiatePayment({
+                                  amount: userShare,
+                                  expenseId: expenseId,
+                                  paidTo: expense.paidBy,
+                                })
+                              }
+                              className={`flex-1 px-4 py-2 text-white rounded-lg ${
+                                selectedPaymentMethod === "cash"
+                                  ? "text-black"
+                                  : "bg-purple-600 hover:bg-purple-700"
+                              }`}
+                            >
+                              Pay with Khalti
                             </Button>
                           )}
 
