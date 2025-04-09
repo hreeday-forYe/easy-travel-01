@@ -120,7 +120,7 @@ export default function JournalList() {
         <ScrollArea className="h-[calc(100vh-29vh)] ">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 bg-gray-50 p-8 ">
             {SearchData.map((journal) => {
-              const isOwner = user?.id === journal.userId;
+              const isOwner = user?.id === journal?.author?._id;
 
               return (
                 <div

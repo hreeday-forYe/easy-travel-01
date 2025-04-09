@@ -9,7 +9,7 @@ import About from "./About";
 import AddJournal from "./Journal/AddJournal";
 import JournalList from "./Journal/JournalList";
 import SideBar from "./SideBar";
-import SingleJournalDetail from "./Journal/SingleJournalPage";
+import SingleJournalPage from "./Journal/SingleJournalPage";
 import EditJournal from "./Journal/Edit-Journal";
 import SingleGroup from "./Group/SingleGroup";
 import ListGroup from "./Group/GroupList";
@@ -25,7 +25,7 @@ import PageNotFound from "./PageNotFound";
 import DashboardNav from "./Header/DashboardNav";
 import Settlement from "./Group/Settlement";
 import ExploreJournalList from "./Explore/ExploreJournalList";
-import SingleExploreJournal from "./Explore/SingleExploreJournal";
+
 import AdminDashboard from "./Admin/AdminDashboard";
 import AdminNavbar from "./Admin/AdminNavbar";
 import AdminSidebar from "./Admin/AdminSidebar";
@@ -49,7 +49,7 @@ export {
   LogoutButton,
   Dashboard,
   SideBar,
-  SingleJournalDetail,
+  SingleJournalPage as SingleJournalDetail,
   AddJournal,
   EditJournal,
   JournalList,
@@ -60,7 +60,6 @@ export {
   Profile,
   PageNotFound,
   DashboardNav,
-  SingleExploreJournal,
   Settlement,
   AdminDashboard,
   AdminNavbar,

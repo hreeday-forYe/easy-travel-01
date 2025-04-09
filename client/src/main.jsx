@@ -10,8 +10,7 @@ import {
   Activate,
   PageNotFound,
   Settlement,
-  SingleExploreJournal,
-  AdminDashboard,
+
   TermsOfService,
   PrivacyPolicy1,
   Support,

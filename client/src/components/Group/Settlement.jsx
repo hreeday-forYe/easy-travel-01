@@ -99,7 +99,6 @@ const Settlement = () => {
       <SideBar />
       <div className="flex-1">
         <GroupNav id={id} />
-
         <div className="max-w-4xl mx-auto px-4  mt-10">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* Header */}
@@ -191,6 +190,7 @@ const Settlement = () => {
                       <div className="flex items-center space-x-4">
                         <span className="font-semibold text-lg">
                           ₹{split.share}
+                          {console.log(split.share)}
                         </span>
                         <Button
                           onClick={() => {
