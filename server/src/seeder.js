@@ -3,6 +3,7 @@ dotenv.config();
 import { asyncHandler } from "./middlewares/asyncHandler.js";
 import connectDB from "./config/dbconnect.js";
 import User from "./models/userModel.js";
+
 const createAdmin = asyncHandler(async (req, res, next) => {
   try {
     await connectDB();

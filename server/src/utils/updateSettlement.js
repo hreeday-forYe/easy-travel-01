@@ -3,9 +3,9 @@ import User from "../models/UserModel.js";
 import ErrorHandler from "./ErrorHandler.js";
 const updateSettlement = async (data) => {
   // console.log(data); expenseId, notes,  userId
-  const expenseId = data.expenseId
-  const note = data.notes
-  const userId = data.userId
+  const expenseId = data.expenseId;
+  const note = data.note;
+  const userId = data.userId;
   const user = await User.findById(userId);
   // Find the expense with group and user details populated
   const expense = await Expense.findById(expenseId)
@@ -66,7 +66,7 @@ const updateSettlement = async (data) => {
 
   await expense.save();
 
-  return {allPaid, expense, originalStatus}
+  return { allPaid, expense, originalStatus };
 };
 
-export {updateSettlement}
+export { updateSettlement };
