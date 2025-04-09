@@ -143,20 +143,12 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
+      
       {
         path: "/explore",
         element: (
           <AuthLayout authentication={true}>
             <ExploreJournalPage />
-          </AuthLayout>
-        ),
-      },
-
-      {
-        path: "/journals/:id",
-        element: (
-          <AuthLayout authentication={true}>
-            <SingleExploreJournal />
           </AuthLayout>
         ),
       },
@@ -193,20 +185,20 @@ const router = createBrowserRouter([
   },
 
   //Admin
-  {
-    path: "/admin",
-    element: <AdminPage />,
-    children: [
-      {
-        index: true,
-        element: (
-          <AdminLayout>
-            <AdminDashboard />
-          </AdminLayout>
-        ),
-      },
-    ],
-  },
+  // {
+  //   path: "/admin",
+  //   element: <AdminPage />,
+  //   children: [
+  //     {
+  //       index: true,
+  //       element: (
+  //         <AdminLayout>
+  //           <AdminDashboard />
+  //         </AdminLayout>
+  //       ),
+  //     },
+  //   ],
+  // },
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>

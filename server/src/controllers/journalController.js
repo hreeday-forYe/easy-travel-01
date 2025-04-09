@@ -77,8 +77,8 @@ class JournalController {
 
   static getAllJournal = asyncHandler(async (req, res, next) => {
     try {
-      const user = req.user;
-      const allJournals = await Journal.find({ author: user._id }).populate(
+      const userId = req.user._id;
+      const allJournals = await Journal.find({ author: userId }).populate(
         "author",
         "name"
       );;

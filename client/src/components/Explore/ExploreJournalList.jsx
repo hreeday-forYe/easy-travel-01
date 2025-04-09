@@ -79,9 +79,9 @@ export default function ExploreJournalList() {
       <div className="px-8 mt-6">
         <div className="pb-8 flex justify-between items-center ">
           <div className="">
-            <h1 className="text-4xl font-bold">Journal</h1>
+            <h1 className="text-4xl font-bold">Explore Journals</h1>
             <p className="text-muted-foreground">
-              View and manage your travel journal entries
+              View the Journals Written by fellow travellers
             </p>
           </div>
           <AddJournal />
@@ -135,7 +135,7 @@ export default function ExploreJournalList() {
                         )}
                       </div>
                       <Link
-                        to={`/journals/${journal._id}`}
+                        to={`/journal/${journal._id}`}
                         className="block mt-4"
                       >
                         <Button className="w-full bg-[#FF9935] hover:bg-[#FF9935]/90 text-white dark:bg-indigo-500 dark:hover:bg-indigo-400">
