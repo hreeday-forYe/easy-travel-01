@@ -40,7 +40,7 @@ function SingleJournalPage() {
   const [deleteJournal, { isLoading: isDeleting }] = useDeleteJournalMutation();
 
   const journal = data?.allJournals?.find((j) => j._id === id);
-  const isOwner = user?.id === journal?.author?._id;
+  const isOwner = user?._id === journal?.author?._id;
   console.log(isOwner)
 
   const stripHtmlTags = (htmlString) => {

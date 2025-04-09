@@ -54,6 +54,7 @@ const Settlement = () => {
         payment: selectedPaymentMethod,
         note,
       };
+      console.log(note);
       if (action === "settle") {
         const response = await expenseSettlement(data).unwrap();
         if (response.success) {

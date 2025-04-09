@@ -31,6 +31,7 @@ import {
 import AuthLayout from "./routes/AuthLayout";
 import AdminLayout from "./routes/AdminLayout";
 import AdminPage from "./pages/AdminPage";
+import AdminDashboardPage from "./pages/AdminPage";
 
 const router = createBrowserRouter([
   {
@@ -167,14 +168,14 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
-      {
-        path: "/admin",
-        element: (
-          <AuthLayout authentication={true}>
-            <AdminPage />
-          </AuthLayout>
-        ),
-      },
+      // {
+      //   path: "/admin",
+      //   element: (
+      //     <AuthLayout authentication={true}>
+      //       <AdminPage />
+      //     </AuthLayout>
+      //   ),
+      // },
 
       {
         path: "*",
@@ -184,20 +185,22 @@ const router = createBrowserRouter([
   },
 
   //Admin
-  // {
-  //   path: "/admin",
-  //   element: <AdminPage />,
-  //   children: [
-  //     {
-  //       index: true,
-  //       element: (
-  //         <AdminLayout>
-  //           <AdminDashboard />
-  //         </AdminLayout>
-  //       ),
-  //     },
-  //   ],
-  // },
+  {
+    path: "/admin",
+    element: <AdminPage />,
+    children: [
+      {
+        index: true,
+        element: (
+          <AdminLayout>
+            <AdminDashboardPage />
+          </AdminLayout>
+        ),
+      },
+    ],
+  },
+
+  
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
