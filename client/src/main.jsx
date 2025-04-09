@@ -14,6 +14,7 @@ import {
   TermsOfService,
   PrivacyPolicy1,
   Support,
+  AdminDashboard,
 } from "./components";
 import { Provider } from "react-redux";
 
@@ -168,14 +169,7 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
       },
-      // {
-      //   path: "/admin",
-      //   element: (
-      //     <AuthLayout authentication={true}>
-      //       <AdminPage />
-      //     </AuthLayout>
-      //   ),
-      // },
+
 
       {
         path: "*",
@@ -193,14 +187,12 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <AdminLayout>
-            <AdminDashboardPage />
+            <AdminDashboard />
           </AdminLayout>
         ),
       },
     ],
   },
-
-  
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>
