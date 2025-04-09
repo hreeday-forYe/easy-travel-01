@@ -81,7 +81,7 @@ class JournalController {
       const allJournals = await Journal.find({ author: userId }).populate(
         "author",
         "name"
-      );;
+      );
       if (!allJournals || allJournals.length === 0) {
         return res.status(200).json({
           success: false,
@@ -96,9 +96,7 @@ class JournalController {
 
   static getPublicJournal = asyncHandler(async (req, res, next) => {
     try {
-      const user = req.user;
       const allJournals = await Journal.find({
-        author: user._id,
         isPrivate: false,
       }).populate("author", "name");
       if (!allJournals || allJournals.length === 0) {
