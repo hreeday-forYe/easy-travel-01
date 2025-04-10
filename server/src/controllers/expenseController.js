@@ -566,7 +566,6 @@ class ExpenseController {
 
   static initiatePayment = asyncHandler(async (req, res, next) => {
     const { amount, expenseId, paidTo } = req.body;
-    console.log(req.body);
     const user = await User.findById(req.user._id);
     const payload = {
       return_url: `http://localhost:3000/groups/settlement/${expenseId}`,

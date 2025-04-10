@@ -41,12 +41,14 @@ const Settlement = () => {
   const [initiateKhalti] = useInitiatePaymentMutation();
   const [completePayment] = useCompletePaymentMutation();
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [paymentResult, setPaymentResult] = useState(null);
   const navigate = useNavigate();
 
   const completePaymentHandler = async (pidx) => {
     try {
       const paymentData = await completePayment({ pidx, expenseId }).unwrap();
       if (paymentData.success) {
+        setPaymentResult(paymentData)
         setShowSuccessPopup(true);
       }
       return;
@@ -65,7 +67,9 @@ const Settlement = () => {
 
   const resetForm = useCallback(() => {
     setShowSuccessPopup(false);
+    // TODO: console.log(id); This is undefined
     if (id) {
+      window.history.pushState({}, document.title, `/groups/settlements/${id}`);
       navigate(`groups/${id}`);
       window.location.reload();
     }
@@ -115,7 +119,7 @@ const Settlement = () => {
   const initiatePayment = async (data) => {
     console.log(data);
     try {
-      const response = await initiateKhalti(data);
+      const response = await initiateKhalti(data).unwrap();
       console.log(response);
       if (response.success) {
         window.location.href = response?.payment_url;
