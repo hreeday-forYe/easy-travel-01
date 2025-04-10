@@ -28,7 +28,8 @@ import { useCallback } from "react";
 
 const Settlement = () => {
   const location = useLocation();
-  const id = location.state?.groupId;
+  let groupId = localStorage.getItem("groupId") || location.state?.groupId;
+
   const { expenseId } = useParams();
   const { data } = useGetSingleExpenseQuery(expenseId);
   const [showSettleModal, setShowSettleModal] = useState(false);
@@ -48,7 +49,7 @@ const Settlement = () => {
     try {
       const paymentData = await completePayment({ pidx, expenseId }).unwrap();
       if (paymentData.success) {
-        setPaymentResult(paymentData)
+        setPaymentResult(paymentData);
         setShowSuccessPopup(true);
       }
       return;
@@ -63,17 +64,30 @@ const Settlement = () => {
       // await completePayment()
       completePaymentHandler(pidxFromUrl);
     }
+    if (localStorage.getItem("groupId")) {
+      return;
+    } else {
+      localStorage.setItem("groupId", location.state.groupId);
+    }
   }, []);
 
   const resetForm = useCallback(() => {
     setShowSuccessPopup(false);
-    // TODO: console.log(id); This is undefined
-    if (id) {
-      window.history.pushState({}, document.title, `/groups/settlements/${id}`);
-      navigate(`groups/${id}`);
+    // let id = localStorage.getItem('groupId')
+    window.history.pushState(
+      {},
+      document.title,
+      `/groups/settlements/${expenseId}`
+    );
+    // TODO: console.log(id); This is undefined+
+    console.log(groupId);
+    if (groupId) {
+      navigate(`/groups/${groupId}`);
+      localStorage.removeItem("groupId");
       window.location.reload();
+      toast.success("Payment Successfull..");
     }
-  }, [id, navigate]); // Add all dependencies here
+  }, [groupId, navigate]); // Add all dependencies here
 
   if (!data) return null;
 
@@ -128,7 +142,7 @@ const Settlement = () => {
         toast.error(error.data.message);
       }
     } catch (error) {
-      toast.error(error.data?.message || 'Payment initation failed');
+      toast.error(error.data?.message || "Payment initation failed");
     }
   };
 
@@ -142,7 +156,7 @@ const Settlement = () => {
     <div className="flex w-full bg-gray-50">
       <SideBar />
       <div className="flex-1">
-        <GroupNav id={id} />
+        <GroupNav id={groupId} />
         <div className="max-w-4xl mx-auto px-4  mt-10">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* Header */}
@@ -407,7 +421,7 @@ const Settlement = () => {
                 <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-fade-in">
                   <div className="text-center">
                     <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                      <CheckCircle2 className="h-6 w-6 text-green-600" />
+                      <CheckCircle2 className="h-6 w-6 text-indigo-800" />
                     </div>
                     <h3 className="mt-3 text-lg font-medium text-gray-900">
                       Payment Successful!
@@ -443,7 +457,7 @@ const Settlement = () => {
                   <div className="mt-5">
                     <button
                       onClick={resetForm}
-                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                     >
                       Close
                     </button>
