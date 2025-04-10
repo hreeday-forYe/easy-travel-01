@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { SideBar } from "..";
 import GroupNav from "./GroupNav";
 import {
+  useCompletePaymentMutation,
   useDisputeExpenseMutation,
   useGetSingleExpenseQuery,
+  useInitiatePaymentMutation,
+  useExpenseSettlementMutation,
 } from "@/app/slices/expenseApiSlice";
 import {
   CalendarDays,
@@ -18,11 +21,11 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSelector } from "react-redux";
-import { useExpenseSettlementMutation } from "../../app/slices/expenseApiSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useInitiatePaymentMutation } from "@/app/slices/expenseApiSlice";
+import { useCallback } from "react";
+
 const Settlement = () => {
   const location = useLocation();
   const id = location.state?.groupId;
@@ -36,8 +39,38 @@ const Settlement = () => {
   const [expenseSettlement] = useExpenseSettlementMutation();
   const [disputeExpense] = useDisputeExpenseMutation();
   const [initiateKhalti] = useInitiatePaymentMutation();
-
+  const [completePayment] = useCompletePaymentMutation();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const navigate = useNavigate();
+
+  const completePaymentHandler = async (pidx) => {
+    try {
+      const paymentData = await completePayment({ pidx, expenseId }).unwrap();
+      if (paymentData.success) {
+        setShowSuccessPopup(true);
+      }
+      return;
+    } catch (error) {
+      toast.error(error?.data?.message || "Payment verification failed");
+    }
+  };
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pidxFromUrl = urlParams.get("pidx");
+    if (pidxFromUrl) {
+      // await completePayment()
+      completePaymentHandler(pidxFromUrl);
+    }
+  }, []);
+
+  const resetForm = useCallback(() => {
+    setShowSuccessPopup(false);
+    if (id) {
+      navigate(`groups/${id}`);
+      window.location.reload();
+    }
+  }, [id, navigate]); // Add all dependencies here
+
   if (!data) return null;
 
   const expense = data.data;
@@ -54,7 +87,6 @@ const Settlement = () => {
         payment: selectedPaymentMethod,
         note,
       };
-      console.log(note);
       if (action === "settle") {
         const response = await expenseSettlement(data).unwrap();
         if (response.success) {
@@ -92,9 +124,16 @@ const Settlement = () => {
         toast.error(error.data.message);
       }
     } catch (error) {
-      toast.error(error.data.message);
+      toast.error(error.data?.message || 'Payment initation failed');
     }
   };
+
+  // const resetForm = useCallback(() => {
+  //   setShowSuccessPopup(false);
+  //   navigate(`groups/${id}`);
+  //   window.location.reload();
+  // }, []);
+
   return (
     <div className="flex w-full bg-gray-50">
       <SideBar />
@@ -191,7 +230,6 @@ const Settlement = () => {
                       <div className="flex items-center space-x-4">
                         <span className="font-semibold text-lg">
                           ₹{split.share}
-                          {console.log(split.share)}
                         </span>
                         <Button
                           onClick={() => {
@@ -283,8 +321,9 @@ const Settlement = () => {
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           {selectedAction === "settle"
-                            ? selectedPaymentMethod === 'cash'? 
-                            "Add a note (optional)": ''
+                            ? selectedPaymentMethod === "cash"
+                              ? "Add a note (optional)"
+                              : ""
                             : "Reason for dispute"}
                         </label>
                         {selectedPaymentMethod === "khalti" ? (
@@ -356,6 +395,55 @@ const Settlement = () => {
                       </div>
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+            {showSuccessPopup && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-fade-in">
+                  <div className="text-center">
+                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                      <CheckCircle2 className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h3 className="mt-3 text-lg font-medium text-gray-900">
+                      Payment Successful!
+                    </h3>
+                    <div className="mt-2 text-sm text-gray-500">
+                      <p>Your payment has been processed successfully.</p>
+
+                      {paymentResult?.paymentInfo && (
+                        <div className="mt-4 bg-gray-50 p-3 rounded-lg text-left">
+                          <h4 className="font-medium text-gray-700 mb-2">
+                            Transaction Details:
+                          </h4>
+                          <div className="space-y-1">
+                            <p className="flex justify-between">
+                              <span className="font-medium">Amount:</span>
+                              <span>
+                                NPR {paymentResult.paymentInfo.total_amount}
+                              </span>
+                            </p>
+                            <p className="flex justify-between">
+                              <span className="font-medium">
+                                Transaction ID:
+                              </span>
+                              <span className="font-mono">
+                                {paymentResult.paymentInfo.transaction_id}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-5">
+                    <button
+                      onClick={resetForm}
+                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

@@ -513,7 +513,7 @@ class ExpenseController {
       expenseId,
       userId,
       note,
-      paymentMethod:'cash'
+      paymentMethod: "cash",
     });
 
     res.status(200).json({
@@ -568,13 +568,12 @@ class ExpenseController {
     const { amount, expenseId, paidTo } = req.body;
     console.log(req.body);
     const user = await User.findById(req.user._id);
-    const expense = await Expense.findById(expenseId);
     const payload = {
       return_url: `http://localhost:3000/groups/settlement/${expenseId}`,
       website_url: "http://localhost:3000",
       amount: amount * 100,
       purchase_order_id: expenseId,
-      purchase_order_name: paidTo,
+      purchase_order_name: paidTo.name,
       customer_info: {
         name: user.name,
         email: user.email,
@@ -609,6 +608,7 @@ class ExpenseController {
 
   static completePayment = asyncHandler(async (req, res, next) => {
     const { pidx } = req.query;
+    const { expenseId } = req.body;
     if (!pidx) {
       return res
         .status(400)
@@ -626,13 +626,23 @@ class ExpenseController {
     );
     const paymentInfo = verificationResponse.data;
     paymentInfo.total_amount = paymentInfo.total_amount / 100;
-
+    const userId = req.user._id;
     if (paymentInfo.status === "Completed") {
-      res.json({
-        success: true,
-        message: "Payment verified ",
-        paymentInfo,
-      });
+      try {
+        await updateSettlement({
+          amount: paymentInfo.total_amount,
+          expenseId,
+          note: "Payment made through khalti",
+          userId:userId
+        });
+        res.json({
+          success: true,
+          message: "Payment verified ",
+          paymentInfo,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 400))
+      }
     } else {
       res.status(400).json({
         success: false,

@@ -3,26 +3,31 @@ import User from "../models/UserModel.js";
 import ErrorHandler from "./ErrorHandler.js";
 const updateSettlement = async (data) => {
   // console.log(data); expenseId, notes,  userId
-  const expenseId = data.expenseId;
-  const note = data.note;
-  const userId = data.userId;
+  const { expenseId, note, userId } = data;
+
+  if (!expenseId || !userId) {
+    throw new Error("expenseId and userId are required");
+  }
+
   const user = await User.findById(userId);
-  // Find the expense with group and user details populated
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   const expense = await Expense.findById(expenseId)
     .populate("paidBy", "name")
     .populate("splitBetween.user", "name");
 
   if (!expense) {
-    return next(new ErrorHandler("Expense not found", 404));
+    throw new Error("Expense not found");
   }
 
-  // Check if user is in splitBetween
   const userSplit = expense.splitBetween.find((split) =>
     split.user.equals(userId)
   );
 
   if (!userSplit) {
-    return next(new ErrorHandler("User not part of this expense split", 400));
+    throw new Error("User not part of this expense split");
   }
 
   // Store original status for comparison

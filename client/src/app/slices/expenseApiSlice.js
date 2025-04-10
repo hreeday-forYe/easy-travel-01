@@ -87,10 +87,10 @@ export const expenseApiSlice = apiSlice.injectEndpoints({
     }),
 
     completePayment: builder.mutation({
-      query: (data) => ({
-        url: `${expense_url}/complete-payment`,
+      query: ({pidx, expenseId}) => ({
+        url: `${expense_url}/complete-payment?pidx=${pidx}`,
         method: "PUT",
-        body: data,
+        body: {expenseId},
         credentials: "include",
       }),
     }),
