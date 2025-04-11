@@ -10,7 +10,6 @@ import {
   Activate,
   PageNotFound,
   Settlement,
-
   TermsOfService,
   PrivacyPolicy1,
   Support,
@@ -32,7 +31,6 @@ import {
 import AuthLayout from "./routes/AuthLayout";
 import AdminLayout from "./routes/AdminLayout";
 import AdminPage from "./pages/AdminPage";
-import AdminDashboardPage from "./pages/AdminPage";
 
 const router = createBrowserRouter([
   {
