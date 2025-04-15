@@ -13,6 +13,7 @@ class JournalController {
         mood,
         location,
         tags,
+        budget,
         isPrivate = true,
       } = req.body;
 
@@ -22,6 +23,7 @@ class JournalController {
           content: "Content is required",
           tags: "At least one Tag is required",
           images: "At least one image is required",
+          budget:"Budject is required"
         };
         return next(new ErrorHandler("Journal Creation Failed!", 404, errors));
       }
@@ -114,7 +116,7 @@ class JournalController {
   static updateJournal = asyncHandler(async (req, res, next) => {
     try {
       const id = req.params.id;
-      const { title, content, mood, location, tags, isPrivate } = req.body;
+      const { title, content, mood, location, tags, isPrivate, budget } = req.body;
 
       // Handle Image section using cloudinary
       let images = [];
@@ -152,6 +154,7 @@ class JournalController {
           tags,
           images: imagesLinks,
           isPrivate,
+          budget
         },
         {
           new: true,

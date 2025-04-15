@@ -37,10 +37,8 @@ const settlementSchema = new mongoose.Schema(
       enum: ["cash", "khalti", "other"],
       required: true,
     },
-    paymentDetails: {
-      transactionId: String,
-      screenshot: String,
-      notes: String,
+    transactionId: {
+      type: String,
     },
     settledAt: Date,
   },

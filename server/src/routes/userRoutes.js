@@ -13,7 +13,11 @@ userRouter.post("/login", UserController.loginUser);
 userRouter.post("/logout", isAuthenticated, UserController.logoutUser);
 
 userRouter.get("/profile", isAuthenticated, UserController.getUserProfile);
-
+userRouter.get(
+  "/dashboard-data",
+  isAuthenticated,
+  UserController.getDashboardData
+);
 userRouter.put(
   "/update-profile",
   isAuthenticated,
