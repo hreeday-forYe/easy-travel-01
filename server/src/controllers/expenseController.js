@@ -439,7 +439,7 @@ class ExpenseController {
       expenseId,
       userId,
       note,
-      amount: expenseId, //TODO:Change this
+      amount: amount,
       paymentMethod: "cash",
     });
 

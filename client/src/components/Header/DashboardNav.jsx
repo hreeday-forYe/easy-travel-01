@@ -1,4 +1,4 @@
-import { Bell, Search, Settings, UserCircle } from "lucide-react";
+import { UserCircle } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -38,16 +38,9 @@ const DashboardNav = ({ SearchData, setSearchData, originalData }) => {
   return (
     <div className="top-0 left-[211px] right-0 h-16 bg-white border-b border-gray-200 px-8 flex items-center justify-between z-10 backdrop-blur-sm bg-white/90">
       <div className="flex items-center gap-4 flex-1 max-w-xl">
-
+        <p className="font-semibold text-xl">Dashboard</p>
       </div>
       <div className="flex items-center gap-4">
-        <button className="p-2 hover:bg-gray-100 rounded-lg relative">
-          <Bell className="h-5 w-5 text-gray-600" />
-          <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
-        </button>
-        <button className="p-2 hover:bg-gray-100 rounded-lg">
-          <Settings className="h-5 w-5 text-gray-600" />
-        </button>
         <div className="flex items-center gap-3 ml-4">
           <div className="flex items-center space-x-4">
             <DropdownMenu modal={false}>
@@ -68,14 +61,7 @@ const DashboardNav = ({ SearchData, setSearchData, originalData }) => {
                     <span className="font-medium text-md">Profile</span>
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuSeparator />
 
-                <Link to="/settings">
-                  <DropdownMenuItem className="cursor-pointer hover:bg-gray-100 p-3">
-                    <Settings className="mr-2 ml-2" />
-                    <span className="font-medium text-md">Settings</span>
-                  </DropdownMenuItem>
-                </Link>
                 <DropdownMenuSeparator />
                 <LogoutButton className="bg-no w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900/50" />
               </DropdownMenuContent>

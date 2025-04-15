@@ -30,6 +30,7 @@ import {
 import AuthLayout from "./routes/AuthLayout";
 import AdminLayout from "./routes/AdminLayout";
 import AdminPage from "./pages/AdminPage";
+import ReportPage from "./pages/ReportPage";
 
 const router = createBrowserRouter([
   {
@@ -155,6 +156,14 @@ const router = createBrowserRouter([
         element: (
           <AuthLayout authentication={true}>
             <SingleJournalPage />
+          </AuthLayout>
+        ),
+      },
+      {
+        path: "/reports",
+        element: (
+          <AuthLayout authentication={true}>
+            <ReportPage />
           </AuthLayout>
         ),
       },
