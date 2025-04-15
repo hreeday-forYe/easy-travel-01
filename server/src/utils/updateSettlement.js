@@ -77,8 +77,8 @@ const updateSettlement = async (data) => {
   const settlement = await Settlement.create({
     group: expense.group,
     expense: expense._id,
-    payer: expense.paidBy,
-    receiver: user._id,
+    receiver: expense.paidBy,
+    payer: user._id,
     amount: amount,
     status: "completed",
     paymentMethod: paymentMethod,
