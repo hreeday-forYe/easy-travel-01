@@ -94,7 +94,7 @@ const Report = () => {
                           {settlement.expense?.description || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {settlement.amount}
+                          {settlement?.currency} {settlement.amount}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {settlement.receiver?.name || "Unknown"}
@@ -160,7 +160,7 @@ const Report = () => {
                           {settlement.expense?.description || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          ${settlement.amount}
+                          {settlement?.currency} {settlement.amount}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {settlement.payer?.name || "Unknown"}
@@ -190,32 +190,6 @@ const Report = () => {
               </table>
             </div>
           )}
-        </div>
-
-        {/* Summary */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-lg font-medium mb-2">Paid Summary</h3>
-            <p className="text-2xl font-bold text-blue-600">
-              ${paidSettlements.reduce((total, item) => total + item.amount, 0)}
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              {paidSettlements.length} settlements
-            </p>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-lg font-medium mb-2">Received Summary</h3>
-            <p className="text-2xl font-bold text-green-600">
-              $
-              {receivedSettlements.reduce(
-                (total, item) => total + item.amount,
-                0
-              )}
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              {receivedSettlements.length} settlements
-            </p>
-          </div>
         </div>
       </div>
     </>

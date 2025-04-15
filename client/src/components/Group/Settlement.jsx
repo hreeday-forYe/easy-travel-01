@@ -160,7 +160,10 @@ const Settlement = () => {
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-[#5751b8] to-[#3b358e] px-6 py-4 text-white">
-              <h1 className="text-3xl font-bold mb-2">₹{expense.amount}</h1>
+              <h1 className="text-3xl font-bold mb-2">
+                {" "}
+                {expense?.currency} {expense.amount}
+              </h1>
               <p className="text-blue-100">{expense.description}</p>
               <div className="mt-4 flex items-center">
                 <Avatar>
@@ -246,7 +249,7 @@ const Settlement = () => {
                       </div>
                       <div className="flex items-center space-x-4">
                         <span className="font-semibold text-lg">
-                          ₹{split.share}
+                          {expense?.currency} {split.share}
                         </span>
                         <Button
                           onClick={() => {

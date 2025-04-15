@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import {
   useGetSingleJournalQuery,
   useUpdateJournalMutation,
+  useGetJournalQuery,
 } from "@/app/slices/journalApiSlice";
 import Formfield from "../Formfield";
 
@@ -29,8 +30,12 @@ export default function EditJournal() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const [updateJournal, { isLoading: isUpdating }] = useUpdateJournalMutation();
-  const { data: journalData , isLoading: isLoadingJournal , refetch} =
-    useGetSingleJournalQuery(id);
+  const {
+    data: journalData,
+    isLoading: isLoadingJournal,
+    refetch,
+  } = useGetSingleJournalQuery(id);
+  const { refetch: allRefetch } = useGetJournalQuery();
 
   const moodOptions = [
     { value: "happy", label: "Happy" },
@@ -93,6 +98,7 @@ export default function EditJournal() {
       };
       await updateJournal(updatedData).unwrap();
       refetch();
+      allRefetch();
       toast.success("Journal entry updated successfully!");
       navigate(`/journal`);
     } catch (error) {

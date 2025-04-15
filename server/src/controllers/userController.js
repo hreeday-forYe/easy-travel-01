@@ -407,6 +407,7 @@ class UserController {
             date: expense.date,
             paidBy: expense.paidBy,
             group: expense.group,
+            currency: expense.currency,
           })),
           pendingSettlements: pendingSettlements.map((settlement) => ({
             id: settlement._id,

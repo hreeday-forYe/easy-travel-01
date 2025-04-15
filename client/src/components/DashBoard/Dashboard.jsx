@@ -11,6 +11,10 @@ import {
   BookOpen,
   Plane,
   BadgeDollarSignIcon,
+  TrendingDownIcon,
+  DollarSignIcon,
+  IndianRupeeIcon,
+  EuroIcon,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -52,6 +56,17 @@ function Dashboard() {
     });
   };
 
+  function getCurrencyIcon(currency) {
+    const currencyIcons = {
+      USD: <DollarSignIcon className="w-4 h-4" />,
+      NPR: <IndianRupeeIcon className="w-4 h-4" />,
+      INR: <IndianRupeeIcon className="w-4 h-4" />,
+      EUR: <EuroIcon className="w-4 h-4"/>,
+    };
+
+    return currencyIcons[currency] || currency; // Return the icon or the currency code if not found
+  }
+
   // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -75,7 +90,7 @@ function Dashboard() {
             </div>
 
             {/* Overview Cards */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               <Card className="p-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900">
@@ -92,17 +107,32 @@ function Dashboard() {
 
               <Card className="p-6">
                 <div className="flex items-center gap-4">
+                  <div className="rounded-full bg-red-100 p-3 dark:bg-red-900">
+                    <TrendingDownIcon className="h-6 w-6 text-red-700 dark:text-red-300" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Owned</p>
+                    <p className="text-2xl font-bold">
+                      Rs.{formatCurrency(totalOwed)}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <div className="flex items-center gap-4">
                   <div className="rounded-full bg-purple-100 p-3 dark:bg-purple-900">
                     <TrendingUp className="h-6 w-6 text-purple-700 dark:text-purple-300" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Net Balance</p>
                     <p className="text-2xl font-bold">
-                      ${formatCurrency(netBalance)}
+                      Rs.{formatCurrency(netBalance)}
                     </p>
                   </div>
                 </div>
               </Card>
+
               <Card className="p-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-full bg-orange-100 p-3 dark:bg-orange-900">
@@ -140,8 +170,9 @@ function Dashboard() {
                             </p>
                           </div>
                         </div>
-                        <p className="font-semibold text-red-600">
-                          -${formatCurrency(expense.amount)}
+                        <p className="font-semibold text-red-600 flex items-center ">
+                          -{getCurrencyIcon(expense?.currency)}{" "}
+                          {formatCurrency(expense.amount)}
                         </p>
                       </div>
                     ))}
@@ -240,7 +271,7 @@ function Dashboard() {
                 <ScrollArea className="h-[33vh]">
                   <div className="space-y-4">
                     {(activity.latestJournals || []).map((journal) => (
-                      <div
+                      <Link to={`/journal/${journal?.id}`}
                         key={journal.id}
                         className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0"
                       >
@@ -258,7 +289,7 @@ function Dashboard() {
                         <p className="text-sm text-muted-foreground">
                           {journal.location}
                         </p>
-                      </div>
+                      </Link>
                     ))}
 
                     {(activity.latestJournals || []).length === 0 && (
