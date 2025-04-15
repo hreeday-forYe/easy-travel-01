@@ -10,6 +10,7 @@ import {
   CalendarIcon,
   BookOpen,
   Plane,
+  BadgeDollarSignIcon,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -42,7 +43,6 @@ function Dashboard() {
 
   // Create spending by category from categoryBreakdown
   const upcoming = trips?.upcoming || [];
-  console.log(upcoming);
 
   // Format monetary values
   const formatCurrency = (amount) => {
@@ -79,12 +79,12 @@ function Dashboard() {
               <Card className="p-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900">
-                    <DollarSign className="h-6 w-6 text-blue-700 dark:text-blue-300" />
+                    <BadgeDollarSignIcon className="h-6 w-6 text-blue-700 dark:text-blue-300" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Total Paid</p>
                     <p className="text-2xl font-bold">
-                      ${formatCurrency(totalPaid)}
+                      Rs.{formatCurrency(totalPaid)}
                     </p>
                   </div>
                 </div>

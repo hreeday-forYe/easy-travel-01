@@ -100,6 +100,7 @@ class ExpenseController {
       const expense = await Expense.create({
         group: groupId,
         description,
+        currency: group.currency,
         amount,
         category,
         paidBy,
