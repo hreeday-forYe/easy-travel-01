@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 
 import { ArrowLeft } from "lucide-react";
 import { toast } from "react-toastify";
-import { useGetJournalQuery } from "@/app/slices/journalApiSlice";
 
 import {
   useGetSingleJournalQuery,
@@ -30,9 +29,8 @@ export default function EditJournal() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const [updateJournal, { isLoading: isUpdating }] = useUpdateJournalMutation();
-  const { data: journalData = {}, isLoading: isLoadingJournal } =
+  const { data: journalData , isLoading: isLoadingJournal , refetch} =
     useGetSingleJournalQuery(id);
-  const { refetch } = useGetJournalQuery();
 
   const moodOptions = [
     { value: "happy", label: "Happy" },
@@ -61,8 +59,10 @@ export default function EditJournal() {
     },
   });
 
+  console.log(journalData);
+
   useEffect(() => {
-    if (journalData.journal) {
+    if (journalData?.journal) {
       const { journal } = journalData;
       reset({
         title: journal.title,
@@ -70,6 +70,7 @@ export default function EditJournal() {
         mood: journal.mood,
         location: journal.location,
         isPrivate: journal.isPrivate,
+        budget: journal.budget,
         images: journal.images || [],
       });
       setTags(journal.tags || []);
@@ -202,7 +203,7 @@ export default function EditJournal() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => navigate(`/journal/${id}`)}
+                onClick={() => navigate("/journal")}
               >
                 Cancel
               </Button>
