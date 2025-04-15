@@ -439,5 +439,31 @@ class UserController {
       return next(new ErrorHandler(error.message, 500));
     }
   };
+
+  static getSettlements = asyncHandler(async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user._id);
+
+      // Get settlements where the user is the payer
+      const paidSettlements = await Settlement.find({ payer: user._id })
+        .populate("receiver", "name email") // who received the payment
+        .populate("group", "name")
+        .populate("expense", "description amount");
+
+      // Get settlements where the user is the receiver
+      const receivedSettlements = await Settlement.find({ receiver: user._id })
+        .populate("payer", "name email") // who paid the user
+        .populate("group", "name")
+        .populate("expense", "description amount");
+
+      res.status(200).json({
+        success: true,
+        paidSettlements, // user paid others
+        receivedSettlements, // user received from others
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
 }
 export default UserController;

@@ -18,6 +18,7 @@ userRouter.get(
   isAuthenticated,
   UserController.getDashboardData
 );
+userRouter.get("/get-settlements", isAuthenticated, UserController.getSettlements)
 userRouter.put(
   "/update-profile",
   isAuthenticated,
