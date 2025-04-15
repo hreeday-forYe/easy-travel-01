@@ -138,7 +138,7 @@ const Settlement = () => {
         window.location.href = response?.payment_url;
       }
       if (response.error) {
-        toast.error(error.data.message);
+        toast.error(response.error.data.message);
       }
     } catch (error) {
       toast.error(error.data?.message || "Payment initation failed");

@@ -68,6 +68,7 @@ class JournalController {
         location,
         tags,
         isPrivate,
+        budget,
         images: imagesLinks,
       });
 
@@ -116,7 +117,8 @@ class JournalController {
   static updateJournal = asyncHandler(async (req, res, next) => {
     try {
       const id = req.params.id;
-      const { title, content, mood, location, tags, isPrivate, budget } = req.body;
+      const { title, content, mood, location, tags, isPrivate, budget } =
+        req.body;
 
       // Handle Image section using cloudinary
       let images = [];
@@ -152,6 +154,7 @@ class JournalController {
           mood,
           location,
           tags,
+          budget,
           images: imagesLinks,
           isPrivate,
           budget
@@ -206,7 +209,7 @@ class JournalController {
   static getSingleJournal = asyncHandler(async (req, res, next) => {
     try {
       const id = req.params.id;
-      const journal = await Journal.findById(id);
+      const journal = await Journal.findById(id).populate("author");
 
       if (!journal) {
         return next(new ErrorHandler("Journal not found", 404));
