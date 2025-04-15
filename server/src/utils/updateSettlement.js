@@ -80,6 +80,7 @@ const updateSettlement = async (data) => {
     receiver: expense.paidBy,
     payer: user._id,
     amount: amount,
+    currency: expense.currency,
     status: "completed",
     paymentMethod: paymentMethod,
     transactionId: paymentMethod === "khalti" ? transactionId : null,

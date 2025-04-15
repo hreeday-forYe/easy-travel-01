@@ -13,19 +13,24 @@ const settlementSchema = new mongoose.Schema(
       required: true,
     },
     payer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     receiver: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     amount: {
-        type: Number,
-        required: true,
-        min: [0, "Amount cannot be negative"],
+      type: Number,
+      required: true,
+      min: [0, "Amount cannot be negative"],
+    },
+    currency: {
+      type: String,
+      default: "NPR",
+      required: true,
     },
     status: {
       type: String,
@@ -40,13 +45,13 @@ const settlementSchema = new mongoose.Schema(
     transactionId: {
       type: String,
     },
+
     settledAt: Date,
   },
   {
     timestamps: true,
   }
 );
-
 
 const Settlement = mongoose.model("Settlement", settlementSchema);
 export default Settlement;

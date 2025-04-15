@@ -94,7 +94,7 @@ const Report = () => {
                           {settlement.expense?.description || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          ${settlement.amount}
+                          {settlement.amount}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {settlement.receiver?.name || "Unknown"}
