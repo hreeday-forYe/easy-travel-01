@@ -21,7 +21,7 @@ adminRouter.get(
 adminRouter.get(
   "/get-journals",
   isAuthenticated,
-  authorizeRoles("admin"),
+  // authorizeRoles("admin"),
   AdminController.getAllJournals
 );
 
