@@ -60,6 +60,26 @@ class AdminController {
     }
   });
 
+  static removeJournal = asyncHandler(async (req, res, next) => {
+    try {
+      const journal = await Journal.findById(req.params.id);
+
+      if (!journal) {
+        return next(new ErrorHandler("Journal not found", 404));
+      }
+
+      await Journal.findByIdAndDelete(req.params.id);
+
+      res.status(200).json({
+        success: true,
+        message: "Journal deleted successfully",
+        deletedJournal: journal,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  });
+
   static getAllGroups = asyncHandler(async (req, res, next) => {
     try {
       const groups = await TravelGroup.find()

@@ -46,6 +46,13 @@ adminRouter.put(
   AdminController.banUserByAdmin
 );
 
+adminRouter.delete(
+  "/remove-journal/:id",
+  isAuthenticated,
+  authorizeRoles("admin"),
+  AdminController.removeJournal
+);
+
 adminRouter.post(
   "/add-user",
   isAuthenticated,

@@ -19,6 +19,14 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    removeJournal: builder.mutation({
+      query: (id) => ({
+        url: `${admin_url}/remove-journal/${id}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+    }),
+
     getUsers: builder.query({
       query: () => ({
         url: `${admin_url}/get-users`,
@@ -70,4 +78,5 @@ export const {
   useGetGroupsQuery,
   useGetSettlementsQuery,
   useGetDashboardDataMutation,
+  useRemoveJournalMutation,
 } = adminApiSlice;
