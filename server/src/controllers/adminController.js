@@ -90,7 +90,7 @@ class AdminController {
         .populate({
           path: "members.user",
           select: "name email", // populate user details in members array
-        });
+        }).sort({createdAt:-1});
 
       // Transform the groups to include member count
       const groupsWithMemberCount = groups.map((group) => ({
