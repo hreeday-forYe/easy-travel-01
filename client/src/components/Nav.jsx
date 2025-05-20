@@ -31,7 +31,7 @@ const Nav = () => {
 
   return (
     <nav className="fixed w-full top-0 z-50 ">
-      <div className="bg-[#e8e2dc] backdrop-blur-md border-b border-gray-100">
+      <div className="bg-[#ffffff] backdrop-blur-md border-b border-gray-100">
         <div className="h-20  px-4 md:px-10 lg:px-20">
           <div className="h-full flex items-center justify-between">
             {/* Logo */}

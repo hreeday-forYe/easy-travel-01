@@ -5,6 +5,9 @@ import {
   Users2,
   MapPinned,
   NotebookPen,
+  Calendar,
+  CreditCard,
+  ArrowBigDown,
 } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +30,7 @@ function AdminDashboard() {
       rejected: { color: "bg-red-100 text-red-800", label: "Rejected" },
     };
 
-    const config = statusConfig[status.toLowerCase()] || statusConfig.pending;
+    const config = statusConfig[status?.toLowerCase()] || statusConfig.pending;
 
     return (
       <Badge className={`${config.color} hover:${config.color}`}>
@@ -153,19 +156,27 @@ function AdminDashboard() {
                   return (
                     <div key={index} className="activity-item">
                       <div className="flex-1">
-                        <div className="flex gap-4">
-                          <h4 className="text-sm font-semibold text-gray-800 mb-0.5">
-                            Journal #{journal._id.slice(-5).toUpperCase()}
-                          </h4>
-                          <span>-{journal.author.name}</span>
+                        <div className="flex gap-3">
+                          <img
+                            src={journal.images[0].url}
+                            alt={journal.title}
+                            className="w-20 h-12 rounded-md object-fill"
+                          />
+                          <div className="flex flex-col">
+                            <h4 className="text-sm font-semibold text-gray-800 mb-0.5 flex flex-col">
+                              {journal.title}
+                            </h4>
+                            <span className="text-sm text-gray-700">
+                              Author: {journal.author.name}
+                            </span>
+
+                            <p className="text-sm text-gray-600">
+                              {journal.location}
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-sm text-gray-600">
-                          {journal.orderItems.length} item
-                          {journal.orderItems.length !== 1 ? "s" : ""} • Total:
-                          Rs. {journal.totalPrice.toFixed(2)}
-                        </p>
+                        <div className="flex gap-7 "></div>
                       </div>
-                      {getStatusBadge(journal.status)}
                     </div>
                   );
                 })}
@@ -187,19 +198,20 @@ function AdminDashboard() {
                 </button>
               </div>
               <div className="space-y-4">
-                {/* {recentPayments.map((payment) => (
+                {filteredSettlements.map((payment) => (
                   <div
                     key={payment._id}
                     className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0"
                   >
                     <div className="space-y-1">
-                      <p className="font-medium">{payment.paidBy.name}</p>
+                      <p className="font-medium">{payment?.paidBy?.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        Appointment Id:{" "}
+                        {payment?.payer?.name} →{payment?.receiver?.name}
                         <strong className="text-green-800">
-                          {payment.appointment}
+                          {payment?.appointment}
                         </strong>
                       </p>
+
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Calendar className="h-4 w-4" />
                         {new Date(payment.createdAt).toLocaleDateString()}
@@ -208,19 +220,17 @@ function AdminDashboard() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-lg">
-                        Rs.{payment.amount}
+                      <p className="flex items-center gap-1">
+                        <span className="text-sm font">
+                          {payment.currency}.
+                        </span>
+                        <p className="font-semibold text-lg">
+                          {payment.amount}
+                        </p>
                       </p>
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${getStatusColor(
-                          payment.status
-                        )}`}
-                      >
-                        {payment.status}
-                      </span>
                     </div>
                   </div>
-                ))} */}
+                ))}
               </div>
             </Card>
 
@@ -238,40 +248,36 @@ function AdminDashboard() {
                 </button>
               </div>
               <div className="space-y-4">
-                {/* {recentPayments.map((payment) => (
+                {filteredGroups.map((payment) => (
                   <div
                     key={payment._id}
                     className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0"
                   >
                     <div className="space-y-1">
-                      <p className="font-medium">{payment.paidBy.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        Appointment Id:{" "}
-                        <strong className="text-green-800">
-                          {payment.appointment}
-                        </strong>
+                      <p className="font-medium">{payment.paidBy?.name}</p>
+                      <p className="text-xl font-bold">{payment.name}</p>
+                      <p className="text-base text-gray-700">
+                        Created by: {payment.creator?.name}
                       </p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        {new Date(payment.createdAt).toLocaleDateString()}
-                        <CreditCard className="h-4 w-4 ml-2" />
-                        {payment.paymentMethod}
+
+                      <div className="flex items-center flex-row  gap-4 text-sm text-muted-foreground">
+                        <p className="flex gap-1 items-center">
+                          <Calendar className="h-4 w-4" />
+                          Start:
+                          {new Date(
+                            payment.trip?.startDate
+                          ).toLocaleDateString()}
+                        </p>
+                        <p className="flex gap-1 items-center">
+                          <Calendar className="h-4 w-4" />
+                          End:
+                          {new Date(payment.trip?.endDate).toLocaleDateString()}
+                          {payment.paymentMethod}
+                        </p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-lg">
-                        Rs.{payment.amount}
-                      </p>
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${getStatusColor(
-                          payment.status
-                        )}`}
-                      >
-                        {payment.status}
-                      </span>
-                    </div>
                   </div>
-                ))} */}
+                ))}
               </div>
             </div>
           </div>

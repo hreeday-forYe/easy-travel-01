@@ -13,15 +13,14 @@ const Top = () => {
           <span className="text-blue-600 font-medium">Get Started</span>
 
           <h1 className="text-3xl md:text-4xl font-bold mt-3 leading-tight">
-            We <span className="text-blue-600">Guarantee</span> The Worthiness
-            Of Every <span className="text-blue-600">Money</span> Transaction.
+            Add <span className="text-blue-600">Journals</span> <br />& Stress Less <br />
+          When <span className="text-blue-600">Sharing</span> Expenses.
           </h1>
 
           <p className="my-5 text-gray-600">
             The easy-to-use budgeting app that helps you keep tabs on your money
             at a glance—anytime, anywhere.
           </p>
-
           <Link to={userId ? "/dashboard" : "/register"}>
             <Button>
               {userId ? "Go to Dashboard" : "Create Free Account"}
